@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;600&display=swap");
+
+@layer base {
+  h1 {
+    @apply text-5xl lg:text-6xl my-4;
+  }
+
+  h2 {
+    @apply text-4xl lg:text-5xl my-4;
+  }
+
+  h3 {
+    @apply text-3xl lg:text-4xl my-4;
+  }
+
+  h4 {
+    @apply text-2xl lg:text-3xl my-4;
+  }
+
+  h5 {
+    @apply text-xl lg:text-2xl my-4;
+  }
+
+  h6 {
+    @apply text-lg my-4;
+  }
+
+  p {
+    @apply text-base font-light;
+  }
+
+  a {
+    @apply text-blue-dimmed hover:text-blue-ocean hover:font-medium;
+  }
+
+  input {
+    @apply text-lg py-3 px-6 bg-white border-2 border-gray-200 focus:outline-none outline-none;
+  }
+
+  textarea {
+    @apply text-lg py-3 px-6 bg-white border-2 border-gray-200 focus:outline-none outline-none;
+  }
+
+  label {
+    @apply text-lg font-medium mb-1;
+  }
+
+  th {
+    @apply font-light;
+  }
+}
+
+#nprogress .bar {
+  background: #0634bf !important;
+}
+
+#bar,
+.bar {
+  height: 20px;
+}
+
+.privatePageSidebar {
+  width: 280px;
+}

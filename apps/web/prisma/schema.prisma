@@ -1,0 +1,73 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider          = "postgresql"
+    url               = env("DATABASE_URL")
+    shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model User {
+    id                  Int           @id @default(autoincrement())
+    createdAt           DateTime      @default(now())
+    updatedAt           DateTime      @updatedAt
+    email               String        @unique
+    password            String
+    first_name          String
+    last_name           String
+    linkedIn_url        String?
+    instagram_username  String?
+    github_url          String?
+    website_url         String?
+    notion_page_url     String?
+    permission          Int
+    profile_picture_ref String
+    projects            Project[]
+    favourites          Favourite[]
+    Application         Application[]
+}
+
+model Project {
+    id                          Int           @id @default(autoincrement())
+    createdAt                   DateTime      @default(now())
+    updatedAt                   DateTime      @updatedAt
+    mainPicture                 String
+    projectName                 String        @unique
+    startingOn                  DateTime
+    estimatedTimeDuration       Int
+    estimatedTimeDurationMetric String
+    description                 String
+    difficulty                  String
+    type                        String
+    searchingFor                String[]
+    numberOfParticipant         Int
+    initialInvestment           Boolean
+    initialInvestmentCost       Int?
+    toolsAndTechnologies        String[]
+    attachments                 Bytes?
+    putOnline                   Boolean
+    applications                Application[]
+    User                        User?         @relation(fields: [userId], references: [id])
+    userId                      Int?
+}
+
+model Application {
+    id          Int      @id @default(autoincrement())
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    status      String
+    Project     Project? @relation(fields: [projectId], references: [id])
+    projectId   Int?
+    Applicant   User?    @relation(fields: [applicantId], references: [id])
+    applicantId Int?
+}
+
+model Favourite {
+    id         Int      @id @default(autoincrement())
+    createdAt  DateTime @default(now())
+    updatedAt  DateTime @updatedAt
+    projectIds Int[]
+    user       User     @relation(fields: [userId], references: [id])
+    userId     Int
+}
