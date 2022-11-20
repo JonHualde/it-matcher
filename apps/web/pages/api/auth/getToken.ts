@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "shared/utils/prisma";
 
 // Helpers
-import Jwt from "shared/utils/jwt.js";
+import Jwt from "shared/utils/jwt";
 
 export default async function (req: NextApiRequest, res: NextApiResponse) {
   // 1) Get token
