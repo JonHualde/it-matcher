@@ -5,4 +5,8 @@ export default registerAs('auth', () => ({
   refreshExpiresIn: '2w',
   accessExpireIn: '10m',
   secret: process.env.JWT_SECRET,
+  httpOnly: true,
+  path: '/',
+  sameSite: 'lax',
+  secure: process.env.NODE_ENV === 'production',
 }));
