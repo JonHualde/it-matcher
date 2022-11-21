@@ -1,10 +1,19 @@
-import { Controller, Get, Post, Res, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Get,
+  Post,
+  Res,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 
 // Guards
 import { AuthGuard } from './guards/auth.guard';
+import { UserRegisterDto } from './dtos/user-register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -25,8 +34,13 @@ export class AuthController {
     return 'hey';
   }
 
-  @Get('signout')
+  @Get('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
-    res.cookie('access_token', '', { expires: new Date() });
+    res.clearCookie('access_token');
+  }
+
+  @Post('register')
+  async register(@Body() userData: UserRegisterDto) {
+    return this.authService.register(userData);
   }
 }
