@@ -17,14 +17,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
       // get JWT from cookie
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => request.cookies.jwt,
+        (request: Request) => request.cookies.access_token,
       ]),
       ignoreExpiration: false,
       secretOrKey: auth.secret,
     });
-  }
-
-  async validate(payload: any) {
-    return { userId: payload.userId, firstName: payload.firstName };
   }
 }

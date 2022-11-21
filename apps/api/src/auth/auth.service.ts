@@ -2,8 +2,6 @@ import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
-
-// services
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -25,7 +23,7 @@ export class AuthService {
 
   async login(user: any, res: Response) {
     res.cookie(
-      'access-token',
+      'access_token',
       this.jwtService.sign({
         email: user.email,
         id: user.id,
