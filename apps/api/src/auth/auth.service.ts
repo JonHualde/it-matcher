@@ -1,10 +1,4 @@
-import {
-  Injectable,
-  NotFoundException,
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
@@ -23,10 +17,7 @@ export class AuthService {
       where: { email: email },
     });
 
-    console.log('user', user);
-
     if (!bcrypt.compareSync(password, user.password)) return null;
-    console.log('hey');
 
     delete user.password;
     return user;

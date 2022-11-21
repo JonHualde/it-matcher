@@ -1,6 +1,5 @@
 import { Controller, Post, Res, UseGuards, Request } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { UserLoginDto } from './dtos/user-login.dto';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 
