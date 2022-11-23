@@ -22,6 +22,13 @@ export class AuthService {
     return user;
   }
 
+  preparePassword(input: string): string {
+    const saltRounds = 12;
+    const passwordHash = bcrypt.hashSync(input, saltRounds);
+
+    return passwordHash;
+  }
+
   async login(user: any, res: Response) {
     res.cookie(
       'access_token',
@@ -36,7 +43,34 @@ export class AuthService {
     return user;
   }
 
-  async register(userData: UserRegisterDto) {
-    return userData;
+  async register(userData: UserRegisterDto, res: Response) {
+    const passwordHash = this.preparePassword(userData.password);
+
+    const user = await this.prisma.user.create({
+      data: {
+        email: userData.email,
+        password: passwordHash,
+        first_name: userData.firstname,
+        last_name: userData.lastname,
+        linkedIn_url: userData.linkedInUrl,
+        instagram_username: userData.instagramUsername,
+        website_url: userData.websiteUrl,
+        notion_page_url: userData.notionPageUrl,
+        permission: 0,
+        profile_picture_ref: '',
+      },
+    });
+
+    res.cookie(
+      'access_token',
+      this.jwtService.sign({
+        email: user.email,
+        id: user.id,
+        firstName: user.first_name,
+        permission: user.permission,
+      }),
+    );
+
+    return user;
   }
 }

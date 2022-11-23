@@ -28,6 +28,14 @@ export class AuthController {
     return this.authService.login(req.user, res);
   }
 
+  @Post('register')
+  async register(
+    @Body() userData: UserRegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.register(userData, res);
+  }
+
   @UseGuards(AuthGuard)
   @Get('protected')
   protectedRoute() {
@@ -37,10 +45,5 @@ export class AuthController {
   @Get('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('access_token');
-  }
-
-  @Post('register')
-  async register(@Body() userData: UserRegisterDto) {
-    return this.authService.register(userData);
   }
 }
