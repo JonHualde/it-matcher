@@ -1,4 +1,11 @@
-import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Request,
+  Get,
+  UseGuards,
+  Delete,
+} from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ProjectIdDto } from './dtos/project.dto';
 import { ProjectService } from './project.service';
@@ -8,8 +15,18 @@ import { ProjectService } from './project.service';
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
-  @Post('delete')
-  async delete(@Body() body: ProjectIdDto) {
-    return this.projectService.delete(body.projectId);
+  @Delete('delete')
+  async delete(@Body() body: ProjectIdDto, @Request() req) {
+    return this.projectService.delete(body.projectId, req.user);
+  }
+
+  @Get('my-projects')
+  async getUserProject(@Request() req) {
+    return this.projectService.getUserProjects(req.user);
+  }
+
+  @Get('all-projects')
+  async getAllProject() {
+    return this.projectService.getAllProjects();
   }
 }
