@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ProjectIdDto } from './dtos/project.dto';
-import { ProjectService } from './project.service';
+import { ProjectService } from './projects.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('project')
@@ -20,12 +20,12 @@ export class ProjectController {
     return this.projectService.delete(body.projectId, req.user);
   }
 
-  @Get('my-projects')
+  @Get('user-projects')
   async getUserProject(@Request() req) {
     return this.projectService.getUserProjects(req.user);
   }
 
-  @Get('all-projects')
+  @Get('all')
   async getAllProject() {
     return this.projectService.getAllProjects();
   }

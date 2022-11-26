@@ -13,7 +13,7 @@ import { jwtConstants } from './constants';
 @Module({
   imports: [
     PrismaModule,
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '30m' },

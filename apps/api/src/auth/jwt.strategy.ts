@@ -9,6 +9,7 @@ import { JwtDecodeDto } from './dtos/jwt-decoded.dto';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private prisma: PrismaService) {
+    console.log('jwt constant', jwtConstants);
     super({
       // get JWT from Header
       // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

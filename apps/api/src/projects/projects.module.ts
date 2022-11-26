@@ -3,9 +3,8 @@ import { JwtStrategy } from 'src/auth/jwt.strategy';
 
 // External modules
 import { PrismaModule } from 'src/prisma/prisma.module';
-import { ProjectController } from './project.controller';
-import { ProjectService } from './project.service';
-import { AuthModule } from 'src/auth/auth.module';
+import { ProjectController } from './projects.controller';
+import { ProjectService } from './projects.service';
 
 @Module({
   imports: [PrismaModule],
