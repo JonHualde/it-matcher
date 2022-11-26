@@ -7,6 +7,6 @@ import { ApplicationService } from './applications.service';
 @Module({
   imports: [PrismaModule],
   controllers: [ApplicationController],
-  providers: [ApplicationService, JwtStrategy],
+  providers: [ApplicationService],
 })
 export class ApplicationModule {}

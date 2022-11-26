@@ -9,6 +9,6 @@ import { ProjectService } from './projects.service';
 @Module({
   imports: [PrismaModule],
   controllers: [ProjectController],
-  providers: [ProjectService, JwtStrategy],
+  providers: [ProjectService],
 })
 export class ProjectModule {}
