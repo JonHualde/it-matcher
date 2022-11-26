@@ -12,8 +12,8 @@ import { AuthService } from './auth.service';
 import { Response } from 'express';
 
 // Guards
-import { AuthGuard } from './guards/auth.guard';
 import { UserRegisterDto } from './dtos/user-register.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -36,9 +36,9 @@ export class AuthController {
     return this.authService.register(userData, res);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('protected')
-  protectedRoute() {
+  protectedRoute(@Res({ passthrough: true }) res: Response) {
     return 'hey';
   }
 
