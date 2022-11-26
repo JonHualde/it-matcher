@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ProjectIdDto } from './dtos/project.dto';
 import { ProjectService } from './project.service';
@@ -9,7 +9,7 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Post('delete')
-  async delete(@Body() projectId: ProjectIdDto) {
-    return this.projectService.delete(projectId);
+  async delete(@Body() body: ProjectIdDto) {
+    return this.projectService.delete(body.projectId);
   }
 }

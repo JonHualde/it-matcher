@@ -8,6 +8,7 @@ import {
 
 export class UserRegisterDto {
   @IsEmail({ allow_utf8_local_part: false })
+  @IsString()
   readonly email: string;
 
   @IsString()
