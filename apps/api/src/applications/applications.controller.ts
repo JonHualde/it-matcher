@@ -10,15 +10,15 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApplicationService } from './applications.service';
-import { ApplicationDto } from './dtos/application.dto';
+import { ApplicationDto, statusDto } from './dtos/application.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('application')
 export class ApplicationController {
   constructor(private readonly applicationService: ApplicationService) {}
 
-  @Get('all')
-  async getAllApplications() {}
+  @Get('all/:status?')
+  async getAllApplications(@Param('status') applicationStatus: statusDto) {}
 
   @Get('user-applications')
   async getUserApplications() {}

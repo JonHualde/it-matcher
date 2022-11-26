@@ -1,11 +1,15 @@
 import { IsEnum, IsNumber, IsString } from 'class-validator';
 
-type status = 'Pending' | 'Rejected' | 'Accepted';
-export const ApplicationsStatus: status[] = ['Pending', 'Rejected', 'Accepted'];
+export type statusDto = 'Pending' | 'Rejected' | 'Accepted';
+export const ApplicationsStatus: statusDto[] = [
+  'Pending',
+  'Rejected',
+  'Accepted',
+];
 
 export class ApplicationDto {
   @IsEnum(ApplicationsStatus)
-  readonly status: status;
+  readonly status: statusDto;
 
   @IsNumber()
   readonly projectId: number;
