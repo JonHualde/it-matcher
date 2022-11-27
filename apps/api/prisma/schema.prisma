@@ -46,7 +46,7 @@ model Project {
     initialInvestmentCost       Int?
     toolsAndTechnologies        String[]
     attachments                 Bytes?
-    putOnline                   Boolean
+    isOnline                    Boolean
     applications                Application[]
     User                        User?         @relation(fields: [userId], references: [id])
     userId                      Int?

@@ -1,16 +1,20 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtDecodeDto } from 'src/auth/dtos/jwt-decoded.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ApplicationDto, statusDto } from './dtos/application.dto';
+import {
+  ApplicationDto,
+  StatusDto,
+  UpdateApplicationDto,
+} from './dtos/application.dto';
 
 @Injectable()
 export class ApplicationService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllApplications(status?: statusDto) {
+  async getAllApplications(status?: StatusDto) {
     const applications = await this.prisma.application.findMany({
       where: {
-        status,
+        ...(status ? { status: status.toString() } : {}),
       },
     });
 
@@ -27,6 +31,22 @@ export class ApplicationService {
     return await this.prisma.application.findUniqueOrThrow({
       where: { id: applicationId },
     });
+  }
+
+  async getApplicationsByProjectId(projectId: number, user: JwtDecodeDto) {
+    const applications = await this.prisma.application.findMany({
+      where: { projectId },
+    });
+
+    const project = await this.prisma.project.findUniqueOrThrow({
+      where: { id: projectId },
+    });
+
+    if (project.userId !== user.id) {
+      throw new ForbiddenException('You are not allowed to get this data.');
+    }
+
+    return applications;
   }
 
   async createNewApplication(application: ApplicationDto, user: JwtDecodeDto) {
@@ -64,18 +84,19 @@ export class ApplicationService {
   }
 
   async updateApplicationStatus(
-    applicationId: number,
-    status: statusDto,
+    application: UpdateApplicationDto,
     user: JwtDecodeDto,
   ) {
     // Check if the application exists, and get it
-    const application = await this.prisma.application.findUniqueOrThrow({
-      where: { id: applicationId },
-    });
+    const applicationToUpdate = await this.prisma.application.findUniqueOrThrow(
+      {
+        where: { id: application.applicationId },
+      },
+    );
 
     // Take the project id, check if the project still exists, and get the project
     const project = await this.prisma.project.findUniqueOrThrow({
-      where: { id: application.projectId },
+      where: { id: applicationToUpdate.projectId },
     });
 
     // Check if the id in the token matches the project owner id
@@ -87,9 +108,9 @@ export class ApplicationService {
 
     // if so, update the application status
     return await this.prisma.application.update({
-      where: { id: applicationId },
+      where: { id: application.applicationId },
       data: {
-        status,
+        status: application.status,
       },
     });
   }

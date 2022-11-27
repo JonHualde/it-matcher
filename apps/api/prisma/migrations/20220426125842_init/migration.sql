@@ -12,10 +12,8 @@ CREATE TABLE "User" (
     "website_url" TEXT,
     "notion_page_url" TEXT,
     "permission" INTEGER NOT NULL,
-
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
-
 -- CreateTable
 CREATE TABLE "Project" (
     "id" SERIAL NOT NULL,
@@ -35,12 +33,10 @@ CREATE TABLE "Project" (
     "initialInvestmentCost" INTEGER,
     "toolsAndTechnologies" TEXT NOT NULL,
     "attachments" BYTEA,
-    "putOnline" BOOLEAN NOT NULL,
+    "isOnline" BOOLEAN NOT NULL,
     "userId" INTEGER,
-
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
 );
-
 -- CreateTable
 CREATE TABLE "Application" (
     "id" SERIAL NOT NULL,
@@ -50,35 +46,33 @@ CREATE TABLE "Application" (
     "project" TEXT NOT NULL,
     "projectId" INTEGER,
     "applicantId" INTEGER,
-
     CONSTRAINT "Application_pkey" PRIMARY KEY ("id")
 );
-
 -- CreateTable
 CREATE TABLE "Favourite" (
     "id" SERIAL NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "projectIds" TEXT[],
+    "projectIds" TEXT [],
     "userId" INTEGER NOT NULL,
-
     CONSTRAINT "Favourite_pkey" PRIMARY KEY ("id")
 );
-
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
 -- CreateIndex
 CREATE UNIQUE INDEX "Project_projectName_key" ON "Project"("projectName");
-
 -- AddForeignKey
-ALTER TABLE "Project" ADD CONSTRAINT "Project_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
+ALTER TABLE "Project"
+ADD CONSTRAINT "Project_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE
+SET NULL ON UPDATE CASCADE;
 -- AddForeignKey
-ALTER TABLE "Application" ADD CONSTRAINT "Application_applicantId_fkey" FOREIGN KEY ("applicantId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
+ALTER TABLE "Application"
+ADD CONSTRAINT "Application_applicantId_fkey" FOREIGN KEY ("applicantId") REFERENCES "User"("id") ON DELETE
+SET NULL ON UPDATE CASCADE;
 -- AddForeignKey
-ALTER TABLE "Application" ADD CONSTRAINT "Application_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
+ALTER TABLE "Application"
+ADD CONSTRAINT "Application_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE
+SET NULL ON UPDATE CASCADE;
 -- AddForeignKey
-ALTER TABLE "Favourite" ADD CONSTRAINT "Favourite_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Favourite"
+ADD CONSTRAINT "Favourite_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

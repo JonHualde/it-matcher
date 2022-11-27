@@ -11,18 +11,22 @@ import {
   UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
-import { application } from 'express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApplicationService } from './applications.service';
-import { ApplicationDto, statusDto } from './dtos/application.dto';
+import {
+  ApplicationDto,
+  StatusDto,
+  UpdateApplicationDto,
+} from './dtos/application.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('application')
 export class ApplicationController {
   constructor(private readonly applicationService: ApplicationService) {}
 
+  // @TODO: Add admin guard
   @Get('all/:status?')
-  async getAllApplications(@Param('status') status: statusDto) {
+  async getAllApplications(@Param('status') status: StatusDto) {
     return this.applicationService.getAllApplications(status);
   }
 
@@ -38,6 +42,18 @@ export class ApplicationController {
     return this.applicationService.getApplicationById(applicationId);
   }
 
+  @Get('project/:projectId')
+  async getApplicationsByProjectId(
+    @Param('projectId', ParseIntPipe) projectId: number,
+    @Request() req,
+  ) {
+    return this.applicationService.getApplicationsByProjectId(
+      projectId,
+      req.user,
+    );
+  }
+
+  // @TODO: Add create application limit by applicant
   @Post()
   async createNewApplication(
     @Body() application: ApplicationDto,
@@ -46,6 +62,7 @@ export class ApplicationController {
     return this.applicationService.createNewApplication(application, req.user);
   }
 
+  // @TODO: Add admin guard
   @Delete(':applicationId')
   async deleteApplicationById(
     @Param('applicationId', ParseIntPipe) applicationId: number,
@@ -57,15 +74,13 @@ export class ApplicationController {
     );
   }
 
-  @Patch(':applicationId/:status')
+  @Patch()
   async updateApplicationStatus(
-    @Param('applicationId', ParseIntPipe) applicationId: number,
-    @Param('status') status: statusDto,
+    @Body() application: UpdateApplicationDto,
     @Request() req,
   ) {
     return this.applicationService.updateApplicationStatus(
-      applicationId,
-      status,
+      application,
       req.user,
     );
   }

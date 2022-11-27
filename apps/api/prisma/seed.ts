@@ -1,11 +1,11 @@
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
+import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 
 // Data
-import userData from "./userData";
-import projectData from "./projectsData";
-import applicationsData from "./applicationsData";
-import favouritesData from "./favouritesData";
+import userData from './userData';
+import projectData from './projectsData';
+import applicationsData from './applicationsData';
+import favouritesData from './favouritesData';
 
 // Prisma
 const prisma = new PrismaClient();
@@ -16,12 +16,12 @@ const run = async () => {
   // 1) Generating users
   await Promise.all(
     userData.map(async (user) => {
-      return prisma.user.upsert({
+      return await prisma.user.upsert({
         where: { email: user.email },
         update: {},
         create: {
           email: user.email,
-          password: bcrypt.hashSync("password", salt),
+          password: bcrypt.hashSync('password', salt),
           first_name: user.firstName,
           last_name: user.lastName,
           linkedIn_url: user.linkedInUrl,
@@ -29,16 +29,16 @@ const run = async () => {
           website_url: user.websiteUrl,
           notion_page_url: user.notionPageUrl,
           permission: user.Permission,
-          profile_picture_ref: "",
+          profile_picture_ref: '',
         },
       });
-    })
+    }),
   );
 
   // 2) Generating projects
   await Promise.all(
     projectData.map(async (project) => {
-      return prisma.project.create({
+      return await prisma.project.create({
         data: {
           User: {
             connect: { id: project.userId },
@@ -56,16 +56,16 @@ const run = async () => {
           initialInvestment: project.initialInvestment,
           initialInvestmentCost: project.initialInvestmentCost,
           toolsAndTechnologies: project.toolsAndTechnologies,
-          putOnline: true,
+          isOnline: true,
         },
       });
-    })
+    }),
   );
 
   // 3) Generating applications
   await Promise.all(
     applicationsData.map(async (application) => {
-      return prisma.application.create({
+      return await prisma.application.create({
         data: {
           Applicant: {
             connect: { id: application.applicantId },
@@ -76,7 +76,7 @@ const run = async () => {
           status: application.status,
         },
       });
-    })
+    }),
   );
 
   // 4) Generating favourites
@@ -87,7 +87,7 @@ const run = async () => {
       });
 
       if (!user) {
-        return prisma.favourite.create({
+        return await prisma.favourite.create({
           data: {
             user: {
               connect: { id: favourite.userId },
@@ -96,13 +96,13 @@ const run = async () => {
           },
         });
       }
-    })
+    }),
   );
 };
 
 run()
   .catch((err) => {
-    console.log("err:", err);
+    console.log('err:', err);
     process.exit(1);
   })
   .finally(async () => {
