@@ -11,6 +11,7 @@ import {
   UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';
+import { application } from 'express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ApplicationService } from './applications.service';
 import { ApplicationDto, statusDto } from './dtos/application.dto';
@@ -20,13 +21,15 @@ import { ApplicationDto, statusDto } from './dtos/application.dto';
 export class ApplicationController {
   constructor(private readonly applicationService: ApplicationService) {}
 
-  @Get('all:status?')
-  async getAllApplications(@Query('status') applicationStatus: statusDto) {
-    return this.applicationService.getAllApplications(applicationStatus);
+  @Get('all/:status?')
+  async getAllApplications(@Param('status') status: statusDto) {
+    return this.applicationService.getAllApplications(status);
   }
 
-  @Get('user-applications')
-  async getUserApplications() {}
+  @Get('user')
+  async getUserApplications(@Request() req) {
+    return this.applicationService.getUserApplications(req.user);
+  }
 
   @Get(':applicationId')
   async getApplicationById(
@@ -36,7 +39,12 @@ export class ApplicationController {
   }
 
   @Post()
-  async createNewApplication(@Body() body: ApplicationDto) {}
+  async createNewApplication(
+    @Body() application: ApplicationDto,
+    @Request() req,
+  ) {
+    return this.applicationService.createNewApplication(application, req.user);
+  }
 
   @Delete(':applicationId')
   async deleteApplicationById(
@@ -49,6 +57,16 @@ export class ApplicationController {
     );
   }
 
-  @Patch('update-application')
-  async updateApplicationStatus(@Body() applicationId: number) {}
+  @Patch(':applicationId/:status')
+  async updateApplicationStatus(
+    @Param('applicationId', ParseIntPipe) applicationId: number,
+    @Param('status') status: statusDto,
+    @Request() req,
+  ) {
+    return this.applicationService.updateApplicationStatus(
+      applicationId,
+      status,
+      req.user,
+    );
+  }
 }

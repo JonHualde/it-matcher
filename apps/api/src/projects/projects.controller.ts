@@ -20,7 +20,7 @@ export class ProjectController {
     return this.projectService.delete(body.projectId, req.user);
   }
 
-  @Get('user-projects')
+  @Get('user')
   async getUserProject(@Request() req) {
     return this.projectService.getUserProjects(req.user);
   }
