@@ -6,6 +6,20 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ProjectService {
   constructor(private prisma: PrismaService) {}
 
+  async getAllProjects() {
+    return await this.prisma.project.findMany({
+      take: 20,
+    });
+  }
+
+  async getUserProjects(user: JwtDecodeDto) {
+    return await this.prisma.project.findMany({
+      where: { userId: user.id },
+    });
+  }
+
+  async createProject() {}
+
   async delete(projectId: number, user: JwtDecodeDto) {
     const project = await this.prisma.project.findUniqueOrThrow({
       where: { id: projectId },
@@ -21,17 +35,5 @@ export class ProjectService {
     });
 
     return project;
-  }
-
-  async getUserProjects(user: JwtDecodeDto) {
-    return await this.prisma.project.findMany({
-      where: { userId: user.id },
-    });
-  }
-
-  async getAllProjects() {
-    return await this.prisma.project.findMany({
-      take: 20,
-    });
   }
 }

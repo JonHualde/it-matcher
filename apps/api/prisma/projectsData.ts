@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 
 const durationMetric = ['day', 'week', 'month'];
 const difficulty = ['beginner', 'intermediate', 'advanced', 'expert'];
-const type = ['commercial', 'non-profitable', 'training project'];
+const type = ['profitable', 'non-profitable', 'training project'];
 
 // config
 import config from './config';
