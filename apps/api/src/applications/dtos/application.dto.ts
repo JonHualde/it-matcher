@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNumber } from 'class-validator';
 
 export type statusDto = 'Pending' | 'Rejected' | 'Accepted';
 export const ApplicationsStatus: statusDto[] = [
