@@ -1,25 +1,28 @@
-const status = ["Accepted", "Pending", "Rejected"];
+const status = ['Accepted', 'Pending', 'Rejected'];
+
+// config
+import config from './config';
+
+const {
+  firstUserId,
+  lastUserId,
+  projectFirstId,
+  projectLastId,
+  loopIteration,
+} = config;
 
 const data = () => ({
   status: status[Math.floor(Math.random() * 2) + 1],
-  projectId: Math.floor(Math.random() * (28 - 22 + 1)) + 22,
-  applicantId: Math.floor(Math.random() * (29 - 24 + 1)) + 24,
+  projectId:
+    Math.floor(Math.random() * (projectLastId - projectFirstId + 1)) +
+    projectFirstId,
+  applicantId:
+    Math.floor(Math.random() * (lastUserId - firstUserId + 1)) + firstUserId,
 });
 
-const applicationsData: Array<any> = [
-  {
-    status: status[Math.floor(Math.random() * 2) + 1],
-    projectId: Math.floor(Math.random() * (28 - 22 + 1)) + 22,
-    applicantId: Math.floor(Math.random() * (29 - 24 + 1)) + 24,
-  },
-  {
-    status: status[Math.floor(Math.random() * 2) + 1],
-    projectId: Math.floor(Math.random() * (28 - 22 + 1)) + 22,
-    applicantId: Math.floor(Math.random() * (29 - 24 + 1)) + 24,
-  },
-];
+const applicationsData: Array<any> = [];
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < loopIteration; i++) {
   applicationsData.push(data());
 }
 

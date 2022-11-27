@@ -1,12 +1,23 @@
-import { Controller, Post, Res, UseGuards, Request } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Get,
+  Post,
+  Res,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { UserLoginDto } from './dtos/user-login.dto';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
 
+// Guards
+import { UserRegisterDto } from './dtos/user-register.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
@@ -15,5 +26,24 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ): Promise<any> {
     return this.authService.login(req.user, res);
+  }
+
+  @Post('register')
+  async register(
+    @Body() userData: UserRegisterDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    return this.authService.register(userData, res);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('protected')
+  protectedRoute(@Res({ passthrough: true }) res: Response) {
+    return 'hey';
+  }
+
+  @Get('logout')
+  async logout(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie('access_token');
   }
 }

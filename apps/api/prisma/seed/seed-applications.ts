@@ -1,17 +1,14 @@
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
+import { PrismaClient } from '@prisma/client';
 
 // Data
-import applicationsData from "../applicationsData";
+import applicationsData from '../applicationsData';
 
 // Prisma
 const prisma = new PrismaClient();
 
 const run = async () => {
-  const salt = bcrypt.genSaltSync();
-
- // 3) Generating applications
- await Promise.all(
+  // 3) Generating applications
+  await Promise.all(
     applicationsData.map(async (application) => {
       return prisma.application.create({
         data: {
@@ -24,13 +21,13 @@ const run = async () => {
           status: application.status,
         },
       });
-    })
+    }),
   );
 };
 
 run()
   .catch((err) => {
-    console.log("err:", err);
+    console.log('err:', err);
     process.exit(1);
   })
   .finally(async () => {
