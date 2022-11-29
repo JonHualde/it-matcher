@@ -37,10 +37,10 @@ export class ProjectController {
   )
   async createNewProject(
     @Body() project: ProjectDto,
-    @UploadedFile() file: Express.Multer.File,
+    // @UploadedFile() file: Express.Multer.File,
   ) {
     console.log('project', project);
-    console.log('projectPicture', file);
+    // console.log('projectPicture', file);
     return 'hey';
   }
 
