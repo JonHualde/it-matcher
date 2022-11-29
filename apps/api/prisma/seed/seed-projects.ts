@@ -15,7 +15,7 @@ const run = async () => {
           User: {
             connect: { id: project.userId },
           },
-          mainPicture: project.mainPicture,
+          projectPicture: project.projectPicture,
           projectName: project.projectName,
           startingOn: project.startingOn,
           estimatedTimeDuration: project.estimatedTimeDuration,

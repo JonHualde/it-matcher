@@ -8,32 +8,33 @@ datasource db {
     shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model User {
-    id                  Int           @id @default(autoincrement())
-    createdAt           DateTime      @default(now())
-    updatedAt           DateTime      @updatedAt
-    email               String        @unique
+model Users {
+    id                  Int            @id @default(autoincrement())
+    createdAt           DateTime       @default(now())
+    updatedAt           DateTime       @updatedAt
+    email               String         @unique
     password            String
     first_name          String
     last_name           String
+    permission          Int
     linkedIn_url        String?
     instagram_username  String?
     github_url          String?
     website_url         String?
     notion_page_url     String?
-    permission          Int
     profile_picture_ref String
-    projects            Project[]
-    favourites          Favourite[]
-    Application         Application[]
+    projects            Projects[]
+    favourites          Favourites[]
+    Application         Applications[]
 }
 
-model Project {
-    id                          Int           @id @default(autoincrement())
-    createdAt                   DateTime      @default(now())
-    updatedAt                   DateTime      @updatedAt
-    mainPicture                 String
-    projectName                 String        @unique
+model Projects {
+    id                          Int            @id @default(autoincrement())
+    createdAt                   DateTime       @default(now())
+    updatedAt                   DateTime       @updatedAt
+    userId                      Int
+    isOnline                    Boolean
+    projectName                 String         @unique
     startingOn                  DateTime
     estimatedTimeDuration       Int
     estimatedTimeDurationMetric String
@@ -45,29 +46,28 @@ model Project {
     initialInvestment           Boolean
     initialInvestmentCost       Int?
     toolsAndTechnologies        String[]
+    projectPicture              String
     attachments                 String[]
-    isOnline                    Boolean
-    applications                Application[]
-    User                        User?         @relation(fields: [userId], references: [id])
-    userId                      Int
+    applications                Applications[]
+    User                        Users?         @relation(fields: [userId], references: [id])
 }
 
-model Application {
-    id          Int      @id @default(autoincrement())
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
+model Applications {
+    id          Int       @id @default(autoincrement())
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
     status      String
-    Project     Project? @relation(fields: [projectId], references: [id])
+    Project     Projects? @relation(fields: [projectId], references: [id])
     projectId   Int?
-    Applicant   User?    @relation(fields: [applicantId], references: [id])
+    Applicant   Users?    @relation(fields: [applicantId], references: [id])
     applicantId Int?
 }
 
-model Favourite {
+model Favourites {
     id         Int      @id @default(autoincrement())
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
     projectIds Int[]
-    user       User     @relation(fields: [userId], references: [id])
+    user       Users    @relation(fields: [userId], references: [id])
     userId     Int
 }

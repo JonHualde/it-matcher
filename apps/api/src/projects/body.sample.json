@@ -1,0 +1,16 @@
+{           
+    "userId": 2,                     
+    "isOnline": true,                  
+    "projectName": "This is a test project name",               
+    "startingOn": "2023-10-27",                 
+    "estimatedTimeDuration": 2,      
+    "estimatedTimeDurationMetric": "week",
+    "description": "This is a test project",                
+    "difficulty": "beginner",                 
+    "type": "non-profitable",                       
+    "searchingFor": ["front-end developer", "back-end developer", "Designer"],               
+    "numberOfParticipant": 3,        
+    "initialInvestment": 10,          
+    "initialInvestmentCost": 100,      
+    "toolsAndTechnologies": ["Docker", "NestJS", "NextJS"]               
+}

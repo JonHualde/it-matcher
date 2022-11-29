@@ -4,8 +4,6 @@ import {
   IsBoolean,
   IsDate,
   IsEnum,
-  IsIn,
-  IsInt,
   IsNumber,
   IsOptional,
   IsString,
@@ -14,8 +12,8 @@ import {
   Min,
 } from 'class-validator';
 
-type durationMetrics = 'week' | 'month';
-const durationMetricsDto: durationMetrics[] = ['week', 'month'];
+type durationMetrics = 'day' | 'week' | 'month';
+const durationMetricsDto: durationMetrics[] = ['day', 'week', 'month'];
 
 type difficultyOptions = 'beginner' | 'intermediate' | 'advanced' | 'expert';
 const difficultyDto: difficultyOptions[] = [
@@ -31,9 +29,6 @@ export class ProjectIdDto {
 }
 
 export class ProjectDto {
-  @IsString()
-  readonly mainPicture: string;
-
   @IsString()
   @Length(2, 255)
   readonly projectName: string;
@@ -65,7 +60,7 @@ export class ProjectDto {
   @IsArray()
   @IsString({ each: true })
   @ArrayMinSize(1)
-  readonly searchingFor: string[];
+  readonly searchingFor: string;
 
   @IsNumber()
   @Min(1)
@@ -84,7 +79,7 @@ export class ProjectDto {
   @IsArray()
   @IsString({ each: true })
   @ArrayMinSize(1)
-  readonly toolsAndTechnologies: string[];
+  readonly toolsAndTechnologies: string;
 
   @IsString({ each: true })
   @IsArray()
@@ -94,7 +89,6 @@ export class ProjectDto {
   @IsBoolean()
   readonly isOnline: boolean;
 
-  @IsInt()
   @IsNumber()
   readonly userId: number;
 }
