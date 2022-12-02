@@ -13,7 +13,7 @@ export class AuthService {
     if (!email || !password) return null;
 
     const user = await this.prisma.user.findUniqueOrThrow({
-      where: { email: email },
+      where: { email },
     });
 
     if (!bcrypt.compareSync(password, user.password)) return null;
