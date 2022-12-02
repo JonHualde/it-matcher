@@ -8,11 +8,11 @@ datasource db {
     shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-model Users {
-    id                  Int            @id @default(autoincrement())
-    createdAt           DateTime       @default(now())
-    updatedAt           DateTime       @updatedAt
-    email               String         @unique
+model user {
+    id                  Int           @id @default(autoincrement())
+    createdAt           DateTime      @default(now())
+    updatedAt           DateTime      @updatedAt
+    email               String        @unique
     password            String
     first_name          String
     last_name           String
@@ -23,18 +23,18 @@ model Users {
     website_url         String?
     notion_page_url     String?
     profile_picture_ref String
-    projects            Projects[]
-    favourites          Favourites[]
-    Application         Applications[]
+    projects            project[]
+    favourites          favourite[]
+    Application         application[]
 }
 
-model Projects {
-    id                          Int            @id @default(autoincrement())
-    createdAt                   DateTime       @default(now())
-    updatedAt                   DateTime       @updatedAt
+model project {
+    id                          Int           @id @default(autoincrement())
+    createdAt                   DateTime      @default(now())
+    updatedAt                   DateTime      @updatedAt
     userId                      Int
     isOnline                    Boolean
-    projectName                 String         @unique
+    projectName                 String        @unique
     startingOn                  DateTime
     estimatedTimeDuration       Int
     estimatedTimeDurationMetric String
@@ -48,26 +48,26 @@ model Projects {
     toolsAndTechnologies        String[]
     projectPicture              String
     attachments                 String[]
-    applications                Applications[]
-    User                        Users?         @relation(fields: [userId], references: [id])
+    applications                application[]
+    User                        user?         @relation(fields: [userId], references: [id])
 }
 
-model Applications {
-    id          Int       @id @default(autoincrement())
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
+model application {
+    id          Int      @id @default(autoincrement())
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
     status      String
-    Project     Projects? @relation(fields: [projectId], references: [id])
+    Project     project? @relation(fields: [projectId], references: [id])
     projectId   Int?
-    Applicant   Users?    @relation(fields: [applicantId], references: [id])
+    Applicant   user?    @relation(fields: [applicantId], references: [id])
     applicantId Int?
 }
 
-model Favourites {
+model favourite {
     id         Int      @id @default(autoincrement())
     createdAt  DateTime @default(now())
     updatedAt  DateTime @updatedAt
     projectIds Int[]
-    user       Users    @relation(fields: [userId], references: [id])
+    user       user     @relation(fields: [userId], references: [id])
     userId     Int
 }
