@@ -7,9 +7,9 @@ import {
   Delete,
   Post,
   UseInterceptors,
-  UploadedFile,
+  UploadedFiles,
 } from '@nestjs/common';
-import { FilesInterceptor, FileInterceptor } from '@nestjs/platform-express';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ProjectIdDto, ProjectDto } from './dtos/project.dto';
 import { ProjectService } from './projects.service';
@@ -31,13 +31,18 @@ export class ProjectController {
 
   @Post()
   @UseInterceptors(
-    FileInterceptor('projectPicture', {
-      limits: { fileSize: 2000000 }, // 2Mb
-    }),
+    FileFieldsInterceptor([
+      { name: 'projectPicture', maxCount: 1 },
+      { name: 'attachments', maxCount: 3 },
+    ]),
   )
   async createNewProject(
     @Body() project: ProjectDto,
-    // @UploadedFile() file: Express.Multer.File,
+    @UploadedFiles()
+    files: {
+      projectPicture: Express.Multer.File[];
+      attachments: Express.Multer.File[];
+    },
   ) {
     console.log('project', project);
     // console.log('projectPicture', file);
