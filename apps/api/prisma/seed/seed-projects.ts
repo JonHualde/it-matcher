@@ -15,7 +15,7 @@ const run = async () => {
           User: {
             connect: { id: project.userId },
           },
-          mainPicture: project.mainPicture,
+          projectPicture: project.projectPicture,
           projectName: project.projectName,
           startingOn: project.startingOn,
           estimatedTimeDuration: project.estimatedTimeDuration,
@@ -23,12 +23,12 @@ const run = async () => {
           description: project.description,
           difficulty: project.difficulty,
           type: project.type,
-          searchingFor: project.searchingFor,
           numberOfParticipant: project.numberOfParticipant,
           initialInvestment: project.initialInvestment,
           initialInvestmentCost: project.initialInvestmentCost,
-          toolsAndTechnologies: project.toolsAndTechnologies,
           isOnline: true,
+          toolsAndTechnologies: project.toolsAndTechnologies,
+          jobTitle: project.jobTitle,
         },
       });
     }),

@@ -1,21 +1,23 @@
+import { Transform } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
   IsBoolean,
   IsDate,
   IsEnum,
-  IsIn,
-  IsInt,
   IsNumber,
   IsOptional,
   IsString,
+  IsInt,
   Length,
   Max,
   Min,
+  IsNotEmpty,
+  MinDate,
 } from 'class-validator';
 
-type durationMetrics = 'week' | 'month';
-const durationMetricsDto: durationMetrics[] = ['week', 'month'];
+type durationMetrics = 'day' | 'week' | 'month';
+const durationMetricsDto: durationMetrics[] = ['day', 'week', 'month'];
 
 type difficultyOptions = 'beginner' | 'intermediate' | 'advanced' | 'expert';
 const difficultyDto: difficultyOptions[] = [
@@ -31,17 +33,26 @@ export class ProjectIdDto {
 }
 
 export class ProjectDto {
-  @IsString()
-  readonly mainPicture: string;
+  @IsNumber()
+  @IsOptional()
+  readonly id: number;
+
+  @IsNumber()
+  @Transform(({ value }) => parseInt(value))
+  readonly userId: number;
 
   @IsString()
   @Length(2, 255)
   readonly projectName: string;
 
+  @IsNotEmpty()
+  @Transform(({ value }) => new Date(value))
   @IsDate()
+  @MinDate(new Date())
   readonly startingOn: Date;
 
   @IsNumber()
+  @Transform(({ value }) => parseInt(value))
   @Min(1)
   @Max(52)
   readonly estimatedTimeDuration: number;
@@ -62,39 +73,46 @@ export class ProjectDto {
   @Length(2, 255)
   readonly type: string;
 
-  @IsArray()
-  @IsString({ each: true })
-  @ArrayMinSize(1)
-  readonly searchingFor: string[];
-
   @IsNumber()
+  @Transform(({ value }) => parseInt(value))
   @Min(1)
   @Max(10)
   readonly numberOfParticipant: number;
 
-  @IsBoolean()
-  readonly initialInvestment: boolean;
-
   @IsNumber()
+  @Transform(({ value }) => parseInt(value))
   @IsOptional()
   @Min(1)
   @Max(1000000)
   readonly initialInvestmentCost: number;
 
-  @IsArray()
-  @IsString({ each: true })
-  @ArrayMinSize(1)
-  readonly toolsAndTechnologies: string[];
+  @IsBoolean()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
 
-  @IsString({ each: true })
-  @IsArray()
-  @ArrayMinSize(1)
-  readonly attachments: string[];
+    return value;
+  })
+  readonly initialInvestment: boolean;
 
   @IsBoolean()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+
+    return value;
+  })
   readonly isOnline: boolean;
 
-  @IsInt()
-  @IsNumber()
-  readonly userId: number;
+  @Transform(({ value }) => JSON.parse(value))
+  @IsArray()
+  @IsInt({ each: true })
+  @ArrayMinSize(1)
+  readonly jobTitle: number[];
+
+  @Transform(({ value }) => JSON.parse(value))
+  @IsArray()
+  @IsInt({ each: true })
+  @ArrayMinSize(1)
+  readonly toolsAndTechnologies: number[];
 }

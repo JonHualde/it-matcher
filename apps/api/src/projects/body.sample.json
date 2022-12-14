@@ -1,0 +1,16 @@
+{
+  "userId": 2,
+  "isOnline": true,
+  "projectName": "This is a test project name",
+  "startingOn": "2023-10-27",
+  "estimatedTimeDuration": 2,
+  "estimatedTimeDurationMetric": "week",
+  "description": "This is a test project",
+  "difficulty": "beginner",
+  "type": "non-profitable",
+  "searchingFor": [2, 5, 8],
+  "numberOfParticipant": 3,
+  "initialInvestment": true,
+  "initialInvestmentCost": 100,
+  "toolsAndTechnologies": [1, 4, 7]
+}

@@ -6,6 +6,8 @@ import userData from './userData';
 import projectData from './projectsData';
 import applicationsData from './applicationsData';
 import favouritesData from './favouritesData';
+import jobTitlesData from './jobTitlesData';
+import toolsAndTechnologiesData from './toolsAndtechnologiesData';
 
 // Prisma
 const prisma = new PrismaClient();
@@ -43,7 +45,7 @@ const run = async () => {
           User: {
             connect: { id: project.userId },
           },
-          mainPicture: project.mainPicture,
+          projectPicture: project.projectPicture,
           projectName: project.projectName,
           startingOn: project.startingOn,
           estimatedTimeDuration: project.estimatedTimeDuration,
@@ -51,12 +53,12 @@ const run = async () => {
           description: project.description,
           difficulty: project.difficulty,
           type: project.type,
-          searchingFor: project.searchingFor,
+          isOnline: project.isOnline,
           numberOfParticipant: project.numberOfParticipant,
           initialInvestment: project.initialInvestment,
           initialInvestmentCost: project.initialInvestmentCost,
           toolsAndTechnologies: project.toolsAndTechnologies,
-          isOnline: true,
+          jobTitle: project.jobTitle,
         },
       });
     }),
@@ -96,6 +98,27 @@ const run = async () => {
           },
         });
       }
+    }),
+  );
+
+  // 5) Creating jobs
+  await Promise.all(
+    jobTitlesData.map(async (job) => {
+      return await prisma.job_title.create({
+        data: {
+          name: job.name,
+        },
+      });
+    }),
+  );
+  // 6) Creating tools and technologies
+  await Promise.all(
+    toolsAndTechnologiesData.map(async (tools) => {
+      return await prisma.tools_and_technologie.create({
+        data: {
+          name: tools.name,
+        },
+      });
     }),
   );
 };

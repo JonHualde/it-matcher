@@ -12,7 +12,7 @@ const { firstUserId, lastUserId, loopIteration } = config;
 const data = () => ({
   userId:
     Math.floor(Math.random() * (lastUserId - firstUserId + 1)) + firstUserId,
-  mainPicture: faker.image.abstract(),
+  projectPicture: faker.image.abstract(),
   projectName: faker.name.findName(),
   startingOn: faker.date.between('2022-06-01', '2022-08-05'),
   estimatedTimeDuration: faker.datatype.number({ max: 10 }),
@@ -21,12 +21,14 @@ const data = () => ({
   description: faker.lorem.paragraph(10),
   difficulty: difficulty[Math.floor(Math.random() * 3) + 1],
   type: type[Math.floor(Math.random() * 2) + 1],
-  searchingFor: faker.helpers.arrayElements(),
   numberOfParticipant: Math.floor(Math.random() * 3 + 1),
   initialInvestment: faker.datatype.boolean(),
   initialInvestmentCost: Math.floor(Math.random() * 150 + 1),
-  toolsAndTechnologies: faker.helpers.arrayElements(),
   isOnline: true,
+  jobTitle: faker.helpers.arrayElements([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+  toolsAndTechnologies: faker.helpers.arrayElements([
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+  ]),
 });
 
 const projectData: Array<any> = [];
