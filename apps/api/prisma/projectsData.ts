@@ -9,20 +9,6 @@ import config from './config';
 
 const { firstUserId, lastUserId, loopIteration } = config;
 
-const jobs = [
-  'front-end developer',
-  'back-end developer',
-  'devOps',
-  'ML Engineer',
-  'data-scientist',
-  'Designer',
-  'Product Owner',
-  'Manager',
-  'Copywritter',
-  'Salesman',
-  'Digital marketing expert',
-];
-
 const data = () => ({
   userId:
     Math.floor(Math.random() * (lastUserId - firstUserId + 1)) + firstUserId,
@@ -35,12 +21,14 @@ const data = () => ({
   description: faker.lorem.paragraph(10),
   difficulty: difficulty[Math.floor(Math.random() * 3) + 1],
   type: type[Math.floor(Math.random() * 2) + 1],
-  searchingFor: faker.helpers.arrayElements(jobs),
   numberOfParticipant: Math.floor(Math.random() * 3 + 1),
   initialInvestment: faker.datatype.boolean(),
   initialInvestmentCost: Math.floor(Math.random() * 150 + 1),
-  toolsAndTechnologies: faker.helpers.arrayElements(),
   isOnline: true,
+  jobTitle: faker.helpers.arrayElements([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]),
+  toolsAndTechnologies: faker.helpers.arrayElements([
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+  ]),
 });
 
 const projectData: Array<any> = [];

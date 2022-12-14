@@ -8,6 +8,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsInt,
   Length,
   Max,
   Min,
@@ -32,6 +33,10 @@ export class ProjectIdDto {
 }
 
 export class ProjectDto {
+  @IsNumber()
+  @IsOptional()
+  readonly id: number;
+
   @IsNumber()
   @Transform(({ value }) => parseInt(value))
   readonly userId: number;
@@ -101,13 +106,13 @@ export class ProjectDto {
 
   @Transform(({ value }) => JSON.parse(value))
   @IsArray()
-  @IsString({ each: true })
+  @IsInt({ each: true })
   @ArrayMinSize(1)
-  readonly searchingFor: string[];
+  readonly jobTitle: number[];
 
   @Transform(({ value }) => JSON.parse(value))
   @IsArray()
-  @IsString({ each: true })
+  @IsInt({ each: true })
   @ArrayMinSize(1)
-  readonly toolsAndTechnologies: string[];
+  readonly toolsAndTechnologies: number[];
 }
