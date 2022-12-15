@@ -29,10 +29,10 @@ Application
 --> Delete an application: DONE
 
 Favourite
---> Get all favourites (+ add query param, + add pagination): Admin only
---> Get my favourites
---> Add a project as one of my favourites
---> Remove a project as one of my favourites
+--> Get all favourites (+ add query param, + add pagination): DONE
+--> Get my favourites: DONE
+--> Add a project as one of my favourites: DONE
+--> Remove a project as one of my favourites: DONE
 
 Tools and technologies
 --> Add a technology to the existing list (needs a thorough check of the existing list
