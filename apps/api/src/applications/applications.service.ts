@@ -72,7 +72,7 @@ export class ApplicationService {
       where: { id: applicationId },
     });
 
-    if (application.applicantId !== user.id) {
+    if (application.userId !== user.id) {
       throw new ForbiddenException(
         'You are not allowed to delete this application.',
       );

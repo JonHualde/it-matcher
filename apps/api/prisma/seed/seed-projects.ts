@@ -12,7 +12,7 @@ const run = async () => {
     projectData.map(async (project) => {
       return prisma.project.create({
         data: {
-          User: {
+          user: {
             connect: { id: project.userId },
           },
           projectPicture: project.projectPicture,

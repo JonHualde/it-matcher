@@ -14,7 +14,7 @@ import { FavouritesService } from './favourites.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('favourite')
-export class ApplicationController {
+export class FavouritesController {
   constructor(private readonly FavouritesService: FavouritesService) {}
   @Get('all/:status?')
   async getAllFavourites(@Request() req) {

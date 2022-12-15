@@ -12,10 +12,10 @@ const run = async () => {
     applicationsData.map(async (application) => {
       return prisma.application.create({
         data: {
-          Applicant: {
-            connect: { id: application.applicantId },
+          user: {
+            connect: { id: application.id },
           },
-          Project: {
+          project: {
             connect: { id: application.projectId },
           },
           status: application.status,
