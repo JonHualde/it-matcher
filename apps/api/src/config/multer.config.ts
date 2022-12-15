@@ -5,19 +5,24 @@ import { v4 as uuid } from 'uuid';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 // Multer configuration
-export const multerConfig = {
-  dest: process.env.UPLOAD_LOCATION,
+const multerConfig = {
+  destPictures: process.env.UPLOAD_LOCATION_PICTURES,
+  destAttachments: process.env.UPLOAD_LOCATION_ATTACHMENTS,
 };
 
 // Multer upload options
-export const multerOptions = {
+export const multerOptions = () => ({
   // Enable file size limits
   limits: {
     fileSize: +process.env.MAX_FILE_SIZE,
   },
   // Check the mimetypes to allow for upload
   fileFilter: (req: any, file: any, cb: any) => {
-    if (file.mimetype.match(/\/(jpg|jpeg|png|gif)$/)) {
+    if (
+      file.fieldname === 'projectPicture'
+        ? file.mimetype.match(/(jpg|jpeg|png|gif)$/)
+        : file.mimetype.match(/(pdf|doc|docs|csv|png|jpeg|jpg|xlsx)$/)
+    ) {
       // Allow storage of file
       cb(null, true);
     } else {
@@ -35,7 +40,12 @@ export const multerOptions = {
   storage: diskStorage({
     // Destination storage path details
     destination: (req: any, file: any, cb: any) => {
-      const uploadPath = multerConfig.dest;
+      const uploadPath =
+        multerConfig[
+          file.fieldname === 'projectPicture'
+            ? 'destPictures'
+            : 'destAttachments'
+        ];
       // Create folder if doesn't exist
       if (!existsSync(uploadPath)) {
         mkdirSync(uploadPath);
@@ -48,4 +58,4 @@ export const multerOptions = {
       cb(null, `${uuid()}${extname(file.originalname)}`);
     },
   }),
-};
+});

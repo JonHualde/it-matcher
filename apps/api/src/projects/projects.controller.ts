@@ -10,7 +10,10 @@ import {
   UseInterceptors,
   UploadedFiles,
 } from '@nestjs/common';
-import { FileFieldsInterceptor } from '@nestjs/platform-express';
+import {
+  FileFieldsInterceptor,
+  FileInterceptor,
+} from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ProjectIdDto, ProjectDto } from './dtos/project.dto';
 import { ProjectService } from './projects.service';
@@ -39,7 +42,7 @@ export class ProjectController {
         { name: 'projectPicture', maxCount: 1 },
         { name: 'attachments', maxCount: 5 },
       ],
-      multerOptions,
+      multerOptions(),
     ),
   )
   async createNewProject(
@@ -51,8 +54,8 @@ export class ProjectController {
     },
     @Request() req,
   ) {
-    console.log('project', project);
-    console.log('files', files);
+    // console.log('project', project);
+    // console.log('files', files);
 
     return 'hey';
 
@@ -76,13 +79,10 @@ export class ProjectController {
 
   @Patch()
   @UseInterceptors(
-    FileFieldsInterceptor(
-      [
-        { name: 'projectPicture', maxCount: 1 },
-        { name: 'attachments', maxCount: 5 },
-      ],
-      multerOptions,
-    ),
+    FileFieldsInterceptor([
+      { name: 'projectPicture', maxCount: 1 },
+      { name: 'attachments', maxCount: 5 },
+    ]),
   )
   async updateApplicationStatus(
     @Body() project: ProjectDto,
