@@ -16,7 +16,7 @@ const data = () => ({
   projectId:
     Math.floor(Math.random() * (projectLastId - projectFirstId + 1)) +
     projectFirstId,
-  applicantId:
+  userId:
     Math.floor(Math.random() * (lastUserId - firstUserId + 1)) + firstUserId,
 });
 

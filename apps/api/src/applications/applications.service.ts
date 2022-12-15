@@ -23,7 +23,7 @@ export class ApplicationService {
 
   async getUserApplications(user: JwtDecodeDto) {
     return await this.prisma.application.findMany({
-      where: { applicantId: user.id },
+      where: { userId: user.id },
     });
   }
 
@@ -51,7 +51,7 @@ export class ApplicationService {
 
   async createNewApplication(application: ApplicationDto, user: JwtDecodeDto) {
     const existingApplication = await this.prisma.application.findMany({
-      where: { projectId: application.projectId, applicantId: user.id },
+      where: { projectId: application.projectId, userId: user.id },
     });
 
     if (existingApplication.length) {
@@ -61,7 +61,7 @@ export class ApplicationService {
     return await this.prisma.application.create({
       data: {
         status: 'Pending',
-        applicantId: application.applicantId,
+        userId: application.userId,
         projectId: application.projectId,
       },
     });
@@ -90,7 +90,7 @@ export class ApplicationService {
     // Check if the application exists, and get it
     const applicationToUpdate = await this.prisma.application.findUniqueOrThrow(
       {
-        where: { id: application.applicationId },
+        where: { id: application.id },
       },
     );
 
@@ -108,7 +108,7 @@ export class ApplicationService {
 
     // if so, update the application status
     return await this.prisma.application.update({
-      where: { id: application.applicationId },
+      where: { id: application.id },
       data: {
         status: application.status,
       },

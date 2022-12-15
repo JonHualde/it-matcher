@@ -25,14 +25,13 @@ model user {
     profile_picture_ref String
     projects            project[]
     favourites          favourite[]
-    Application         application[]
+    applications        application[]
 }
 
 model project {
     id                          Int           @id @default(autoincrement())
     createdAt                   DateTime      @default(now())
     updatedAt                   DateTime      @updatedAt
-    userId                      Int
     isOnline                    Boolean
     projectName                 String        @unique
     startingOn                  DateTime
@@ -49,27 +48,30 @@ model project {
     projectPicture              String
     attachments                 String[]
     applications                application[]
-    User                        user?         @relation(fields: [userId], references: [id])
+    user                        user          @relation(fields: [userId], references: [id])
+    userId                      Int
+    favourites                  favourite[]
 }
 
 model application {
-    id          Int      @id @default(autoincrement())
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    status      String
-    Project     project? @relation(fields: [projectId], references: [id])
-    projectId   Int?
-    Applicant   user?    @relation(fields: [applicantId], references: [id])
-    applicantId Int?
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    status    String
+    project   project  @relation(fields: [projectId], references: [id])
+    projectId Int
+    user      user     @relation(fields: [userId], references: [id])
+    userId    Int
 }
 
 model favourite {
-    id         Int      @id @default(autoincrement())
-    createdAt  DateTime @default(now())
-    updatedAt  DateTime @updatedAt
-    projectIds Int[]
-    user       user     @relation(fields: [userId], references: [id])
-    userId     Int
+    id        Int      @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    project   project  @relation(fields: [projectId], references: [id])
+    projectId Int
+    user      user     @relation(fields: [userId], references: [id])
+    userId    Int
 }
 
 model tools_and_technologie {

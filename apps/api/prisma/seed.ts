@@ -42,7 +42,7 @@ const run = async () => {
     projectData.map(async (project) => {
       return await prisma.project.create({
         data: {
-          User: {
+          user: {
             connect: { id: project.userId },
           },
           projectPicture: project.projectPicture,
@@ -69,10 +69,10 @@ const run = async () => {
     applicationsData.map(async (application) => {
       return await prisma.application.create({
         data: {
-          Applicant: {
-            connect: { id: application.applicantId },
+          user: {
+            connect: { id: application.userId },
           },
-          Project: {
+          project: {
             connect: { id: application.projectId },
           },
           status: application.status,
@@ -94,7 +94,9 @@ const run = async () => {
             user: {
               connect: { id: favourite.userId },
             },
-            projectIds: favourite.projectIds,
+            project: {
+              connect: { id: favourite.projectId },
+            },
           },
         });
       }

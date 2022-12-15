@@ -15,7 +15,7 @@ export class ApplicationDto {
   readonly projectId: number;
 
   @IsNumber()
-  readonly applicantId: number;
+  readonly userId: number;
 }
 
 export class UpdateApplicationDto {
@@ -23,7 +23,7 @@ export class UpdateApplicationDto {
   readonly status: statusOptions;
 
   @IsNumber()
-  readonly applicationId: number;
+  readonly id: number;
 }
 
 export class StatusDto {
