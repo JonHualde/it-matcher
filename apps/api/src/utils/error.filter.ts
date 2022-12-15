@@ -25,47 +25,40 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (exception instanceof PrismaClientKnownRequestError) {
       let e = exception as PrismaClientKnownRequestError;
       if (e.code === 'P2002') {
-        response.status(HttpStatus.CONFLICT).json({
+        return response.status(HttpStatus.CONFLICT).json({
           statusCode: HttpStatus.CONFLICT,
           message: `Field(s): ${(e?.meta as any)?.target.join(
             ',',
           )} already exists`,
         });
-        return;
       } else if (e.code === 'P2003') {
-        response.status(HttpStatus.BAD_REQUEST).json({
+        return response.status(HttpStatus.BAD_REQUEST).json({
           statusCode: HttpStatus.BAD_REQUEST,
           message: `Specified fields values doesn't exists`,
         });
-        return;
       } else if (e.code === 'P2025') {
-        response.status(HttpStatus.NOT_FOUND).json({
+        return response.status(HttpStatus.NOT_FOUND).json({
           statusCode: HttpStatus.NOT_FOUND,
           message: 'Specified resource could not be found',
         });
-        return;
       } else {
         console.error(exception);
-        response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
           message: 'Your request could not be processed',
         });
-        return;
       }
     } else if (exception instanceof PrismaClientValidationError) {
       console.error(exception);
-
-      response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+      return response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
         statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
         message: 'Your request could not be processed',
       });
-      return;
     } else if (exception?.name === 'NotFoundError') {
-      response.status(HttpStatus.NOT_FOUND).json({
+      return response.status(HttpStatus.NOT_FOUND).json({
         statusCode: HttpStatus.NOT_FOUND,
         message: 'Specified resource could not be found',
       });
-      return;
     }
 
     const status = exception.getStatus();
