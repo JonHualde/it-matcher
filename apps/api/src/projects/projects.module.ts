@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
 
 // External modules
 import { PrismaModule } from 'src/prisma/prisma.module';

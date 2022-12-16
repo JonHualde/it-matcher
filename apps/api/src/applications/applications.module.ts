@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { JwtStrategy } from 'src/auth/jwt.strategy';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { ApplicationController } from './applications.controller';
 import { ApplicationService } from './applications.service';

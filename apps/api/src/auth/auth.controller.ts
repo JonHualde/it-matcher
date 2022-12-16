@@ -13,7 +13,6 @@ import { Response } from 'express';
 
 // Guards
 import { UserRegisterDto } from './dtos/user-register.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -36,14 +35,18 @@ export class AuthController {
     return this.authService.register(userData, res);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Get('protected')
-  protectedRoute(@Res({ passthrough: true }) res: Response) {
-    return 'hey';
-  }
-
   @Get('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('access_token');
+  }
+
+  @Get('refresh-token')
+  async refreshToken(
+    @Request() req,
+    refreshToken: string,
+  ): Promise<{ accessToken: string }> {
+    console.log('req,', req.cookies, req.user);
+    return { accessToken: 'hey' };
+    return this.authService.refreshToken(refreshToken);
   }
 }

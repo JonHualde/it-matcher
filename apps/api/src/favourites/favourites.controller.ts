@@ -10,8 +10,6 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { FavouritesService } from './favourites.service';
-// dto
-import { AddFavouriteDto } from './dto/add-favourite.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('favourite')

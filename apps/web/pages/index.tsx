@@ -8,6 +8,7 @@ import LetsDoThisSection from "shared/components/lets-do-this-section/lets-do-th
 const Home: NextPage = () => {
   return (
     <PublicPageLayout>
+      <img src="../../public/uploads/pictures/be9b3bf2-776c-498a-b1b5-cb97323e2b56.png" alt="hero" />
       <Introduction />
       <AdvantagesSection />
       <KickStartSection />

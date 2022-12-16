@@ -19,21 +19,51 @@ export class ProjectService {
     });
   }
 
-  async uploadMedia(file: any, path: 'project' | 'user', userId: number) {
-    // @TODO
-    // Upload the file into the public folder
-
-    // Retrieve the file reference (name with extension)
-    return 'file name';
-  }
-
-  async deleteMedia(file: any, path: 'project' | 'user', userId: number) {
+  async deleteMedia(file: any, type: 'picture' | 'attachment', userId: number) {
     // @TODO
     // Check if the file exists
     // Delete the file or throw an error
+    // @FROM CHATGPT --> Local file deletion
+    //     const fs = require('fs');
+    // function deleteImage(filePath) {
+    //   // Delete the local file
+    //   fs.unlink(filePath, (error) => {
+    //     if (error) {
+    //       console.error(`Error deleting image: ${error}`);
+    //     } else {
+    //       console.log('Image successfully deleted.');
+    //     }
+    //   });
+    // }
+    // @FROM CHATGPT --> Remove server image deletion
+    //     const fs = require('fs');
+    // const request = require('request');
+    // function deleteImage(imageUrl) {
+    //   // Retrieve the image from the server using the URL
+    //   request.get(imageUrl, (error, response, body) => {
+    //     if (error) {
+    //       console.error(`Error retrieving image: ${error}`);
+    //       return;
+    //     }
+    //     // Save the image to a local file
+    //     const filePath = './image.jpg';
+    //     fs.writeFileSync(filePath, body);
+    //     // Delete the local file
+    //     fs.unlink(filePath, (error) => {
+    //       if (error) {
+    //         console.error(`Error deleting image: ${error}`);
+    //       } else {
+    //         console.log('Image successfully deleted.');
+    //       }
+    //     });
+    //   });
+    // }
   }
 
   async createNewProject(files: any, project: ProjectDto, user: JwtDecodeDto) {
+    console.log('project', project);
+    console.log('files', files);
+
     const numberOfProject = await this.prisma.project.findMany({
       where: { userId: project.userId },
     });
@@ -44,29 +74,19 @@ export class ProjectService {
       );
     }
 
-    // Project picture upload
-    const projectPicture: string = await this.uploadMedia(
-      files.projectPicture,
-      'project',
-      project.userId,
-    );
-
     const attachments: string[] = [];
 
-    // Project attachments upload
-    files.attachments.forEach(async (attachment: any) => {
-      attachments.push(
-        await this.uploadMedia(attachment, 'project', project.userId),
-      );
-    });
-
-    // Create project
+    if (files.attachments) {
+      files.attachments.forEach((file: any) => {
+        attachments.push(file.updatedFilename);
+      });
+    }
     return await this.prisma.project.create({
       data: {
         userId: project.userId,
         projectName: project.projectName,
-        startingOn: project.startingOn,
-        estimatedTimeDuration: project.estimatedTimeDuration,
+        startingOn: new Date(project.startingOn),
+        estimatedTimeDuration: +project.estimatedTimeDuration,
         estimatedTimeDurationMetric: project.estimatedTimeDurationMetric,
         description: project.description,
         difficulty: project.difficulty,
@@ -77,7 +97,7 @@ export class ProjectService {
         isOnline: project.isOnline,
         toolsAndTechnologies: project.toolsAndTechnologies,
         jobTitle: project.jobTitle,
-        projectPicture,
+        projectPicture: files.projectPicture[0].filename,
         attachments,
       },
     });

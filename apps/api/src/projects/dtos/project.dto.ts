@@ -1,4 +1,4 @@
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   ArrayMinSize,
   IsArray,
@@ -115,4 +115,8 @@ export class ProjectDto {
   @IsInt({ each: true })
   @ArrayMinSize(1)
   readonly toolsAndTechnologies: number[];
+
+  @IsOptional()
+  @IsNotEmpty()
+  readonly projectPicture: string;
 }

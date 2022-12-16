@@ -5,8 +5,6 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtDecodeDto } from 'src/auth/dtos/jwt-decoded.dto';
-// dto
-import { AddFavouriteDto } from './dto/add-favourite.dto';
 @Injectable()
 export class FavouritesService {
   constructor(private prisma: PrismaService) {}

@@ -73,4 +73,18 @@ export class AuthService {
 
     return user;
   }
+
+  async refreshToken(refreshToken: string) {
+    try {
+      // Verify the refresh token
+      const payload = this.jwtService.verify(refreshToken);
+
+      // If the token is valid, generate a new access token
+      const accessToken = this.jwtService.sign(payload);
+      return { accessToken };
+    } catch (error) {
+      // If the token is invalid or has expired, return an error response
+      // throw new HttpException('Invalid refresh token', HttpStatus.UNAUTHORIZED);
+    }
+  }
 }
