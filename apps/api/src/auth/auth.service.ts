@@ -1,14 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserRegisterDto } from './dtos/user-register.dto';
+import { UserService } from 'src/user/user.service';
 
+export enum TokenType {
+  ACCESS,
+  REFRESH,
+}
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private jwtService: JwtService) {}
+  constructor(
+    private prisma: PrismaService,
+    private jwtService: JwtService,
+    private userService: UserService,
+  ) {}
 
+  // Used in the local strategy - LocalAuthGuard in controllers/auth/auth.controller.ts
   async validateUser(email: string, password: string) {
     if (!email || !password) return null;
 
@@ -29,17 +39,8 @@ export class AuthService {
     return passwordHash;
   }
 
-  async login(user: any, res: Response) {
-    res.cookie(
-      'access_token',
-      this.jwtService.sign({
-        email: user.email,
-        id: user.id,
-        firstName: user.first_name,
-        permission: user.permission,
-      }),
-    );
-
+  async login(user: UserRegisterDto, res: Response) {
+    this.generateTokens(res, user);
     return user;
   }
 
@@ -61,9 +62,16 @@ export class AuthService {
       },
     });
 
+    this.generateTokens(res, user);
+
+    return user;
+  }
+
+  async generateTokens(res: Response, user: any) {
     res.cookie(
       'access_token',
       this.jwtService.sign({
+        tokenType: TokenType.ACCESS,
         email: user.email,
         id: user.id,
         firstName: user.first_name,
@@ -71,20 +79,42 @@ export class AuthService {
       }),
     );
 
-    return user;
+    res.cookie(
+      'refresh_token',
+      this.jwtService.sign(
+        {
+          tokenType: TokenType.REFRESH,
+          id: user.id,
+          firstName: user.first_name,
+          permission: user.permission,
+        },
+        {
+          expiresIn: '2w',
+        },
+      ),
+    );
   }
 
-  async refreshToken(refreshToken: string) {
-    try {
-      // Verify the refresh token
-      const payload = this.jwtService.verify(refreshToken);
+  async refreshToken(token: string, res: Response) {
+    const tokenData = this.jwtService.verify(token);
 
-      // If the token is valid, generate a new access token
-      const accessToken = this.jwtService.sign(payload);
-      return { accessToken };
-    } catch (error) {
-      // If the token is invalid or has expired, return an error response
-      // throw new HttpException('Invalid refresh token', HttpStatus.UNAUTHORIZED);
-    }
+    if (tokenData.tokenType !== TokenType.REFRESH)
+      throw new BadRequestException('Invalid refresh token');
+
+    const user = await this.userService.findById(tokenData.id);
+
+    res.clearCookie('access_token');
+    res.cookie(
+      'access_token',
+      this.jwtService.sign({
+        tokenType: TokenType.ACCESS,
+        email: user.email,
+        id: user.id,
+        firstName: user.first_name,
+        permission: user.permission,
+      }),
+    );
+
+    return res.status(200).json({ message: 'Token refreshed successfully' });
   }
 }

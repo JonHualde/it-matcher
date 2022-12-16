@@ -38,15 +38,11 @@ export class AuthController {
   @Get('logout')
   async logout(@Res({ passthrough: true }) res: Response) {
     res.clearCookie('access_token');
+    res.clearCookie('refresh_token');
   }
 
-  @Get('refresh-token')
-  async refreshToken(
-    @Request() req,
-    refreshToken: string,
-  ): Promise<{ accessToken: string }> {
-    console.log('req,', req.cookies, req.user);
-    return { accessToken: 'hey' };
-    return this.authService.refreshToken(refreshToken);
+  @Post('refresh')
+  async refreshToken(@Request() req, @Res() res: Response) {
+    return this.authService.refreshToken(req.cookies.refresh_token, res);
   }
 }

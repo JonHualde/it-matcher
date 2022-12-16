@@ -5,9 +5,16 @@ import { ApplicationModule } from './applications/applications.module';
 import { AuthModule } from './auth/auth.module';
 import { ProjectModule } from './projects/projects.module';
 import { FavouritesModule } from './favourites/favourites.module';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [AuthModule, ProjectModule, ApplicationModule, FavouritesModule],
+  imports: [
+    AuthModule,
+    ProjectModule,
+    ApplicationModule,
+    FavouritesModule,
+    UserModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
