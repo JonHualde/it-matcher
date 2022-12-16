@@ -2,7 +2,7 @@ Auth
 --> Login: DONE
 --> Register: DONE
 --> Logout: DONE
---> Refresh token (protected): ONGOING
+--> Refresh: DONE
 
 User
 --> Reset password

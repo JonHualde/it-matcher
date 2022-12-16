@@ -78,6 +78,11 @@ export class AllExceptionsFilter implements ExceptionFilter {
       });
     }
 
-    response.status(exception.getStatus()).json(exception.getResponse());
+    const status = exception?.getStatus ? exception.getStatus() : 400;
+    const errorMessage = exception?.getResponse
+      ? exception.getResponse()
+      : { message: 'Your request could not be processed' };
+
+    response.status(status).json(errorMessage);
   }
 }
