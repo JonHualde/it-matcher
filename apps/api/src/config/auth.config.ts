@@ -2,9 +2,9 @@ import { registerAs } from '@nestjs/config';
 
 export default registerAs('auth', () => ({
   applicationName: 'it-matcher',
+  accessExpireIn: '10m',
   refreshExpiresIn: '2w',
-  accessExpireIn: '30m',
-  secret: process.env.JWT_SECRET,
+  secret: process.env.JWT_KEY,
   httpOnly: true,
   path: '/',
   sameSite: 'lax',

@@ -1,18 +1,24 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Inject } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserRegisterDto } from './dtos/user-register.dto';
 import { UserService } from 'src/user/user.service';
+import { ConfigType } from '@nestjs/config';
+// Custom config
+import authConfig from '@config/auth.config';
 
 export enum TokenType {
   ACCESS,
   REFRESH,
 }
+
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(authConfig.KEY)
+    private config: ConfigType<typeof authConfig>,
     private prisma: PrismaService,
     private jwtService: JwtService,
     private userService: UserService,
@@ -40,7 +46,9 @@ export class AuthService {
   }
 
   async login(user: UserRegisterDto, res: Response) {
-    this.generateTokens(res, user);
+    this.generateAccessToken(res, user);
+    this.generateRefreshToken(res, user);
+
     return user;
   }
 
@@ -62,23 +70,31 @@ export class AuthService {
       },
     });
 
-    this.generateTokens(res, user);
+    this.generateAccessToken(res, user);
+    this.generateRefreshToken(res, user);
 
     return user;
   }
 
-  async generateTokens(res: Response, user: any) {
+  async generateAccessToken(res: Response, user: any) {
     res.cookie(
       'access_token',
-      this.jwtService.sign({
-        tokenType: TokenType.ACCESS,
-        email: user.email,
-        id: user.id,
-        firstName: user.first_name,
-        permission: user.permission,
-      }),
+      this.jwtService.sign(
+        {
+          tokenType: TokenType.ACCESS,
+          email: user.email,
+          id: user.id,
+          firstName: user.first_name,
+          permission: user.permission,
+        },
+        {
+          expiresIn: this.config.accessExpireIn,
+        },
+      ),
     );
+  }
 
+  async generateRefreshToken(res: Response, user: any) {
     res.cookie(
       'refresh_token',
       this.jwtService.sign(
@@ -89,7 +105,7 @@ export class AuthService {
           permission: user.permission,
         },
         {
-          expiresIn: '2w',
+          expiresIn: this.config.refreshExpiresIn,
         },
       ),
     );
@@ -103,17 +119,7 @@ export class AuthService {
 
     const user = await this.userService.findById(tokenData.id);
 
-    res.clearCookie('access_token');
-    res.cookie(
-      'access_token',
-      this.jwtService.sign({
-        tokenType: TokenType.ACCESS,
-        email: user.email,
-        id: user.id,
-        firstName: user.first_name,
-        permission: user.permission,
-      }),
-    );
+    this.generateAccessToken(res, user);
 
     return res.status(200).json({ message: 'Token refreshed successfully' });
   }
