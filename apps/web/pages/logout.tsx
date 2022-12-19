@@ -1,16 +1,22 @@
-import PrivatePageLayout from "shared/src/components/layouts/private-page-layout";
+import { useRouter } from "next/router";
+// Components
+import PublicPageLayout from "@shared-components/layouts/public-page-layout";
+// Store
+import { useStoreActions, useStoreState } from "easy-peasy";
+import { useEffect } from "react";
 
 const Profile = (props: any) => {
-  return <PrivatePageLayout pathname={props.pathname} title={"Logout"}></PrivatePageLayout>;
-};
+  const router = useRouter();
+  const resetAuthAndUserData = useStoreActions((actions: any) => actions.resetAuthAndUserData);
+  const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
-export async function getServerSideProps(ctx: any) {
-  return {
-    redirect: {
-      permanent: false,
-      destination: "/login",
-    },
-  };
-}
+  useEffect(() => {
+    updateAuthStatus(false);
+    resetAuthAndUserData();
+    router.push("/");
+  }, []);
+
+  return <PublicPageLayout>Logout</PublicPageLayout>;
+};
 
 export default Profile;

@@ -4,8 +4,15 @@ import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserRegisterDto } from './dtos/user-register.dto';
+import {
+  AccessToken,
+  RefreshToken,
+  JwtDecodeDto,
+} from './dtos/jwt-decoded.dto';
+import { ResetPassword } from './dtos/password.dto';
 import { UserService } from 'src/user/user.service';
 import { ConfigType } from '@nestjs/config';
+
 // Custom config
 import authConfig from '@config/auth.config';
 
@@ -111,8 +118,10 @@ export class AuthService {
     );
   }
 
-  async refreshToken(token: string, res: Response) {
-    const tokenData = this.jwtService.verify(token);
+  async refreshToken(token: RefreshToken, res: Response) {
+    const tokenData: JwtDecodeDto = this.jwtService.verify(
+      token as unknown as string,
+    );
 
     if (tokenData.tokenType !== TokenType.REFRESH)
       throw new BadRequestException('Invalid refresh token');
@@ -122,5 +131,41 @@ export class AuthService {
     this.generateAccessToken(res, user);
 
     return res.status(200).json({ message: 'Token refreshed successfully' });
+  }
+
+  async verifyToken(accessToken: AccessToken, res: Response) {
+    const tokenData: JwtDecodeDto = this.jwtService.verify(
+      accessToken as unknown as string,
+    );
+
+    if (tokenData.tokenType !== TokenType.ACCESS)
+      throw new BadRequestException('Invalid access token');
+
+    return res.status(200).json({ message: 'Token verified successfully' });
+  }
+
+  async comparePasswords(passwordInDB: string, passwordTypedByUser: string) {
+    return bcrypt.compareSync(passwordTypedByUser, passwordInDB);
+  }
+
+  async resetPassword(body: ResetPassword, user: JwtDecodeDto) {
+    const userData = await this.prisma.user.findUniqueOrThrow({
+      where: { id: user.id },
+    });
+
+    const arePasswordsMatching = this.comparePasswords(
+      userData.password,
+      body.currentPassword,
+    );
+
+    if (!arePasswordsMatching)
+      throw new BadRequestException('The current password is incorrect.');
+
+    const passwordHash = this.preparePassword(body.currentPassword);
+
+    return await this.prisma.user.update({
+      where: { id: user.id },
+      data: { password: passwordHash },
+    });
   }
 }

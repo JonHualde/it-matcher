@@ -1,16 +1,10 @@
-import {
-  IsEmail,
-  IsNumber,
-  IsString,
-  IsInt,
-  Min,
-  Max,
-  IsBoolean,
-} from 'class-validator';
+import { IsEmail, IsNumber, IsString, IsInt, Min, Max } from 'class-validator';
 
 export class JwtDecodeDto {
-  @IsBoolean()
-  readonly isValid: boolean;
+  @IsNumber()
+  @Min(0)
+  @Max(1)
+  readonly tokenType: number;
 
   @IsString()
   @IsEmail()
@@ -32,4 +26,21 @@ export class JwtDecodeDto {
 
   @IsNumber()
   readonly exp: number;
+}
+
+export class TokenDto {
+  @IsString()
+  readonly access_token: string;
+
+  @IsString()
+  readonly refresh_token: string;
+}
+
+export class AccessToken {
+  @IsString()
+  readonly access_token: string;
+}
+export class RefreshToken {
+  @IsString()
+  readonly refresh_token: string;
 }

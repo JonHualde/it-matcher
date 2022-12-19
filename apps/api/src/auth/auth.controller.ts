@@ -6,13 +6,16 @@ import {
   Res,
   UseGuards,
   Request,
+  Patch,
 } from '@nestjs/common';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
 import { Response } from 'express';
-
-// Guards
+// Dtos
 import { UserRegisterDto } from './dtos/user-register.dto';
+import { AccessToken } from './dtos/jwt-decoded.dto';
+import { ResetPassword } from './dtos/password.dto';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -44,5 +47,16 @@ export class AuthController {
   @Post('refresh')
   async refreshToken(@Request() req, @Res() res: Response) {
     return this.authService.refreshToken(req.cookies.refresh_token, res);
+  }
+
+  @Get('verify-token')
+  async verifyToken(@Request() req, @Res() res: Response) {
+    return this.authService.verifyToken(req.cookies.access_token, res);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch('reset-password')
+  async resetPassword(@Body() body: ResetPassword, @Request() req) {
+    return this.authService.resetPassword(body, req.user);
   }
 }

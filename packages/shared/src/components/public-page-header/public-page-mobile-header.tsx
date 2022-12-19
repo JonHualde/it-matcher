@@ -2,59 +2,53 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import Button from "../button/button";
 import Link from "next/link";
-
 // Store
 import { useStoreActions, useStoreState } from "easy-peasy";
-
 // Icon
 import { FiMenu, FiX } from "react-icons/fi";
+// Utils
+import { fetchJSON } from "@shared-utils";
 
 const PublicPageMobileHeader = () => {
-  const router = useRouter();
-  let isLoggedIn = useStoreState((state: any) => state.loggedIn);
   const [showMenu, setShowMenu] = useState(false);
+  const router = useRouter();
 
-  const updateAuthStatus = useStoreActions(
-    (actions: any) => actions.updateUserAuthStatus
-  );
+  let isLoggedIn: boolean = useStoreState((state: any) => state.loggedIn);
+  const resetAuthAndUserData = useStoreActions((actions: any) => actions.resetAuthAndUserData);
+  const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
+  console.log("isLoggedIn", isLoggedIn);
   const logout = () => {
-    fetch("/api/auth/logout")
-      .then((res) => res.json())
-      .then((result) => {
+    fetchJSON("auth/logout", "GET")
+      .then((res: any): any => {
         updateAuthStatus(false);
-        console.log(result);
+        resetAuthAndUserData();
+        router.push("/");
       })
-      .catch((err) => alert("Big issue"));
+      .catch((err) => alert("We could not log you out, please try again later."));
   };
 
   return (
-    <div className="bg-pastel-light flex justify-between items-center py-8 px-8 relative lg:hidden">
+    <div className="relative flex items-center justify-between bg-pastel-light py-8 px-8 lg:hidden">
       <div className="flex w-full justify-end">
-        <FiMenu
-          onClick={() => setShowMenu(true)}
-          className="w-10 h-10 text-pastel-dark cursor-pointer"
-        />
+        <FiMenu onClick={() => setShowMenu(true)} className="h-10 w-10 cursor-pointer text-pastel-dark" />
       </div>
       <div
         className={
           showMenu
-            ? "fixed top-0 bottom-0 left-0 right-0 h-screen w-screen z-50 bg-white flex flex-col justify-center items-center px-8"
+            ? "fixed top-0 bottom-0 left-0 right-0 z-50 flex h-screen w-screen flex-col items-center justify-center bg-white px-8"
             : "hidden"
         }
       >
-        <FiX
-          className="w-10 h-10 text-pastel-dark absolute top-8 right-10 cursor-pointer"
-          onClick={() => setShowMenu(false)}
-        />
+        <FiX className="absolute top-8 right-10 h-10 w-10 cursor-pointer text-pastel-dark" onClick={() => setShowMenu(false)} />
         <h1
-          className="font-oswald text-blue-dimmed font-semibold text-blue-500 cursor-pointer  mb-20 text-center"
+          className="text-blue-500 mb-20 cursor-pointer text-center font-oswald  font-semibold text-blue-dimmed"
           onClick={() => router.push("/")}
         >
           EXPERT MATCHER
         </h1>
-        <div className="flex flex-col items-center mb-20">
-          {!isLoggedIn ? (
+        <div className="mb-20 flex flex-col items-center">
+          {!isLoggedIn && (
             <>
               <Button
                 text="Log in"
@@ -75,32 +69,30 @@ const PublicPageMobileHeader = () => {
                 action={() => router.push("/signup")}
               />
             </>
-          ) : (
-            <Button
-              text="Logout"
-              color="bg-blue-ocean"
-              hover="bg-blue-800"
-              textColor="text-white"
-              margin="text-2xl"
-              borderColor="border-blue-ocean"
-              action={() => logout()}
-            />
           )}
+
+          <Button
+            text="Logout"
+            color="bg-blue-ocean"
+            hover="bg-blue-800"
+            textColor="text-white"
+            margin="text-2xl"
+            borderColor="border-blue-ocean"
+            action={() => logout()}
+          />
         </div>
         <div className="flex items-center">
-          <ul className="flex flex-col space-y-12 items-center">
+          <ul className="flex flex-col items-center space-y-12">
             <Link href="/">
-              <li className="text-blue-dimmed font-medium text-3xl cursor-pointer hover:scale-105 transform transition-all mx-4">
-                Home
-              </li>
+              <li className="mx-4 transform cursor-pointer text-3xl font-medium text-blue-dimmed transition-all hover:scale-105">Home</li>
             </Link>
             <Link href="/contact">
-              <li className="text-blue-dimmed font-medium text-3xl cursor-pointer hover:scale-105 transform transition-all mx-4">
+              <li className="mx-4 transform cursor-pointer text-3xl font-medium text-blue-dimmed transition-all hover:scale-105">
                 Contact
               </li>
             </Link>
             <Link href="/search">
-              <li className="text-blue-dimmed font-medium text-3xl cursor-pointer hover:scale-105 transform transition-all mx-4">
+              <li className="mx-4 transform cursor-pointer text-3xl font-medium text-blue-dimmed transition-all hover:scale-105">
                 Find A Project
               </li>
             </Link>

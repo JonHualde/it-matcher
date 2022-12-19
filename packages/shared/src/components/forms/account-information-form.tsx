@@ -1,53 +1,51 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, ChangeEvent, useState, useEffect } from "react";
 import { ToastContainer, toast, Zoom } from "react-toastify";
-import useSWR, { useSWRConfig } from 'swr'
-
 // Components
 import InputContainer from "../input-container/input-container";
 import { ErrorMessage } from "../error-message";
 import Toast from "../toast/toast";
+// Types
+import { User } from "@shared-types";
 
-// Hook
-import { getUserInfo } from "../../hooks/user";
+interface AccountInformationFormProps {
+  user: User;
+}
 
-
-const AccountInformationForm = () => {
+const AccountInformationForm = ({ user }: AccountInformationFormProps) => {
   const myToast = useRef<any>();
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [linkedInUrl, setLinkedInUrl] = useState("");
-  const [githubUrl, setGithubUrl] = useState("");
-  const [instagramUsername, setInstagramUserName] = useState("");
-  const [websiteUrl, setWebsiteUrl] = useState("");
-  const [notionPageUrl, setNotionPageUrl] = useState("");
+  const [userData, setUserData] = useState<User>(user);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const { mutate } = useSWRConfig()
 
-  const { data, isLoading, isError } = getUserInfo();
+  const updateStates = (user: User) => {
+    setUserData((userData) => ({
+      ...userData,
+      email: user.email,
+      firstname: user.first_name,
+      lastname: user.last_name,
+      linkedInUrl: user.linkedIn_url,
+      githubUrl: user.github_url,
+      instagramUsername: user.instagram_username,
+      websiteUrl: user.website_url,
+      notionPageUrl: user.notion_page_url,
+    }));
+  };
 
-  const updateStates = (user: any) => {
-    setEmail(user.email);
-    setFirstname(user.firstname);
-    setLastname(user.lastname);
-    setLinkedInUrl(user.linkedInUrl);
-    setGithubUrl(user.githubUrl);
-    setInstagramUserName(user.instagramUsername);
-    setWebsiteUrl(user.websiteUrl);
-    setNotionPageUrl(user.notionPageUrl);
+  const updateUserData = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserData((userData) => ({
+      ...userData,
+      [name]: value,
+    }));
   };
 
   const notify = () =>
-    (myToast.current = toast(
-      <Toast successMessage="Uploading your picture..." />,
-      {
-        autoClose: false,
-        closeButton: false,
-        type: toast.TYPE.INFO,
-        transition: Zoom,
-      }
-    ));
+    (myToast.current = toast(<Toast successMessage="Uploading your picture..." />, {
+      autoClose: false,
+      closeButton: false,
+      type: toast.TYPE.INFO,
+      transition: Zoom,
+    }));
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     notify();
@@ -60,14 +58,14 @@ const AccountInformationForm = () => {
         "Content-Type": "Application/json",
       },
       body: JSON.stringify({
-        email,
-        firstname,
-        lastname,
-        linkedInUrl,
-        instagramUsername,
-        notionPageUrl,
-        websiteUrl,
-        githubUrl,
+        email: userData.email,
+        firstname: userData.first_name,
+        lastname: userData.last_name,
+        linkedInUrl: userData.linkedIn_url,
+        githubUrl: userData.github_url,
+        instagramUsername: userData.instagram_username,
+        websiteUrl: userData.website_url,
+        notionPageUrl: userData.notion_page_url,
       }),
     })
       .then((res) => res.json())
@@ -81,7 +79,6 @@ const AccountInformationForm = () => {
         });
 
         updateStates(result.user);
-        mutate("/user/get-user-info");
       })
       .catch((error) => {
         setError(true);
@@ -96,106 +93,84 @@ const AccountInformationForm = () => {
   };
 
   useEffect(() => {
-    if (!isLoading && !data.user && isError.error) {
-      setError(true);
-      setErrorMessage(
-        "An issue occured while fetching your personal data. Please try again."
-      );
-      toast.update(myToast.current, {
-        type: toast.TYPE.ERROR,
-        autoClose: 5000,
-        render: "We could not get your data. Please reload the page",
-      });
+    if (user.email.length) {
+      updateStates(user);
     }
-
-    if (!isLoading && data.user && !isError?.error) {
-      updateStates(data.user);
-    }
-
-  }, [data, isLoading, isError]);
+  }, [user]);
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="flex flex-col mt-8 w-full max-w-xl"
-    >
-      <ToastContainer
-        position="top-right"
-        hideProgressBar={true}
-        newestOnTop={false}
-        rtl={false}
-        pauseOnFocusLoss
-      />
+    <form onSubmit={handleSubmit} className="mt-8 flex w-full max-w-xl flex-col">
+      <ToastContainer position="top-right" hideProgressBar={true} newestOnTop={false} rtl={false} pauseOnFocusLoss />
       <h5 className="text-blue-dimmed">ACCOUNT INFORMATION</h5>
       {error && <ErrorMessage errorMessage={errorMessage} />}
       <InputContainer
         type="text"
         placeholder="John"
-        onChange={setFirstname}
-        value={isLoading ? "Loading..." : firstname}
+        onChange={(e: ChangeEvent<HTMLInputElement> | any) => updateUserData(e)}
+        value={userData.first_name}
         name="firstname"
-        label="First name"
+        label="first_name"
       />
       <InputContainer
         type="text"
         placeholder="Doe"
-        onChange={setLastname}
-        value={isLoading ? "Loading..." : lastname}
+        onChange={(e: ChangeEvent<HTMLInputElement> | any) => updateUserData(e)}
+        value={userData.last_name}
         name="lastname"
-        label="Last name"
+        label="last_name"
       />
       <InputContainer
         type="email"
         placeholder="email"
-        onChange={setEmail}
-        value={isLoading ? "Loading..." : email}
+        onChange={(e: ChangeEvent<HTMLInputElement> | any) => updateUserData(e)}
+        value={userData.email}
         name="email"
-        label="Email"
+        label="email"
       />
       <InputContainer
         type="text"
         placeholder="https://..."
-        onChange={setLinkedInUrl}
-        value={isLoading ? "Loading..." : linkedInUrl}
+        onChange={(e: ChangeEvent<HTMLInputElement> | any) => updateUserData(e)}
+        value={userData.linkedIn_url ?? ""}
         name="linkedInUrl"
-        label="Linkedin URL"
+        label="linkedIn_url"
       />
       <InputContainer
         type="text"
         placeholder="https://..."
-        onChange={setGithubUrl}
-        value={isLoading ? "Loading..." : githubUrl}
+        onChange={(e: ChangeEvent<HTMLInputElement> | any) => updateUserData(e)}
+        value={userData.github_url ?? ""}
         name="githubUrl"
-        label="Github URL"
+        label="github_url"
       />
       <InputContainer
         type="text"
         placeholder=""
-        onChange={setInstagramUserName}
-        value={isLoading ? "Loading..." : instagramUsername}
+        onChange={(e: ChangeEvent<HTMLInputElement> | any) => updateUserData(e)}
+        value={userData.instagram_username ?? ""}
         name="instagramUsername"
         label="Instagram Username"
       />
       <InputContainer
         type="text"
         placeholder="https://..."
-        onChange={setWebsiteUrl}
-        value={isLoading ? "Loading..." : websiteUrl}
+        onChange={(e: ChangeEvent<HTMLInputElement> | any) => updateUserData(e)}
+        value={userData.website_url ?? ""}
         name="websiteUrl"
-        label="Website URL"
+        label="website_url"
       />
       <InputContainer
         type="text"
         placeholder="https://..."
-        onChange={setNotionPageUrl}
-        value={isLoading ? "Loading..." : notionPageUrl}
+        onChange={(e: ChangeEvent<HTMLInputElement> | any) => updateUserData(e)}
+        value={userData.notion_page_url ?? ""}
         name="notionPageUrl"
-        label="Notion Page URL"
+        label="notion_page_url"
       />
       <button
         type="submit"
-        className="w-full bg-blue-ocean py-3 rounded-sm flex justify-center text-white font-medium
-            hover:bg-blue-800 mt-4"
+        className="hover:bg-blue-800 mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3
+            font-medium text-white"
       >
         Update Personal Information
       </button>

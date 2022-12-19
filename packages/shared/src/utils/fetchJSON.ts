@@ -6,38 +6,17 @@ export default async function fetchJSON(url: string, method: "GET" | "POST" | "P
   const res = await fetch(`${BASE_URL}/${url}`, {
     method,
     headers: {
-      "Content-Type": "Application/json",
+      "Content-Type": "application/json",
     },
+    credentials: "include",
     body: body ? JSON.stringify(body) : undefined,
   });
 
-  let isJson = res.headers.get("Content-Type")?.indexOf("application/json") !== -1;
-  const json = isJson ? await res.json() : undefined;
+  const json = await res.json();
+
+  console.log("jsonapi", json, res.ok);
 
   if (res.ok) return json;
 
   return Promise.reject(json ? json : res.status);
-}
-
-// Examples of usage
-async function getData() {
-  const data = await fetchJSON("https://example.com/data.json", "GET");
-  console.log(data);
-}
-
-async function updateData() {
-  const data = { id: 123, name: "John Smith" };
-  const result = await fetchJSON("https://example.com/data.json", "PUT", data);
-  console.log(result);
-}
-
-async function deleteData() {
-  const result = await fetchJSON("https://example.com/data.json", "DELETE");
-  console.log(result);
-}
-
-async function postData() {
-  const data = { name: "John Smith" };
-  const result = await fetchJSON("https://example.com/data.json", "POST", data);
-  console.log(result);
 }

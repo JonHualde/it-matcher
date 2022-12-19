@@ -1,6 +1,4 @@
-import React from "react";
 import { useRouter } from "next/router";
-
 // Components
 import Button from "../button/button";
 

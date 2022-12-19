@@ -7,7 +7,7 @@ import { ErrorMessage } from "../error-message";
 // Store
 import { useStoreActions } from "easy-peasy";
 // utils
-import fetchJSON from "../../utils/fetchJSON";
+import { fetchJSON } from "@shared-utils";
 // types
 import { User } from "@shared-types";
 
@@ -24,34 +24,11 @@ const LoginForm = () => {
     e.preventDefault();
     setError(false);
 
-    fetchJSON("/auth/login", "POST", {
+    fetchJSON("auth/login", "POST", {
       email,
       password,
     })
       .then((user: User) => {
-        console.log("user", user);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError(true);
-        setErrorMessage(err.message);
-      });
-
-    fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "Application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-        if (result.error) throw new Error(result.errorMessage);
-
         updateAuthStatus(true);
         router.push("/profile");
       })

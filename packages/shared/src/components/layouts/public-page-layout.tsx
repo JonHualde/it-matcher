@@ -10,7 +10,7 @@ interface PublicPageLayoutProps {
 
 const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
   return (
-    <div className="flex flex-col h-screen justify-between">
+    <div className="flex h-screen flex-col justify-between">
       <PublicPageHeader />
       <PublicPageMobileHeader />
       {children}

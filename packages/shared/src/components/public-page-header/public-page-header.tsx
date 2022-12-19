@@ -2,50 +2,49 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Button from "../button/button";
 import PublicPageNavigation from "../public-page-navigation/public-page-navigation";
-
 // Store
 import { useStoreActions, useStoreState } from "easy-peasy";
+// Utils
+import { fetchJSON } from "@shared-utils";
 
 const PublicPageHeader = () => {
   const router = useRouter();
+
   let isLoggedIn = useStoreState((state: any) => state.loggedIn);
-
   const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
-
   const resetAuthAndUserData = useStoreActions((actions: any) => actions.resetAuthAndUserData);
 
   const logout = () => {
-    fetch("/api/auth/logout")
-      .then((res) => res.json())
-      .then((result) => {
+    fetchJSON("auth/logout", "GET")
+      .then((res: any): any => {
         updateAuthStatus(false);
         resetAuthAndUserData();
-        console.log(result);
+        router.push("/");
       })
-      .catch((err) => alert("Big issue"));
+      .catch((err) => alert("We could not log you out, please try again later."));
   };
 
-  useEffect(() => {
-    const getUserAuth = async () => {
-      try {
-        let res = await fetch("/api/auth/getToken");
-        let { user } = await res.json();
+  // useEffect(() => {
+  //   const getUserAuth = async () => {
+  //     try {
+  //       let res = await fetch("/api/auth/getToken");
+  //       let { user } = await res.json();
 
-        console.log("user", user);
+  //       console.log("user", user);
 
-        if (user === undefined || user.error) {
-          updateAuthStatus(false);
-          resetAuthAndUserData();
-        } else {
-          updateAuthStatus(true);
-        }
-      } catch (error) {
-        console.error("Could not decipher token data.");
-      }
-    };
+  //       if (user === undefined || user.error) {
+  //         updateAuthStatus(false);
+  //         resetAuthAndUserData();
+  //       } else {
+  //         updateAuthStatus(true);
+  //       }
+  //     } catch (error) {
+  //       console.error("Could not decipher token data.");
+  //     }
+  //   };
 
-    getUserAuth();
-  }, []);
+  //   getUserAuth();
+  // }, []);
 
   return (
     <div className="relative hidden items-center justify-between bg-pastel-light py-8 px-8 lg:flex">

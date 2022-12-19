@@ -1,11 +1,7 @@
-import React from "react";
-import { useRouter } from "next/router";
 import { FaRocket, FaConnectdevelop } from "react-icons/fa";
 import { BsFillChatDotsFill } from "react-icons/bs";
 
 const KickStartSection = () => {
-  const router = useRouter();
-
   return (
     <div className="mx-auto flex w-full flex-col bg-pastel-light px-10 md:px-20 xl:px-48">
       <div className="my-12 flex flex-col items-center lg:my-28">
