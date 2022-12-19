@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { userInfo } from "os";
 import { useEffect, useState } from "react";
-import PrivatePageLayout from "shared/components/layouts/private-page-layout";
+import PrivatePageLayout from "shared/src/components/layouts/private-page-layout";
 
 // helpers
 import Jwt from "../utils/jwt";

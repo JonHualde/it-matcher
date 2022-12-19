@@ -26,5 +26,11 @@
     "moduleResolution": "node",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
+    "paths": {
+      "@shared-components/*": ["./../../packages/shared/src/components/*"],
+      "@shared-hooks": ["./../../packages/shared/src/hooks/index.ts"],
+      "@shared-types": ["./../../packages/shared/src/types/index.ts"],
+      "@shared-utils": ["./../../packages/shared/src/utils/index.ts"],
+    }
   }
 }

@@ -1,4 +1,4 @@
-import PrivatePageLayout from "shared/components/layouts/private-page-layout";
+import PrivatePageLayout from "shared/src/components/layouts/private-page-layout";
 
 const Profile = (props: any) => {
   return <PrivatePageLayout pathname={props.pathname} title={"Logout"}></PrivatePageLayout>;

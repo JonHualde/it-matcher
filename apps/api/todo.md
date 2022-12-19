@@ -13,11 +13,12 @@ User
 --> Get all users (protected)
 
 Project
---> Get all projects (+ add query param to filter projects + add pagination): ONGOING
 --> Get n° of applications for a specific project
+--> Get all projects (+ add query param to filter projects + add pagination): DONE (needs pagination)
 --> Get my projects: DONE
---> Get a specific project
+--> Get a specific project (by id, by name): DONE
 --> Create a new project (3 project per user as a limit): DONE
+--> Update a project's isOnline status
 --> Update a project
 --> Delete a project
 

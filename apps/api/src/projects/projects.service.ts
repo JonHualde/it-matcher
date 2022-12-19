@@ -1,15 +1,34 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { JwtDecodeDto } from 'src/auth/dtos/jwt-decoded.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { ProjectDto } from './dtos/project.dto';
+import { FilterProjectDto, ProjectDto } from './dtos/project.dto';
 
 @Injectable()
 export class ProjectService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllProjects() {
+  async getAllProjects(filterProjectDto: FilterProjectDto) {
     return await this.prisma.project.findMany({
-      take: 20,
+      take: 100,
+      where: {
+        isOnline: filterProjectDto?.isOnline ?? {},
+        userId: { equals: filterProjectDto?.userId } ?? {},
+        projectName: { contains: filterProjectDto?.projectName } ?? {},
+        difficulty: { equals: filterProjectDto?.difficulty } ?? {},
+      },
+      orderBy: { createdAt: filterProjectDto.orderBy ?? 'desc' },
+    });
+  }
+
+  async getProjectByUserId(userId: number) {
+    return await this.prisma.project.findMany({
+      where: { userId },
+    });
+  }
+
+  async getProjectById(id: number) {
+    return await this.prisma.project.findUnique({
+      where: { id },
     });
   }
 

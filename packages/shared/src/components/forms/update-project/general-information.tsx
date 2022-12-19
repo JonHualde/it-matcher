@@ -1,5 +1,5 @@
-import InputContainer from "components/input-container/input-container";
-import { TextArea } from "components/text-area";
+import InputContainer from "@shared-components/input-container/input-container";
+import { TextArea } from "@shared-components/text-area";
 import React from "react";
 
 interface GeneralInformationProps {
@@ -9,9 +9,9 @@ interface GeneralInformationProps {
 const GeneralInformation = (props: GeneralInformationProps) => {
   return (
     <>
-      <h5 className="text-blue-dimmed mt-[43px] mb-[28px]">GENERAL INFORMATION</h5>
+      <h5 className="mt-[43px] mb-[28px] text-blue-dimmed">GENERAL INFORMATION</h5>
       <div className="mb-[50px] flex flex-col">
-        <div className="w-full mb-5 mt-0">
+        <div className="mb-5 mt-0 w-full">
           <input
             accept="image/*"
             name="mainPicture"
@@ -29,7 +29,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
           onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
         />
 
-        <div className="flex flex-col lg:flex-row w-full">
+        <div className="flex w-full flex-col lg:flex-row">
           <InputContainer
             type="text"
             name="startingOn"
@@ -38,7 +38,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
             onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
             width="1/2 lg:mr-4"
           />
-          <div className="w-1/2 flex">
+          <div className="flex w-1/2">
             <InputContainer
               type="number"
               name="estimatedTimeDuration"
@@ -47,14 +47,14 @@ const GeneralInformation = (props: GeneralInformationProps) => {
               onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
               width="1/2 lg:mr-4"
             />
-            <div className="flex flex-col mb-4 w-1/2">
+            <div className="mb-4 flex w-1/2 flex-col">
               <label htmlFor="estimatedTimeDurationMetric"> Duration </label>
               <select
                 value={""}
                 name="estimatedTimeDurationMetric"
                 id="estimatedTimeDurationMetric"
                 onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
-                className="focus:outline-none py-4 px-3 border-2 border-gray-200"
+                className="border-2 border-gray-200 py-4 px-3 focus:outline-none"
               >
                 <option value="" disabled>
                   Choose a duration
@@ -77,14 +77,14 @@ const GeneralInformation = (props: GeneralInformationProps) => {
         />
 
         <div className="flex flex-col lg:flex-row">
-          <div className="flex flex-col mb-4 w-1/2 mr-4">
+          <div className="mb-4 mr-4 flex w-1/2 flex-col">
             <label htmlFor="difficulty"> Difficulty of the project </label>
             <select
               value={""}
               name="difficulty"
               id="difficulty"
               onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
-              className="focus:outline-none py-3 px-3 border-2 border-gray-200"
+              className="border-2 border-gray-200 py-3 px-3 focus:outline-none"
             >
               <option value="" disabled>
                 Set a difficulty level
@@ -95,13 +95,13 @@ const GeneralInformation = (props: GeneralInformationProps) => {
               <option value="Expert">Expert</option>
             </select>
           </div>
-          <div className="flex flex-col mb-4 w-1/2">
+          <div className="mb-4 flex w-1/2 flex-col">
             <label htmlFor="type"> Type of the project </label>
             <select
               value={""}
               name="type"
               id="type"
-              className="focus:outline-none py-3 px-3 border-2 border-gray-200"
+              className="border-2 border-gray-200 py-3 px-3 focus:outline-none"
               onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
             >
               <option value="" disabled>

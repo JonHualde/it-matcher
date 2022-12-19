@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from "react";
-import FilterApplications from "shared/components/forms/filter-applications";
-import PrivatePageLayout from "shared/components/layouts/private-page-layout";
-import RequestsTable from "shared/components/tables/requests-table";
-import Toast from "shared/components/toast/toast";
+import FilterApplications from "shared/src/components/forms/filter-applications";
+import PrivatePageLayout from "shared/src/components/layouts/private-page-layout";
+import RequestsTable from "shared/src/components/tables/requests-table";
+import Toast from "shared/src/components/toast/toast";
 import { ToastContainer, toast, Zoom } from "react-toastify";
 // helpers
 import Jwt from "../utils/jwt";

@@ -1,13 +1,15 @@
+import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
-
 // Components
 import InputContainer from "../input-container/input-container";
 import { ErrorMessage } from "../error-message";
-
 // Store
 import { useStoreActions } from "easy-peasy";
+// utils
+import fetchJSON from "../../utils/fetchJSON";
+// types
+import { User } from "@shared-types";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -16,16 +18,27 @@ const LoginForm = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const router = useRouter();
 
-  const updateAuthStatus = useStoreActions(
-    (actions: any) => actions.updateUserAuthStatus
-  );
+  const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(false);
 
+    fetchJSON("/auth/login", "POST", {
+      email,
+      password,
+    })
+      .then((user: User) => {
+        console.log("user", user);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError(true);
+        setErrorMessage(err.message);
+      });
+
     fetch("/api/auth/login", {
-      method: "post",
+      method: "POST",
       headers: {
         "Content-Type": "Application/json",
       },
@@ -55,28 +68,16 @@ const LoginForm = () => {
       <h6 className="mb-4 lg:mb-8">
         Need an EXPERT:MATCHER account?{" "}
         <Link href="/signup">
-          <a className="ml-1 text-link-color underline">Create an account</a>
+          <a className="text-link-color ml-1 underline">Create an account</a>
         </Link>
       </h6>
       {error && <ErrorMessage errorMessage={errorMessage} />}
-      <InputContainer
-        type="email"
-        placeholder="email"
-        onChange={setEmail}
-        name="email"
-        label="Email"
-      />
-      <InputContainer
-        type="password"
-        placeholder="password"
-        onChange={setPassword}
-        name="password"
-        label="Password"
-      />
+      <InputContainer type="email" placeholder="email" onChange={setEmail} name="email" label="Email" />
+      <InputContainer type="password" placeholder="password" onChange={setPassword} name="password" label="Password" />
       <button
         type="submit"
-        className="w-full bg-blue-ocean py-3 rounded-sm flex justify-center text-white font-medium
-          hover:bg-blue-800 mt-4"
+        className="hover:bg-blue-800 mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3
+          font-medium text-white"
       >
         Log in
       </button>

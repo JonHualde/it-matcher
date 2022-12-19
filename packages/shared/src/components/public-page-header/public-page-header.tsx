@@ -10,20 +10,16 @@ const PublicPageHeader = () => {
   const router = useRouter();
   let isLoggedIn = useStoreState((state: any) => state.loggedIn);
 
-  const updateAuthStatus = useStoreActions(
-    (actions: any) => actions.updateUserAuthStatus
-  );
+  const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
-  const resetAuthAndUserData = useStoreActions(
-    (actions: any) => actions.resetAuthAndUserData
-  )
+  const resetAuthAndUserData = useStoreActions((actions: any) => actions.resetAuthAndUserData);
 
   const logout = () => {
     fetch("/api/auth/logout")
       .then((res) => res.json())
       .then((result) => {
         updateAuthStatus(false);
-        resetAuthAndUserData()
+        resetAuthAndUserData();
         console.log(result);
       })
       .catch((err) => alert("Big issue"));
@@ -39,7 +35,7 @@ const PublicPageHeader = () => {
 
         if (user === undefined || user.error) {
           updateAuthStatus(false);
-          resetAuthAndUserData()
+          resetAuthAndUserData();
         } else {
           updateAuthStatus(true);
         }
@@ -52,10 +48,10 @@ const PublicPageHeader = () => {
   }, []);
 
   return (
-    <div className="bg-pastel-light hidden lg:flex justify-between items-center py-8 px-8 relative">
+    <div className="relative hidden items-center justify-between bg-pastel-light py-8 px-8 lg:flex">
       <PublicPageNavigation />
       <h3
-        className="absolute left-1/2 -translate-x-1/2 font-oswald text-blue-dimmed font-semibold text-blue-500 cursor-pointer"
+        className="text-blue-500 absolute left-1/2 -translate-x-1/2 cursor-pointer font-oswald font-semibold text-blue-dimmed"
         onClick={() => router.push("/")}
       >
         EXPERT MATCHER
@@ -83,10 +79,7 @@ const PublicPageHeader = () => {
           </>
         ) : (
           <>
-            <p
-              className="mr-6 cursor-pointer hover:scale-105 transition-all"
-              onClick={() => router.push("/profile")}
-            >
+            <p className="mr-6 cursor-pointer transition-all hover:scale-105" onClick={() => router.push("/profile")}>
               My Profile
             </p>
             <Button

@@ -16,6 +16,9 @@ import {
   MinDate,
 } from 'class-validator';
 
+type orderBy = 'asc' | 'desc';
+const orderByDto: orderBy[] = ['asc', 'desc'];
+
 type durationMetrics = 'day' | 'week' | 'month';
 const durationMetricsDto: durationMetrics[] = ['day', 'week', 'month'];
 
@@ -104,8 +107,8 @@ export class ProjectDto {
   })
   readonly isOnline: boolean;
 
-  @Transform(({ value }) => JSON.parse(value))
   @IsArray()
+  @Transform(({ value }) => JSON.parse(value))
   @IsInt({ each: true })
   @ArrayMinSize(1)
   readonly jobTitle: number[];
@@ -119,4 +122,35 @@ export class ProjectDto {
   @IsOptional()
   @IsNotEmpty()
   readonly projectPicture: string;
+}
+
+export class FilterProjectDto {
+  @IsOptional()
+  @IsBoolean()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+
+    return value;
+  })
+  readonly isOnline: boolean;
+
+  @IsOptional()
+  @IsString()
+  @Length(0, 255)
+  readonly projectName: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => parseInt(value))
+  readonly userId: number;
+
+  @IsOptional()
+  @IsEnum(difficultyDto)
+  @IsString()
+  readonly difficulty: difficultyOptions;
+
+  @IsOptional()
+  @IsEnum(orderByDto)
+  readonly orderBy: orderBy;
 }

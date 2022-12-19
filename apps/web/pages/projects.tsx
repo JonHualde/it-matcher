@@ -1,13 +1,13 @@
 import { useEffect, useState, useRef } from "react";
-import PrivatePageLayout from "shared/components/layouts/private-page-layout";
+import PrivatePageLayout from "shared/src/components/layouts/private-page-layout";
 import { ToastContainer, toast, Zoom } from "react-toastify";
-import ProjectCard from "shared/components/project-card/project-card";
+import ProjectCard from "shared/src/components/project-card/project-card";
 
 // helpers
 import Jwt from "../utils/jwt";
 // Components
-import Toast from "shared/components/toast/toast";
-import DeleteProjectModal from "shared/components/modals/delete-project-modal";
+import Toast from "shared/src/components/toast/toast";
+import DeleteProjectModal from "shared/src/components/modals/delete-project-modal";
 // Hooks
 import { getUserProjects } from "../hooks/projects";
 import EditProjectModal from "components/modals/edit-project-modal";
@@ -63,7 +63,7 @@ const Projects = (props: any) => {
   return (
     <PrivatePageLayout title="Projects" pathname={props.pathname}>
       <ToastContainer position="top-right" autoClose={5000} hideProgressBar={true} newestOnTop={false} rtl={false} pauseOnFocusLoss />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-8">
+      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
         {!!projects.length &&
           projects.map((project: any, index: number) => (
             <ProjectCard

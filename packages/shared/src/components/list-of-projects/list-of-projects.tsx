@@ -11,9 +11,7 @@ const ListOfProjects = () => {
   const [loader, setLoader] = useState(true);
 
   let isLoggedIn = useStoreState((state: any) => state.loggedIn);
-  const updateProject = useStoreActions(
-    (actions: any) => actions.updateProject
-  );
+  const updateProject = useStoreActions((actions: any) => actions.updateProject);
 
   useEffect(() => {
     const getData = async () => {
@@ -32,9 +30,7 @@ const ListOfProjects = () => {
           if (user === undefined || user.error) {
             projects = results.projects;
           } else {
-            projects = results.projects.filter(
-              (item: any) => item.userId !== user.id
-            );
+            projects = results.projects.filter((item: any) => item.userId !== user.id);
           }
 
           setProjects(projects);
@@ -70,18 +66,15 @@ const ListOfProjects = () => {
   };
 
   return (
-    <div
-      className="grid grid-cols-1 gap-y-8 overflow-y-auto col-span-1"
-      style={{ height: "calc(100vh - 150px)" }}
-    >
+    <div className="col-span-1 grid grid-cols-1 gap-y-8 overflow-y-auto" style={{ height: "calc(100vh - 150px)" }}>
       {!loader && projects.length
         ? projects.map((project) => (
             <div
               key={project.projectName}
               onClick={() => updateProject(project)}
-              className="flex flex-col border border-gray-200 shadow-xl rounded-md p-4 relative cursor-pointer hover:px-3 transition-all"
+              className="relative flex cursor-pointer flex-col rounded-md border border-gray-200 p-4 shadow-xl transition-all hover:px-3"
             >
-              <div className="w-12 h-12 relative flex items-center">
+              <div className="relative flex h-12 w-12 items-center">
                 <img src="/images/login.png" alt="" className="rounded-md" />
               </div>
               <h5 className="mb-0 mt-3">{project.projectName}</h5>

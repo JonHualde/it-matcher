@@ -1,7 +1,7 @@
-import AccountInformationForm from "shared/components/forms/account-information-form";
-import UpdatePasswordForm from "shared/components/forms/update-password";
-import UploadProfilePictureForm from "shared/components/forms/upload-image";
-import PrivatePageLayout from "shared/components/layouts/private-page-layout";
+import AccountInformationForm from "shared/src/components/forms/account-information-form";
+import UpdatePasswordForm from "shared/src/components/forms/update-password";
+import UploadProfilePictureForm from "shared/src/components/forms/upload-image";
+import PrivatePageLayout from "shared/src/components/layouts/private-page-layout";
 
 // helpers
 import Jwt from "../utils/jwt";

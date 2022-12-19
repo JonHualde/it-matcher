@@ -78,6 +78,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
       });
     }
 
+    console.log(exception);
+
     const status = exception?.getStatus ? exception.getStatus() : 400;
     const errorMessage = exception?.getResponse
       ? exception.getResponse()
