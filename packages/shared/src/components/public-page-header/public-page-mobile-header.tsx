@@ -13,14 +13,12 @@ const PublicPageMobileHeader = () => {
   const [showMenu, setShowMenu] = useState(false);
   const router = useRouter();
 
-  let isLoggedIn: boolean = useStoreState((state: any) => state.loggedIn);
+  let isLoggedIn: boolean = useStoreState((state: any) => state.user.isLoggedIn);
   const resetAuthAndUserData = useStoreActions((actions: any) => actions.resetAuthAndUserData);
-  const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
   const logout = () => {
     fetchJSON("auth/logout", "GET")
       .then((res: any): any => {
-        updateAuthStatus(false);
         resetAuthAndUserData();
         router.push("/");
       })

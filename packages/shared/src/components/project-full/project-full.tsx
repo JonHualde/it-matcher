@@ -16,7 +16,7 @@ interface ShowProjectProps {
 }
 
 const ShowProject = ({ selectedProject }: ShowProjectProps) => {
-  let isLoggedIn = useStoreState((state: any) => state.loggedIn);
+  let isLoggedIn = useStoreState((state: any) => state.user.loggedIn);
   const myToast = useRef<any>();
   const [disabledButton, setDisabledButton] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);

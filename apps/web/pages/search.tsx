@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
 import PublicPageLayout from "shared/src/components/layouts/public-page-layout";
 import ListOfProjects from "shared/src/components/list-of-projects/list-of-projects";
 import ShowProject from "shared/src/components/project-full/project-full";
@@ -7,11 +6,14 @@ import ShowProject from "shared/src/components/project-full/project-full";
 import { fetchJSON } from "@shared-utils";
 // types
 import { ProjectProps } from "@shared-types";
+// States
+import { useStoreState } from "easy-peasy";
 
 const Search = ({ pathname }: any) => {
   const [projects, setProjects] = useState<ProjectProps[]>([]);
   const [selectedProject, setSelectedProject] = useState<ProjectProps | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const user = useStoreState((state: any) => state.user);
 
   const getProjectDetails = async (project: ProjectProps) => {
     setSelectedProject(project);
@@ -21,12 +23,10 @@ const Search = ({ pathname }: any) => {
     const getData = async () => {
       await fetchJSON("project/all", "GET")
         .then(async (projects: ProjectProps[]) => {
-          const isTokenVerified = await fetchJSON("auth/verify-token", "GET").catch(() => false);
-
-          if (!isTokenVerified) {
+          if (!user.isLoggedIn) {
             setProjects(() => projects);
           } else {
-            setProjects(() => projects.filter((item: ProjectProps) => item.userId !== isTokenVerified.id));
+            setProjects(() => projects.filter((item: ProjectProps) => item.userId !== user.id));
           }
 
           setIsLoading(false);

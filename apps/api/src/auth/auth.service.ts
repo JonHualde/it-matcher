@@ -148,6 +148,13 @@ export class AuthService {
       .json({ message: 'Token verified successfully', userId: tokenData.id });
   }
 
+  async logout(res: Response) {
+    res.clearCookie('access_token');
+    res.clearCookie('refresh_token');
+
+    return res.status(200).json({ message: 'Logged out successfully' });
+  }
+
   async comparePasswords(passwordInDB: string, passwordTypedByUser: string) {
     return bcrypt.compareSync(passwordTypedByUser, passwordInDB);
   }

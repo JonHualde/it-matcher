@@ -29,7 +29,7 @@ const LoginForm = () => {
       password,
     })
       .then((user: User) => {
-        updateAuthStatus(true);
+        updateAuthStatus({ isLoggedIn: true, id: user.id });
         router.push("/profile");
       })
       .catch((err) => {

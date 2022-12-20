@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Button from "../button/button";
 import PublicPageNavigation from "../public-page-navigation/public-page-navigation";
@@ -10,41 +9,17 @@ import { fetchJSON } from "@shared-utils";
 const PublicPageHeader = () => {
   const router = useRouter();
 
-  let isLoggedIn = useStoreState((state: any) => state.loggedIn);
-  const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
+  let isLoggedIn = useStoreState((state: any) => state.user.isLoggedIn);
   const resetAuthAndUserData = useStoreActions((actions: any) => actions.resetAuthAndUserData);
 
   const logout = () => {
     fetchJSON("auth/logout", "GET")
       .then((res: any): any => {
-        updateAuthStatus(false);
         resetAuthAndUserData();
         router.push("/");
       })
       .catch((err) => alert("We could not log you out, please try again later."));
   };
-
-  // useEffect(() => {
-  //   const getUserAuth = async () => {
-  //     try {
-  //       let res = await fetch("/api/auth/getToken");
-  //       let { user } = await res.json();
-
-  //       console.log("user", user);
-
-  //       if (user === undefined || user.error) {
-  //         updateAuthStatus(false);
-  //         resetAuthAndUserData();
-  //       } else {
-  //         updateAuthStatus(true);
-  //       }
-  //     } catch (error) {
-  //       console.error("Could not decipher token data.");
-  //     }
-  //   };
-
-  //   getUserAuth();
-  // }, []);
 
   return (
     <div className="relative hidden items-center justify-between bg-pastel-light py-8 px-8 lg:flex">
