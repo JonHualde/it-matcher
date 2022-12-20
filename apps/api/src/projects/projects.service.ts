@@ -107,6 +107,7 @@ export class ProjectService {
         startingOn: new Date(project.startingOn),
         estimatedTimeDuration: +project.estimatedTimeDuration,
         estimatedTimeDurationMetric: project.estimatedTimeDurationMetric,
+        full_name: user.firstname + ' ' + user.lastname,
         description: project.description,
         difficulty: project.difficulty,
         type: project.type,

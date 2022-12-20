@@ -2,9 +2,10 @@ export default interface ProjectProps {
   id: number;
   createdAt: Date | string;
   updatedAt: Date | string;
-  mainPicture: string;
+  isOnline: true;
   projectName: string;
   startingOn: Date | string;
+  full_name: string;
   estimatedTimeDuration: number;
   estimatedTimeDurationMetric: string;
   description: string;
@@ -13,9 +14,9 @@ export default interface ProjectProps {
   numberOfParticipant: number;
   initialInvestment: boolean;
   initialInvestmentCost: number;
-  attachments: Array<string>;
-  putOnline: true;
+  toolsAndTechnologies: number[];
+  jobTitle: number[];
+  attachments: string[];
+  projectPicture: string;
   userId: number;
-  searchingFor: object;
-  toolsAndTechnologies: object;
 }

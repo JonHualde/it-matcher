@@ -35,6 +35,7 @@ model project {
     isOnline                    Boolean
     projectName                 String        @unique
     startingOn                  DateTime
+    full_name                   String
     estimatedTimeDuration       Int
     estimatedTimeDurationMetric String
     description                 String

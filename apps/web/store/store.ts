@@ -4,7 +4,6 @@ export const store = createStore(
   persist({
     loggedIn: false,
     applications: null,
-    shownProject: {},
     updateProject: action((state: any, payload: object) => {
       state.shownProject = payload;
     }),
@@ -12,8 +11,7 @@ export const store = createStore(
       state.loggedIn = payload;
     }),
     resetAuthAndUserData: action((state: any) => {
-      (state.loggedIn = false),
-      (state.applications = null);
+      (state.loggedIn = false), (state.applications = null);
     }),
     updateApplications: action((state: any, payload: any) => {
       state.applications = payload;

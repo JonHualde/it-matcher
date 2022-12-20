@@ -17,7 +17,6 @@ const PublicPageMobileHeader = () => {
   const resetAuthAndUserData = useStoreActions((actions: any) => actions.resetAuthAndUserData);
   const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
-  console.log("isLoggedIn", isLoggedIn);
   const logout = () => {
     fetchJSON("auth/logout", "GET")
       .then((res: any): any => {

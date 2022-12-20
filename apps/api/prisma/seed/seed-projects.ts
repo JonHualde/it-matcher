@@ -22,6 +22,7 @@ const run = async () => {
           estimatedTimeDurationMetric: project.estimatedTimeDurationMetric,
           description: project.description,
           difficulty: project.difficulty,
+          full_name: project.full_name,
           type: project.type,
           numberOfParticipant: project.numberOfParticipant,
           initialInvestment: project.initialInvestment,

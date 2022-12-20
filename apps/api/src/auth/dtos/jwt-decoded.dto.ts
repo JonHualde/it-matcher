@@ -16,6 +16,9 @@ export class JwtDecodeDto {
   @IsString()
   readonly firstname: string;
 
+  @IsString()
+  readonly lastname: string;
+
   @IsInt()
   @Min(0)
   @Max(10)

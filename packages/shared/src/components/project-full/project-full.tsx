@@ -1,35 +1,35 @@
 import { useState, useEffect, useRef } from "react";
 import { ToastContainer, toast, Zoom } from "react-toastify";
-
 // Store
 import { useStoreActions, useStoreState } from "easy-peasy";
-
 // Components
 import Button from "../button/button";
 import Modal from "../modals/logInModal";
 import Toast from "../toast/toast";
+// types
+import { ProjectProps } from "@shared-types";
+// Utils
+import { getDate } from "@shared-utils";
 
-const ProjectFull = () => {
-  let shownProject = useStoreState((state: any) => state.shownProject);
+interface ShowProjectProps {
+  selectedProject: ProjectProps | null;
+}
+
+const ShowProject = ({ selectedProject }: ShowProjectProps) => {
   let isLoggedIn = useStoreState((state: any) => state.loggedIn);
   const myToast = useRef<any>();
   const [disabledButton, setDisabledButton] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const updateAuthStatus = useStoreActions(
-    (actions: any) => actions.updateUserAuthStatus
-  );
+  const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
   const notify = () =>
-    (myToast.current = toast(
-      <Toast successMessage="Sending application request..." />,
-      {
-        autoClose: false,
-        closeButton: false,
-        type: toast.TYPE.INFO,
-        transition: Zoom,
-      }
-    ));
+    (myToast.current = toast(<Toast successMessage="Sending application request..." />, {
+      autoClose: false,
+      closeButton: false,
+      type: toast.TYPE.INFO,
+      transition: Zoom,
+    }));
 
   const dismiss = () => toast.dismiss(myToast.current);
 
@@ -45,8 +45,7 @@ const ProjectFull = () => {
       let res = await fetch("/api/auth/getToken");
       let { user } = await res.json();
 
-      if (user === undefined)
-        throw new Error("User is not logged in. Could not identify you.");
+      if (user === undefined) throw new Error("User is not logged in. Could not identify you.");
 
       const status = ["Accepted", "Pending", "Rejected"];
 
@@ -79,37 +78,6 @@ const ProjectFull = () => {
     }
   };
 
-  useEffect(() => {
-    let id = shownProject.id;
-
-    const getUserToken = async () => {
-      if (isLoggedIn && id) {
-        const res = await fetch(
-          `/api/application/get-applications?projectId=${id}`
-        );
-        const result = await res.json();
-
-        console.log("result", result);
-
-        if (result.error) {
-          alert("Logout and login again.");
-          updateAuthStatus(false);
-          fetch("/api/auth/logout");
-          return;
-        }
-
-        if (!result.canApply) {
-          setDisabledButton(true);
-          return;
-        }
-      }
-
-      setDisabledButton(false);
-    };
-
-    getUserToken();
-  }, [shownProject, isLoggedIn]);
-
   return (
     <>
       {isModalOpen && (
@@ -122,9 +90,9 @@ const ProjectFull = () => {
           close={() => setIsModalOpen(false)}
         />
       )}
-      {!!Object.keys(shownProject).length && (
+      {selectedProject && (
         <div
-          className="col-span-3 border-2 border-gray-200 py-8 px-10 rounded-md shadow-xl relative"
+          className="relative col-span-3 rounded-md border-2 border-gray-200 py-8 px-10 shadow-xl"
           style={{ height: "calc(100vh - 150px)" }}
         >
           <ToastContainer
@@ -135,23 +103,21 @@ const ProjectFull = () => {
             rtl={false}
             pauseOnFocusLoss
           />
-          <div className="flex items-center relative mb-8">
+          <div className="relative mb-8 flex items-center">
             {/* Main Picture */}
-            <div className="w-28 h-28 relative flex items-center">
+            <div className="relative flex h-28 w-28 items-center">
               <img src="/images/login.png" alt="" className="rounded-md" />
             </div>
 
             {/* Title and general info */}
-            <div className="flex flex-col pl-6 w-2/3">
-              <h4 className="my-0 capitalize">{shownProject.projectName}</h4>
-              <h4 className="my-0 capitalize">
-                For {shownProject.projectName}
-              </h4>
-              <h6 className="mt-5 mb-0 capitalize">{shownProject.type}</h6>
+            <div className="flex w-2/3 flex-col pl-6">
+              <h4 className="my-0 capitalize">{selectedProject?.full_name}</h4>
+              <h4 className="my-0 capitalize">For {selectedProject?.projectName}</h4>
+              <h6 className="mt-5 mb-0 capitalize">{selectedProject?.type}</h6>
             </div>
 
             {/* Apply / favourite */}
-            <div className="flex absolute right-0 bottom-0">
+            <div className="absolute right-0 bottom-0 flex">
               <div className="flex items-center">
                 <Button
                   text={!disabledButton ? "Apply" : "Application Sent"}
@@ -162,7 +128,7 @@ const ProjectFull = () => {
                   padding="px-3 py-1"
                   borderColor="border-blue-ocean"
                   disabled={disabledButton}
-                  action={() => sendApplication(shownProject)}
+                  action={() => sendApplication(selectedProject)}
                 />
                 <div className="relative flex items-center pl-4">
                   <img src="/images/heart.png" alt="" className="rounded-md" />
@@ -171,18 +137,16 @@ const ProjectFull = () => {
             </div>
           </div>
 
-          <div className="border-2 border-gray-200 w-full absolute left-0"></div>
+          <div className="absolute left-0 w-full border-2 border-gray-200"></div>
 
-          <div className="flex flex-col mt-16">
-            <div className="flex justify-between items-center border-b-2 border-gray-200 mb-6">
-              <h4 className="text-muted font-sm text-lg mb-2">Posted</h4>
-              <h4 className="text-muted font-sm text-lg mb-2">
-                {new Date(shownProject.createdAt).getDate()} days ago
-              </h4>
+          <div className="mt-16 flex flex-col">
+            <div className="mb-6 flex items-center justify-between border-b-2 border-gray-200">
+              <h4 className="text-muted font-sm mb-2 text-lg">Posted</h4>
+              <h4 className="text-muted font-sm mb-2 text-lg">{getDate(selectedProject?.createdAt)}</h4>
             </div>
             <div className="flex flex-col">
               <h5 className="mb-2">Description</h5>
-              <p>{shownProject.description}</p>
+              <p>{selectedProject?.description}</p>
             </div>
           </div>
         </div>
@@ -191,4 +155,4 @@ const ProjectFull = () => {
   );
 };
 
-export default ProjectFull;
+export default ShowProject;

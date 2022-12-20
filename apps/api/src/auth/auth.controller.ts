@@ -13,7 +13,6 @@ import { AuthService } from './auth.service';
 import { Response } from 'express';
 // Dtos
 import { UserRegisterDto } from './dtos/user-register.dto';
-import { AccessToken } from './dtos/jwt-decoded.dto';
 import { ResetPassword } from './dtos/password.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 

@@ -21,20 +21,3 @@ export default function useTokenVerification() {
 
   return isTokenValid;
 }
-
-// Examples of usage:
-// import { useTokenVerification } from './useTokenVerification';
-
-// function App() {
-//   const isTokenValid = useTokenVerification();
-
-//   if (isTokenValid === null) {
-//     return <div>Loading...</div>;
-//   }
-
-//   if (!isTokenValid) {
-//     return <div>Access denied</div>;
-//   }
-
-//   return <div>Access granted</div>;
-// }

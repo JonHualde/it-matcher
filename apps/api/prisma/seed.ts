@@ -50,6 +50,7 @@ const run = async () => {
           startingOn: project.startingOn,
           estimatedTimeDuration: project.estimatedTimeDuration,
           estimatedTimeDurationMetric: project.estimatedTimeDurationMetric,
+          full_name: project.full_name,
           description: project.description,
           difficulty: project.difficulty,
           type: project.type,

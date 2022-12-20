@@ -1,6 +1,3 @@
-let projectIdsArray: Array<any> = [];
-
-import { last } from 'rxjs';
 // config
 import config from './config';
 

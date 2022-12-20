@@ -92,6 +92,7 @@ export class AuthService {
           email: user.email,
           id: user.id,
           firstName: user.first_name,
+          lastName: user.last_name,
           permission: user.permission,
         },
         {
@@ -109,6 +110,7 @@ export class AuthService {
           tokenType: TokenType.REFRESH,
           id: user.id,
           firstName: user.first_name,
+          lastName: user.last_name,
           permission: user.permission,
         },
         {
@@ -141,7 +143,9 @@ export class AuthService {
     if (tokenData.tokenType !== TokenType.ACCESS)
       throw new BadRequestException('Invalid access token');
 
-    return res.status(200).json({ message: 'Token verified successfully' });
+    return res
+      .status(200)
+      .json({ message: 'Token verified successfully', userId: tokenData.id });
   }
 
   async comparePasswords(passwordInDB: string, passwordTypedByUser: string) {

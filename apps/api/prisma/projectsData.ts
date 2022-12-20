@@ -18,6 +18,7 @@ const data = () => ({
   estimatedTimeDuration: faker.datatype.number({ max: 10 }),
   estimatedTimeDurationMetric:
     durationMetric[Math.floor(Math.random() * 2) + 1],
+  full_name: faker.name.findName(),
   description: faker.lorem.paragraph(10),
   difficulty: difficulty[Math.floor(Math.random() * 3) + 1],
   type: type[Math.floor(Math.random() * 2) + 1],
