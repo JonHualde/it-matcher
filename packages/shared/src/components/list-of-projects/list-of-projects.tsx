@@ -31,7 +31,7 @@ const ListOfProjects = ({ projects, getProjectDetails }: ListOfProjectProps) => 
               <Image
                 loading="lazy"
                 layout="fill"
-                src={`${project.projectPicture ?? "/images/login.png"} `}
+                src={`${project.projectPicture && project.projectPicture.includes("http") ? project.projectPicture : "/images/login.png"} `}
                 alt="project_main_picture"
                 objectFit="cover"
                 className="rounded-md"

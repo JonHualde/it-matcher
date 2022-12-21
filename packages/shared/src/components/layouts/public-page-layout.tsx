@@ -2,7 +2,7 @@ import { ReactNode, useEffect } from "react";
 import PublicPageFooter from "../public-page-footer/public-page-footer";
 import PublicPageHeader from "../public-page-header/public-page-header";
 import PublicPageMobileHeader from "../public-page-header/public-page-mobile-header";
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, Zoom } from "react-toastify";
 // States
 import { useStoreActions, useStoreState } from "easy-peasy";
 // Utils
@@ -60,7 +60,7 @@ const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
         newestOnTop={true}
         rtl={false}
         closeOnClick
-        pauseOnHover
+        transition={Zoom}
       />
       <PublicPageHeader />
       <PublicPageMobileHeader />

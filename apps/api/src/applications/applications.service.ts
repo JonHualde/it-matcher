@@ -58,11 +58,6 @@ export class ApplicationService {
   }
 
   async createNewApplication(application: ApplicationDto, user: JwtDecodeDto) {
-    // Check if the user exists
-    const findUser = await this.userService.findById(application.userId);
-    console.log('find user', findUser);
-    if (!findUser) throw new BadGatewayException('User not found');
-
     const existingApplication = await this.prisma.application.findMany({
       where: { projectId: application.projectId, userId: user.id },
     });
@@ -74,7 +69,7 @@ export class ApplicationService {
     return await this.prisma.application.create({
       data: {
         status: 'Pending',
-        userId: application.userId,
+        userId: user.id,
         projectId: application.projectId,
       },
     });

@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import PublicPageLayout from "shared/src/components/layouts/public-page-layout";
 import ListOfProjects from "shared/src/components/list-of-projects/list-of-projects";
 import { ShowProjectModal, LogInModal } from "@shared-components/modals";
+
 // Utils
 import { fetchJSON } from "@shared-utils";
 // types

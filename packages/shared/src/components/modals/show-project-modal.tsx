@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { toast, Zoom } from "react-toastify";
 // Components
-import { Modal, LogInModal } from "@shared-components/modals";
+import { Modal } from "@shared-components/modals";
 import { Button } from "@shared-components/button";
 import Toast from "../toast/toast";
 import { Date, Title, Paragraph } from "@shared-components/typography";
@@ -10,6 +10,8 @@ import { Badge } from "@shared-components/status";
 import { useStoreActions, useStoreState } from "easy-peasy";
 // types
 import { ProjectProps } from "@shared-types";
+// Utils
+import { fetchJSON } from "@shared-utils";
 
 interface LogInModalProps {
   close: () => void;
@@ -23,12 +25,19 @@ const ShowProjectModal = (props: LogInModalProps) => {
   const [disabledButton, setDisabledButton] = useState(false);
 
   const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
+  const notify = () =>
+    (myToast.current = toast("Processing your application request...", {
+      autoClose: false,
+      closeButton: false,
+      type: toast.TYPE.INFO,
+    }));
 
   const updateToast = (type: "SUCCESS" | "ERROR" | "INFO", message: string) => {
     toast.update(myToast.current, {
       type: toast.TYPE[type],
       render: message,
       transition: Zoom,
+      autoClose: 6000,
     });
   };
 
@@ -38,43 +47,18 @@ const ShowProjectModal = (props: LogInModalProps) => {
       return;
     }
 
-    updateToast("INFO", "Processing your application request...");
+    notify();
 
-    try {
-      let res = await fetch("/api/auth/getToken");
-      let { user } = await res.json();
-
-      if (user === undefined) throw new Error("User is not logged in. Could not identify you.");
-
-      const status = ["Accepted", "Pending", "Rejected"];
-
-      fetch("/api/application/send-application", {
-        method: "POST",
-        headers: {
-          "Content-Type": "Application/json",
-        },
-        body: JSON.stringify({
-          status: status[Math.floor(Math.random() * 2) + 1],
-          projectId: shownProject.id,
-          applicantId: user.id,
-        }),
+    fetchJSON("application", "POST", {
+      projectId: shownProject.id,
+    })
+      .then(() => {
+        setDisabledButton(true);
+        updateToast("SUCCESS", "Your application has been sent correctly.");
       })
-        .then((res) => res.json())
-        .then(() => {
-          setDisabledButton(true);
-          toast.update(myToast.current, {
-            type: toast.TYPE.SUCCESS,
-            autoClose: 5000,
-            render: "Your application has been sent correctly.",
-          });
-        });
-    } catch (error: any) {
-      toast.update(myToast.current, {
-        type: toast.TYPE.ERROR,
-        autoClose: 5000,
-        render: error.message,
+      .catch((err) => {
+        updateToast("ERROR", err.message);
       });
-    }
   };
 
   const getStatus = (isOnline: boolean) => {

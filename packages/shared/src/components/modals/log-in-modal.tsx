@@ -6,7 +6,7 @@ import InputContainer from "../input-container/input-container";
 import { ErrorMessage } from "../error-message";
 import { Modal } from "@shared-components/modals";
 // Store
-import { useStoreActions, useStoreState } from "easy-peasy";
+import { useStoreActions } from "easy-peasy";
 // utils
 import { fetchJSON } from "@shared-utils";
 // types
@@ -29,19 +29,25 @@ const LogInModal = (props: LogInModalProps) => {
   const [errorMessage, setErrorMessage] = useState("");
   const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
+  const notify = () =>
+    (myToast.current = toast("Logging you in...", {
+      autoClose: false,
+      closeButton: false,
+      type: toast.TYPE.INFO,
+    }));
+
   const updateToast = (type: "SUCCESS" | "ERROR" | "INFO", message: string) => {
     toast.update(myToast.current, {
-      type: toast.TYPE[type],
       render: message,
-      transition: Zoom,
+      type: toast.TYPE[type],
+      autoClose: 6000,
     });
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    updateToast("INFO", "Logging you in...");
     setError(false);
+    notify();
 
     fetchJSON("auth/login", "POST", {
       email,
