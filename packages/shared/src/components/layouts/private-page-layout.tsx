@@ -16,12 +16,15 @@ const PrivatePageLayout = (props: PublicPageLayoutProps) => {
   const router = useRouter();
   const isTokenValid = useTokenVerification();
 
+  console.log("isTokenValid", isTokenValid);
+
   if (isTokenValid === null) {
     return <div>Loading...</div>;
   }
 
   if (!isTokenValid) {
     router.push("/login");
+    return <div>Redirecting you to the login page.</div>;
   }
 
   return (

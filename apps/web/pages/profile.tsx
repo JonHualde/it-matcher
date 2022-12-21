@@ -29,13 +29,13 @@ const Profile = (props: ProfileProps) => {
   });
 
   const getUserInfo = async () => {
-    const user: any = await fetchJSON("user", "GET").catch((err) => {
-      console.log(err);
-    });
-
-    console.log("user", user);
-
-    setUser(user as User);
+    const user: any = await fetchJSON("user", "GET")
+      .then((res) => {
+        setUser(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   useEffect(() => {

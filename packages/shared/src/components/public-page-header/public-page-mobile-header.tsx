@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Button from "../button/button";
 import Link from "next/link";
@@ -11,10 +11,14 @@ import { fetchJSON } from "@shared-utils";
 
 const PublicPageMobileHeader = () => {
   const [showMenu, setShowMenu] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const router = useRouter();
-
-  let isLoggedIn: boolean = useStoreState((state: any) => state.user.isLoggedIn);
   const resetAuthAndUserData = useStoreActions((actions: any) => actions.resetAuthAndUserData);
+  let isLoggedIn = useStoreState((state: any) => state.user.isLoggedIn);
+
+  useEffect(() => {
+    setIsUserLoggedIn(isLoggedIn);
+  }, [isLoggedIn]);
 
   const logout = () => {
     fetchJSON("auth/logout", "GET")
@@ -45,7 +49,7 @@ const PublicPageMobileHeader = () => {
           EXPERT MATCHER
         </h1>
         <div className="mb-20 flex flex-col items-center">
-          {!isLoggedIn && (
+          {!isUserLoggedIn && (
             <>
               <Button
                 text="Log in"

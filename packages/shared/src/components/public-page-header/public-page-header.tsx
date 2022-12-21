@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Button from "../button/button";
 import PublicPageNavigation from "../public-page-navigation/public-page-navigation";
@@ -7,16 +8,20 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 import { fetchJSON } from "@shared-utils";
 
 const PublicPageHeader = () => {
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
   const router = useRouter();
-
-  let isLoggedIn = useStoreState((state: any) => state.user.isLoggedIn);
   const resetAuthAndUserData = useStoreActions((actions: any) => actions.resetAuthAndUserData);
+  let isLoggedIn = useStoreState((state: any) => state.user.isLoggedIn);
+
+  useEffect(() => {
+    setIsUserLoggedIn(isLoggedIn);
+  }, [isLoggedIn]);
 
   const logout = () => {
     fetchJSON("auth/logout", "GET")
       .then((res: any): any => {
         resetAuthAndUserData();
-        router.push("/");
+        router.asPath === "/" ? router.reload() : router.push("/");
       })
       .catch((err) => alert("We could not log you out, please try again later."));
   };
@@ -31,7 +36,7 @@ const PublicPageHeader = () => {
         EXPERT MATCHER
       </h3>
       <div className="flex items-center">
-        {!isLoggedIn ? (
+        {!isUserLoggedIn ? (
           <>
             <Button
               text="Log in"

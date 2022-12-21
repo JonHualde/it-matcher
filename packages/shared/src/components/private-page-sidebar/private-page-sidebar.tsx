@@ -1,45 +1,41 @@
 import Link from "next/link";
 import Navigation from "./navigation";
 import { useRouter } from "next/router";
-
 // Store
 import { useStoreActions } from "easy-peasy";
+// Utils
+import { fetchJSON } from "@shared-utils";
 
 const PrivatePageSidebar = ({ pathname }: any) => {
   const router = useRouter();
-
-  const logUserOut = useStoreActions(
-    (actions: any) => actions.resetAuthAndUserData
-  );
+  const resetAuthAndUserData = useStoreActions((actions: any) => actions.resetAuthAndUserData);
 
   const logout = () => {
-    logUserOut();
-    router.push("/login");
+    fetchJSON("auth/logout", "GET")
+      .then((res: any): any => {
+        resetAuthAndUserData();
+        router.asPath === "/" ? router.reload() : router.push("/");
+      })
+      .catch((err) => alert("We could not log you out, please try again later."));
+
+    router.push("/");
   };
 
   return (
-    <div className="privatePageSidebar border-r border-pastel flex flex-col px-8 relative">
-      <ul className="space-y-10 mt-12">
+    <div className="privatePageSidebar relative flex flex-col border-r border-pastel px-8">
+      <ul className="mt-12 space-y-10">
         {Navigation.map((item) => (
           <Link key={item.routeName} href={item.routeLink}>
             <li
-              className={`flex text-lg items-center cursor-pointer ${
-                pathname === item.routeLink.toLowerCase()
-                  ? "text-pastel-dark"
-                  : ""
-              }`}
+              className={`flex cursor-pointer items-center text-lg ${pathname === item.routeLink.toLowerCase() ? "text-pastel-dark" : ""}`}
             >
-              {item.icon(pathname === item.routeLink.toLowerCase())}{" "}
-              {item.routeName}
+              {item.icon(pathname === item.routeLink.toLowerCase())} {item.routeName}
             </li>
           </Link>
         ))}
       </ul>
-      <div
-        onClick={logout}
-        className="flex items-center text-lg absolute bottom-8 cursor-pointer hover:text-pastel-dark"
-      >
-        <img src="/images/logout.svg" className="w-6 h-6 mr-3" />
+      <div onClick={logout} className="absolute bottom-8 flex cursor-pointer items-center text-lg hover:text-pastel-dark">
+        <img src="/images/logout.svg" className="mr-3 h-6 w-6" />
         Logout
       </div>
     </div>
