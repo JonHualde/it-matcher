@@ -1,6 +1,7 @@
 interface ModalProps {
   close: () => void;
   children: React.ReactNode | JSX.Element;
+  zIndex?: number;
   size?:
     | "max-w-xs"
     | "max-w-sm"
@@ -17,7 +18,7 @@ interface ModalProps {
 
 const Modal = (props: ModalProps) => {
   return (
-    <div className="fixed -inset-6 z-20 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div className={`fixed -inset-6 z-${props.zIndex ?? 20} overflow-auto`} aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex min-h-screen items-center justify-center text-center sm:block">
         <div className="fixed inset-0 bg-gray-200 bg-opacity-80 transition-opacity" aria-hidden="true" onClick={props.close}></div>
 
@@ -26,9 +27,7 @@ const Modal = (props: ModalProps) => {
         </span>
 
         <div
-          className={`relative inline-block ${
-            props.size ?? "max-w-md"
-          } transform overflow-y-auto rounded-lg bg-white px-8 py-10 text-left align-bottom
+          className={`inline-block ${props.size ?? "max-w-md"} transform overflow-auto rounded-lg bg-white px-8 py-10 text-left align-bottom
           shadow-xl transition-all sm:my-8 sm:w-full sm:align-middle`}
         >
           <svg

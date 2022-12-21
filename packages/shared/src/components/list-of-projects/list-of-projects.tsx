@@ -16,12 +16,15 @@ const ListOfProjects = ({ projects, getProjectDetails }: ListOfProjectProps) => 
   const updateProject = useStoreActions((actions: any) => actions.updateProject);
 
   return (
-    <div className="col-span-1 grid grid-cols-1 gap-y-8 overflow-y-auto" style={{ height: "calc(100vh - 150px)" }}>
+    <div
+      className="col-span-8 grid gap-8 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 "
+      style={{ height: "calc(100vh - 150px)" }}
+    >
       {projects.map((project, index) => (
         <div
           key={project.projectName + "-" + index}
           onClick={() => getProjectDetails(project)}
-          className="relative flex cursor-pointer flex-col rounded-md border border-gray-200 p-4 shadow-xl transition-all hover:px-2"
+          className="relative flex cursor-pointer flex-col rounded-md border border-gray-200 p-4 shadow-xl transition-all hover:p-3"
         >
           <div className="flex justify-between">
             <div className="relative h-12 w-14">

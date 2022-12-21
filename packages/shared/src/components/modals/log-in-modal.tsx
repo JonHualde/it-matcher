@@ -17,6 +17,7 @@ interface LogInModalProps {
   subtitle?: string;
   linkText?: string;
   link?: string;
+  zIndex?: 10 | 20 | 30 | 40 | 50;
 }
 
 const LogInModal = (props: LogInModalProps) => {
@@ -80,7 +81,7 @@ const LogInModal = (props: LogInModalProps) => {
   };
 
   return (
-    <Modal close={props.close}>
+    <Modal close={props.close} zIndex={props.zIndex ?? 20}>
       <div className="w-full bg-white px-8">
         <div className="flex w-full flex-col">
           <div className="mb-6">
@@ -88,7 +89,7 @@ const LogInModal = (props: LogInModalProps) => {
               {props.title}
             </h3>
             <div className="mt-2 mb-3">
-              <p className="text-gray-500 text-sm">
+              <p className="text-sm text-gray-500">
                 {props.subtitle && props.subtitle}{" "}
                 {props.link ? (
                   <Link href={props.link}>
@@ -103,7 +104,7 @@ const LogInModal = (props: LogInModalProps) => {
               <InputContainer type="password" placeholder="password" onChange={setPassword} name="password" label="Password" />
               <button
                 type="submit"
-                className="hover:bg-blue-800 mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3 font-medium text-white"
+                className="mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3 font-medium text-white hover:bg-blue-800"
               >
                 Log in
               </button>

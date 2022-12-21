@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
+// Components
 import PublicPageLayout from "shared/src/components/layouts/public-page-layout";
 import ListOfProjects from "shared/src/components/list-of-projects/list-of-projects";
-import ShowProject from "shared/src/components/project-full/project-full";
+import { ShowProjectModal, LogInModal } from "@shared-components/modals";
 // Utils
 import { fetchJSON } from "@shared-utils";
 // types
 import { ProjectProps } from "@shared-types";
 // States
 import { useStoreState } from "easy-peasy";
-import { ShowProjectModal } from "@shared-components/modals";
 
 const Search = ({ pathname }: any) => {
   const [projects, setProjects] = useState<ProjectProps[]>([]);
   const [selectedProject, setSelectedProject] = useState<ProjectProps | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useStoreState((state: any) => state.user);
 
   const getProjectDetails = async (project: ProjectProps) => {
@@ -54,11 +55,28 @@ const Search = ({ pathname }: any) => {
           {error ? (
             <div>Error</div>
           ) : (
-            <div className="grid h-full grid-cols-4 gap-x-6 py-4 px-8">
-              <ListOfProjects projects={projects} getProjectDetails={getProjectDetails} />
-              {selectedProject && <ShowProjectModal selectedProject={selectedProject} close={() => setSelectedProject(null)} />}
-              {/* <ShowProject selectedProject={selectedProject} /> */}
-            </div>
+            <>
+              {isModalOpen && (
+                <LogInModal
+                  title={"Log in to apply to this offer"}
+                  subtitle={"You do not have an account yet?"}
+                  linkText={"Sign up"}
+                  link={"/sign-up"}
+                  close={() => setIsModalOpen(false)}
+                  zIndex={40}
+                />
+              )}
+              <div className="grid h-full grid-cols-4 gap-x-6 py-4 px-8">
+                <ListOfProjects projects={projects} getProjectDetails={getProjectDetails} />
+                {selectedProject && (
+                  <ShowProjectModal
+                    openLogInModal={() => setIsModalOpen(true)}
+                    selectedProject={selectedProject}
+                    close={() => setSelectedProject(null)}
+                  />
+                )}
+              </div>
+            </>
           )}
         </>
       )}

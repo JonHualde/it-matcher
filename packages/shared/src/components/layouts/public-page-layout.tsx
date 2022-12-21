@@ -50,7 +50,7 @@ const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
   }, [accessToken]);
 
   return (
-    <div className="flex h-screen flex-col justify-between">
+    <div className="relative flex h-screen flex-col justify-between">
       <PublicPageHeader />
       <PublicPageMobileHeader />
       {children}

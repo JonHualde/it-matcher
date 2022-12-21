@@ -3,7 +3,7 @@ import { ReactElement } from "react";
 interface TitleProps {
   color?: "blue-dimmed" | "blue-ocean" | "blue-purple";
   customClassName?: string;
-  children: string;
+  children: string | ReactElement;
 }
 
 const Paragraph = (props: TitleProps) => {
