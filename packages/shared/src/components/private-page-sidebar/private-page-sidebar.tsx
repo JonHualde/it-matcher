@@ -17,8 +17,6 @@ const PrivatePageSidebar = ({ pathname }: any) => {
         router.asPath === "/" ? router.reload() : router.push("/");
       })
       .catch((err) => alert("We could not log you out, please try again later."));
-
-    router.push("/");
   };
 
   return (

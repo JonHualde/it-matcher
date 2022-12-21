@@ -13,9 +13,6 @@ export default async function fetchJSON(url: string, method: "GET" | "POST" | "P
   });
 
   const json = await res.json();
-
-  console.log("jsonapi", json, res.ok);
-
   if (res.ok) return json;
 
   return Promise.reject(json ? json : res.status);

@@ -31,7 +31,7 @@ export class ProjectController {
   }
 
   @Get('all')
-  async getAllProject(@Query() filterProjectDto: FilterProjectDto) {
+  async getAllProject(@Query() filterProjectDto?: FilterProjectDto) {
     return this.projectService.getAllProjects(filterProjectDto);
   }
 

@@ -7,7 +7,7 @@ import { FilterProjectDto, ProjectDto } from './dtos/project.dto';
 export class ProjectService {
   constructor(private prisma: PrismaService) {}
 
-  async getAllProjects(filterProjectDto: FilterProjectDto) {
+  async getAllProjects(filterProjectDto?: FilterProjectDto) {
     return await this.prisma.project.findMany({
       take: 100,
       where: {

@@ -6,6 +6,7 @@ import PrivatePageSidebar from "../private-page-sidebar/private-page-sidebar";
 import Title from "../title/title";
 // Hooks
 import { useTokenVerification } from "@shared-hooks";
+
 interface PublicPageLayoutProps {
   children?: ReactNode;
   pathname?: any;
@@ -24,7 +25,6 @@ const PrivatePageLayout = (props: PublicPageLayoutProps) => {
 
   if (!isTokenValid) {
     router.push("/login");
-    return <div>Redirecting you to the login page.</div>;
   }
 
   return (

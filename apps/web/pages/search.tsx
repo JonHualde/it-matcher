@@ -13,6 +13,7 @@ const Search = ({ pathname }: any) => {
   const [projects, setProjects] = useState<ProjectProps[]>([]);
   const [selectedProject, setSelectedProject] = useState<ProjectProps | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<boolean>(false);
   const user = useStoreState((state: any) => state.user);
 
   const getProjectDetails = async (project: ProjectProps) => {
@@ -20,6 +21,8 @@ const Search = ({ pathname }: any) => {
   };
 
   useEffect(() => {
+    setError(false);
+
     const getData = async () => {
       await fetchJSON("project/all", "GET")
         .then(async (projects: ProjectProps[]) => {
@@ -33,7 +36,8 @@ const Search = ({ pathname }: any) => {
           return;
         })
         .catch((err) => {
-          console.error(err);
+          console.error("HEYYY", err);
+          setError(true);
           setIsLoading(false);
         });
     };
@@ -45,10 +49,16 @@ const Search = ({ pathname }: any) => {
       {isLoading ? (
         <div>Loading...</div>
       ) : (
-        <div className="grid h-full grid-cols-4 gap-x-6 py-4 px-8">
-          <ListOfProjects projects={projects} getProjectDetails={getProjectDetails} />
-          <ShowProject selectedProject={selectedProject} />
-        </div>
+        <>
+          {error ? (
+            <div>Error</div>
+          ) : (
+            <div className="grid h-full grid-cols-4 gap-x-6 py-4 px-8">
+              <ListOfProjects projects={projects} getProjectDetails={getProjectDetails} />
+              <ShowProject selectedProject={selectedProject} />
+            </div>
+          )}
+        </>
       )}
     </PublicPageLayout>
   );
