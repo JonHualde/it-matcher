@@ -84,7 +84,7 @@ export class ProjectService {
     console.log('files', files);
 
     const numberOfProject = await this.prisma.project.findMany({
-      where: { userId: project.userId },
+      where: { userId: user.id },
     });
 
     if (user.permission === 0 && numberOfProject.length > 3) {
@@ -102,12 +102,12 @@ export class ProjectService {
     }
     return await this.prisma.project.create({
       data: {
-        userId: project.userId,
+        userId: user.id,
         projectName: project.projectName,
         startingOn: new Date(project.startingOn),
         estimatedTimeDuration: +project.estimatedTimeDuration,
         estimatedTimeDurationMetric: project.estimatedTimeDurationMetric,
-        full_name: user.firstname + ' ' + user.lastname,
+        full_name: user.firstName + ' ' + user.lastName,
         description: project.description,
         difficulty: project.difficulty,
         type: project.type,
@@ -143,11 +143,11 @@ export class ProjectService {
   async updateProject(files: any, project: ProjectDto, user: JwtDecodeDto) {
     // @TODO
     // Check if a file exists
-    await this.prisma.project.findUniqueOrThrow({
+    const existingProject = await this.prisma.project.findUniqueOrThrow({
       where: { id: project.id },
     });
 
-    if (project.userId !== user.id) {
+    if (existingProject.userId !== user.id) {
       throw new ForbiddenException(
         'You are not allowed to update this project.',
       );
@@ -156,7 +156,6 @@ export class ProjectService {
     return await this.prisma.project.update({
       where: { id: project.id },
       data: {
-        userId: project.userId,
         projectName: project.projectName,
         startingOn: project.startingOn,
         estimatedTimeDuration: project.estimatedTimeDuration,

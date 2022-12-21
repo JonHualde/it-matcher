@@ -46,7 +46,7 @@ const ListOfProjects = ({ projects, getProjectDetails }: ListOfProjectProps) => 
           </div>
           <h5 className="line-clamp-3 mb-0 mt-3">{project.projectName}</h5>
           <p className="mt-0 mb-6">{project.type}</p>
-          <div className="flex items-end">
+          {/* <div className="flex items-end">
             <Button
               text="Details"
               color="bg-blue-ocean"
@@ -57,7 +57,7 @@ const ListOfProjects = ({ projects, getProjectDetails }: ListOfProjectProps) => 
               borderColor="border-blue-ocean"
               action={() => () => updateProject(project)}
             />
-          </div>
+          </div> */}
         </div>
       ))}
     </div>

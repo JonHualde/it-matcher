@@ -1,6 +1,11 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadGatewayException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { JwtDecodeDto } from 'src/auth/dtos/jwt-decoded.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { UserService } from 'src/user/user.service';
 import {
   ApplicationDto,
   StatusDto,
@@ -9,7 +14,10 @@ import {
 
 @Injectable()
 export class ApplicationService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private userService: UserService,
+  ) {}
 
   async getAllApplications(status?: StatusDto) {
     const applications = await this.prisma.application.findMany({
@@ -50,6 +58,11 @@ export class ApplicationService {
   }
 
   async createNewApplication(application: ApplicationDto, user: JwtDecodeDto) {
+    // Check if the user exists
+    const findUser = await this.userService.findById(application.userId);
+    console.log('find user', findUser);
+    if (!findUser) throw new BadGatewayException('User not found');
+
     const existingApplication = await this.prisma.application.findMany({
       where: { projectId: application.projectId, userId: user.id },
     });

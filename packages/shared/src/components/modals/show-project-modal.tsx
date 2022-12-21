@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { ToastContainer, toast, Zoom } from "react-toastify";
+import { toast, Zoom } from "react-toastify";
 // Components
 import { Modal, LogInModal } from "@shared-components/modals";
 import { Button } from "@shared-components/button";
@@ -24,15 +24,13 @@ const ShowProjectModal = (props: LogInModalProps) => {
 
   const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
-  const notify = () =>
-    (myToast.current = toast(<Toast successMessage="Sending application request..." />, {
-      autoClose: false,
-      closeButton: false,
-      type: toast.TYPE.INFO,
+  const updateToast = (type: "SUCCESS" | "ERROR" | "INFO", message: string) => {
+    toast.update(myToast.current, {
+      type: toast.TYPE[type],
+      render: message,
       transition: Zoom,
-    }));
-
-  const dismiss = () => toast.dismiss(myToast.current);
+    });
+  };
 
   const sendApplication = async (shownProject: any) => {
     if (!isLoggedIn) {
@@ -40,7 +38,7 @@ const ShowProjectModal = (props: LogInModalProps) => {
       return;
     }
 
-    notify();
+    updateToast("INFO", "Processing your application request...");
 
     try {
       let res = await fetch("/api/auth/getToken");
@@ -86,14 +84,6 @@ const ShowProjectModal = (props: LogInModalProps) => {
   return (
     <Modal size="max-w-4xl" close={() => props.close()}>
       <div className="relative rounded-md" style={{ height: "calc(100vh - 150px)" }}>
-        <ToastContainer
-          position="top-right"
-          // autoClose={5000}
-          hideProgressBar={true}
-          newestOnTop={false}
-          rtl={false}
-          pauseOnFocusLoss
-        />
         <div className="mb-8 flex flex-col items-center">
           {/* Main Picture */}
           <div className="relative my-4 flex h-80 w-full items-center">

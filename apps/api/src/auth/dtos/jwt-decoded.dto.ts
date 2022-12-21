@@ -14,10 +14,10 @@ export class JwtDecodeDto {
   readonly id: number;
 
   @IsString()
-  readonly firstname: string;
+  readonly firstName: string;
 
   @IsString()
-  readonly lastname: string;
+  readonly lastName: string;
 
   @IsInt()
   @Min(0)

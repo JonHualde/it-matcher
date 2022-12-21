@@ -40,10 +40,6 @@ export class ProjectDto {
   @IsOptional()
   readonly id: number;
 
-  @IsNumber()
-  @Transform(({ value }) => parseInt(value))
-  readonly userId: number;
-
   @IsString()
   @Length(2, 255)
   readonly projectName: string;

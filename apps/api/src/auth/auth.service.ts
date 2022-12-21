@@ -66,8 +66,8 @@ export class AuthService {
       data: {
         email: userData.email,
         password: passwordHash,
-        first_name: userData.firstname,
-        last_name: userData.lastname,
+        first_name: userData.firstName,
+        last_name: userData.lastName,
         linkedIn_url: userData.linkedInUrl,
         instagram_username: userData.instagramUsername,
         website_url: userData.websiteUrl,

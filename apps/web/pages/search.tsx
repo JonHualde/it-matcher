@@ -63,7 +63,7 @@ const Search = ({ pathname }: any) => {
                   linkText={"Sign up"}
                   link={"/sign-up"}
                   close={() => setIsModalOpen(false)}
-                  zIndex={40}
+                  zIndex="z-30"
                 />
               )}
               <div className="grid h-full grid-cols-4 gap-x-6 py-4 px-8">

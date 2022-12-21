@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 // Components
 import InputContainer from "../input-container/input-container";
 import { ErrorMessage } from "../error-message";
+import { Title, Paragraph } from "@shared-components/typography";
 // Store
 import { useStoreActions } from "easy-peasy";
 // utils
@@ -41,20 +42,24 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col">
-      <h3 className="mt-8 font-medium">Log in</h3>
-      <h6 className="mb-4 lg:mb-8">
-        Need an EXPERT:MATCHER account?{" "}
-        <Link href="/signup">
-          <a className="text-link-color ml-1 underline">Create an account</a>
-        </Link>
-      </h6>
+      <Title type="h3" customClassName="mt-8 font-medium">
+        Log in
+      </Title>
+      <Title type="h6" customClassName="mb-4 lg:mb-8">
+        <div className="flex items-center">
+          <Paragraph>Need an EXPERT:MATCHER account? </Paragraph>
+          <Link href="/signup">
+            <a className="text-link-color ml-1 underline">Create an account</a>
+          </Link>
+        </div>
+      </Title>
       {error && <ErrorMessage errorMessage={errorMessage} />}
       <InputContainer type="email" placeholder="email" onChange={setEmail} name="email" label="Email" />
       <InputContainer type="password" placeholder="password" onChange={setPassword} name="password" label="Password" />
       <button
         type="submit"
-        className="hover:bg-blue-800 mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3
-          font-medium text-white"
+        className="mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3 font-medium
+          text-white hover:bg-blue-800"
       >
         Log in
       </button>

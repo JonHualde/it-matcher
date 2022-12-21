@@ -21,11 +21,11 @@ export class UserRegisterDto {
 
   @IsString()
   @Length(2, 256)
-  readonly firstname: string;
+  readonly firstName: string;
 
   @IsString()
   @Length(2, 256)
-  readonly lastname: string;
+  readonly lastName: string;
 
   @IsString()
   @IsOptional()

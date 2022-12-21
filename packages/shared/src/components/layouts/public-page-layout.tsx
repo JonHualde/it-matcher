@@ -2,6 +2,7 @@ import { ReactNode, useEffect } from "react";
 import PublicPageFooter from "../public-page-footer/public-page-footer";
 import PublicPageHeader from "../public-page-header/public-page-header";
 import PublicPageMobileHeader from "../public-page-header/public-page-mobile-header";
+import { ToastContainer } from "react-toastify";
 // States
 import { useStoreActions, useStoreState } from "easy-peasy";
 // Utils
@@ -51,6 +52,16 @@ const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
 
   return (
     <div className="relative flex h-screen flex-col justify-between">
+      <ToastContainer
+        className="z-50"
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        rtl={false}
+        closeOnClick
+        pauseOnHover
+      />
       <PublicPageHeader />
       <PublicPageMobileHeader />
       {children}

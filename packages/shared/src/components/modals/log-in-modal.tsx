@@ -1,15 +1,16 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
-import { ToastContainer, toast, Zoom } from "react-toastify";
-
+import { toast, Zoom } from "react-toastify";
 // Components
 import InputContainer from "../input-container/input-container";
 import { ErrorMessage } from "../error-message";
-import Toast from "../toast/toast";
 import { Modal } from "@shared-components/modals";
-
 // Store
 import { useStoreActions, useStoreState } from "easy-peasy";
+// utils
+import { fetchJSON } from "@shared-utils";
+// types
+import { User } from "@shared-types";
 
 interface LogInModalProps {
   close: () => void;
@@ -17,7 +18,7 @@ interface LogInModalProps {
   subtitle?: string;
   linkText?: string;
   link?: string;
-  zIndex?: 10 | 20 | 30 | 40 | 50;
+  zIndex?: "z-10" | "z-20" | "z-30" | "z-40" | "z-50";
 }
 
 const LogInModal = (props: LogInModalProps) => {
@@ -26,62 +27,43 @@ const LogInModal = (props: LogInModalProps) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
   const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
-  const notify = () =>
-    (myToast.current = toast(<Toast successMessage="Logging you in..." />, {
-      autoClose: false,
-      closeButton: false,
-      type: toast.TYPE.INFO,
+  const updateToast = (type: "SUCCESS" | "ERROR" | "INFO", message: string) => {
+    toast.update(myToast.current, {
+      type: toast.TYPE[type],
+      render: message,
       transition: Zoom,
-    }));
-
-  const dismiss = () => toast.dismiss();
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    notify();
-
     e.preventDefault();
+
+    updateToast("INFO", "Logging you in...");
     setError(false);
 
-    fetch("/api/auth/login", {
-      method: "post",
-      headers: {
-        "Content-Type": "Application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-      }),
+    fetchJSON("auth/login", "POST", {
+      email,
+      password,
     })
-      .then((res) => res.json())
-      .then((result) => {
-        console.log(result);
-        if (result.error) throw new Error(result.errorMessage);
+      .then((user: User) => {
+        updateAuthStatus({ isLoggedIn: true, id: user.id });
+        updateToast("SUCCESS", "You are now logged in");
 
-        updateAuthStatus({ isLoggedIn: true, id: result.user.id });
         props.close();
-        toast.update(myToast.current, {
-          type: toast.TYPE.SUCCESS,
-          autoClose: 5000,
-          render: "You are now logged in",
-        });
       })
       .catch(async (err) => {
         console.error(err);
+        updateToast("ERROR", err.message);
+
         setError(true);
         setErrorMessage(err.message);
-        toast.update(myToast.current, {
-          type: toast.TYPE.ERROR,
-          autoClose: 5000,
-          render: err.message,
-        });
       });
   };
 
   return (
-    <Modal close={props.close} zIndex={props.zIndex ?? 20}>
+    <Modal close={props.close} zIndex={props.zIndex ?? "z-20"}>
       <div className="w-full bg-white px-8">
         <div className="flex w-full flex-col">
           <div className="mb-6">

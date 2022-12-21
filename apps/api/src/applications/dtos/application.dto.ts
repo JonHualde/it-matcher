@@ -8,9 +8,6 @@ export const ApplicationsStatus: statusOptions[] = [
 ];
 
 export class ApplicationDto {
-  @IsEnum(ApplicationsStatus)
-  readonly status: statusOptions;
-
   @IsNumber()
   readonly projectId: number;
 

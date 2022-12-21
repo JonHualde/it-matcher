@@ -1,7 +1,7 @@
 interface ModalProps {
   close: () => void;
   children: React.ReactNode | JSX.Element;
-  zIndex?: number;
+  zIndex?: "z-10" | "z-20" | "z-30" | "z-40" | "z-50";
   size?:
     | "max-w-xs"
     | "max-w-sm"
@@ -18,7 +18,7 @@ interface ModalProps {
 
 const Modal = (props: ModalProps) => {
   return (
-    <div className={`fixed -inset-6 z-${props.zIndex ?? 20} overflow-auto`} aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <div className={`fixed -inset-6 ${props.zIndex ?? "z-20"} overflow-auto`} aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex min-h-screen items-center justify-center text-center sm:block">
         <div className="fixed inset-0 bg-gray-200 bg-opacity-80 transition-opacity" aria-hidden="true" onClick={props.close}></div>
 
