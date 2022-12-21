@@ -8,6 +8,7 @@ import { fetchJSON } from "@shared-utils";
 import { ProjectProps } from "@shared-types";
 // States
 import { useStoreState } from "easy-peasy";
+import { ShowProjectModal } from "@shared-components/modals";
 
 const Search = ({ pathname }: any) => {
   const [projects, setProjects] = useState<ProjectProps[]>([]);
@@ -55,7 +56,8 @@ const Search = ({ pathname }: any) => {
           ) : (
             <div className="grid h-full grid-cols-4 gap-x-6 py-4 px-8">
               <ListOfProjects projects={projects} getProjectDetails={getProjectDetails} />
-              <ShowProject selectedProject={selectedProject} />
+              {selectedProject && <ShowProjectModal selectedProject={selectedProject} close={() => setSelectedProject(null)} />}
+              {/* <ShowProject selectedProject={selectedProject} /> */}
             </div>
           )}
         </>

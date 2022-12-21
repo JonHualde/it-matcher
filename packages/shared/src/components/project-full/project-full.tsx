@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { ToastContainer, toast, Zoom } from "react-toastify";
 // Store
 import { useStoreActions, useStoreState } from "easy-peasy";
 // Components
-import Button from "../button/button";
-import Modal from "../modals/logInModal";
+import { Button } from "@shared-components/button";
 import Toast from "../toast/toast";
+import { LogInModal } from "@shared-components/modals";
 // types
 import { ProjectProps } from "@shared-types";
 // Utils
@@ -81,20 +81,16 @@ const ShowProject = ({ selectedProject }: ShowProjectProps) => {
   return (
     <>
       {isModalOpen && (
-        <Modal
+        <LogInModal
           title={"Log in to apply to this offer"}
           subtitle={"You do not have an account yet?"}
           linkText={"Sign up"}
           link={"/sign-up"}
-          isOpen={isModalOpen}
           close={() => setIsModalOpen(false)}
         />
       )}
       {selectedProject && (
-        <div
-          className="relative col-span-3 rounded-md border-2 border-gray-200 py-8 px-10 shadow-xl"
-          style={{ height: "calc(100vh - 150px)" }}
-        >
+        <div className="relative col-span-3 rounded-md border-2 border-gray-200 p-6 shadow-xl" style={{ height: "calc(100vh - 150px)" }}>
           <ToastContainer
             position="top-right"
             // autoClose={5000}
@@ -106,13 +102,17 @@ const ShowProject = ({ selectedProject }: ShowProjectProps) => {
           <div className="relative mb-8 flex items-center">
             {/* Main Picture */}
             <div className="relative flex h-28 w-28 items-center">
-              <img src="/images/login.png" alt="" className="rounded-md" />
+              <img
+                src={`${selectedProject.projectPicture ? selectedProject.projectPicture : "/images/login.png"} `}
+                alt="project_main_picture"
+                className="rounded-md"
+              />
             </div>
 
             {/* Title and general info */}
-            <div className="flex w-2/3 flex-col pl-6">
-              <h4 className="my-0 capitalize">{selectedProject?.full_name}</h4>
-              <h4 className="my-0 capitalize">For {selectedProject?.projectName}</h4>
+            <div className="flex flex-col pl-5">
+              <h4 className="my-0 capitalize">{selectedProject?.projectName}</h4>
+              <h6 className="my-0 capitalize italic">By {selectedProject?.full_name}</h6>
               <h6 className="mt-5 mb-0 capitalize">{selectedProject?.type}</h6>
             </div>
 
@@ -137,7 +137,7 @@ const ShowProject = ({ selectedProject }: ShowProjectProps) => {
             </div>
           </div>
 
-          <div className="absolute left-0 w-full border-2 border-gray-200"></div>
+          <div className="absolute left-0 w-full border border-gray-200"></div>
 
           <div className="mt-16 flex flex-col">
             <div className="mb-6 flex items-center justify-between border-b-2 border-gray-200">
