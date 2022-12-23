@@ -1,14 +1,12 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
-import { StoreProvider } from "easy-peasy";
-
+import Router from "next/router";
 // Libs
 import "react-toastify/dist/ReactToastify.css";
-
 // Store
 import { store } from "../store/store";
-
-import Router from "next/router";
+import { StoreProvider } from "easy-peasy";
+// NProgress
 import NProgress from "nprogress"; //nprogress module
 import "nprogress/nprogress.css"; //styles of nprogress
 

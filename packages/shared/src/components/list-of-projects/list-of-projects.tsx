@@ -2,29 +2,29 @@ import Image from "next/image";
 // store
 import { useStoreActions } from "easy-peasy";
 // Components
-import Button from "../button/button";
-import { Italic, Date } from "@shared-components/typography";
+import { Italic, Date, Paragraph, Title } from "@shared-components/typography";
+import { Badge } from "@shared-components/status";
 // types
-import { ProjectProps } from "@shared-types";
+import { ProjectProps, JobTitlesTypes } from "@shared-types";
 
 interface ListOfProjectProps {
   projects: ProjectProps[];
+  jobTitles: JobTitlesTypes[];
   getProjectDetails: (project: ProjectProps) => void;
 }
 
-const ListOfProjects = ({ projects, getProjectDetails }: ListOfProjectProps) => {
+const ListOfProjects = ({ projects, getProjectDetails, jobTitles }: ListOfProjectProps) => {
   const updateProject = useStoreActions((actions: any) => actions.updateProject);
 
   return (
-    <div
-      className="col-span-8 grid gap-8 overflow-y-auto sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 "
-      style={{ height: "calc(100vh - 150px)" }}
-    >
+    <div className="grid gap-8 overflow-y-auto p-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4" style={{ height: "calc(100vh - 150px)" }}>
       {projects.map((project, index) => (
         <div
           key={project.projectName + "-" + index}
           onClick={() => getProjectDetails(project)}
-          className="relative flex cursor-pointer flex-col rounded-md border border-gray-200 p-4 shadow-xl transition-all hover:p-3"
+          className="relative flex cursor-pointer flex-col rounded-md border border-gray-200 p-4 shadow-xl transition-all duration-300 ease-in-out hover:translate-y-[-2px] hover:scale-105
+         hover:border-gray-300 hover:shadow-2xl
+          "
         >
           <div className="flex justify-between">
             <div className="relative h-12 w-14">
@@ -44,20 +44,32 @@ const ListOfProjects = ({ projects, getProjectDetails }: ListOfProjectProps) => 
               <Date customClassName="pl-2">{project.createdAt}</Date>
             </div>
           </div>
-          <h5 className="line-clamp-3 mb-0 mt-3">{project.projectName}</h5>
-          <p className="mt-0 mb-6">{project.type}</p>
-          {/* <div className="flex items-end">
-            <Button
-              text="Details"
-              color="bg-blue-ocean"
-              textColor="text-white"
-              hover="text-blue-800"
-              rounded="rounded-md"
-              padding="px-3 py-1"
-              borderColor="border-blue-ocean"
-              action={() => () => updateProject(project)}
-            />
-          </div> */}
+          <Title type="h5" customClassName="line-clamp-3 mb-0 mt-3">
+            {project.projectName}
+          </Title>
+          <Paragraph customClassName="mt-0">{project.type}</Paragraph>
+          <Paragraph>
+            <>
+              <span className="font-bold">Estimated duration:</span> {project.estimatedTimeDuration}
+              {" " + project.estimatedTimeDurationMetric + "(s)"}
+            </>
+          </Paragraph>
+          <div className="mt-2">
+            <Title type="h6" customClassName="line-clamp-3 mb-1 mt-0">
+              Searching for:
+            </Title>
+            {jobTitles.map((jobTitle, index) => {
+              return project.jobTitle.map((item) => {
+                if (item === jobTitle.id) {
+                  return (
+                    <Badge key={jobTitle.name + "-" + index} color="blue" customClassName="inline-flex text-xs font-medium m-0.5">
+                      {jobTitle.name}
+                    </Badge>
+                  );
+                }
+              });
+            })}
+          </div>
         </div>
       ))}
     </div>

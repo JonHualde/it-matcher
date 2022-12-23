@@ -26,7 +26,6 @@
       "@shared-hooks": ["./src/hooks/index.ts"],
       "@shared-types": ["./src/types/index.ts"],
       "@shared-utils": ["./src/utils/index.ts"],
-      "@shared-utils/validation": ["./src/utils/validation/index.ts"]
     }
   }
 }

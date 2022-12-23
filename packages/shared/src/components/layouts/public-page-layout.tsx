@@ -51,7 +51,7 @@ const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
   }, [accessToken]);
 
   return (
-    <div className="relative flex h-screen flex-col justify-between">
+    <div className="relative flex h-screen flex-col">
       <ToastContainer
         className="z-50"
         position="top-right"

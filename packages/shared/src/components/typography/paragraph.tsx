@@ -9,9 +9,22 @@ interface TitleProps {
 const Paragraph = (props: TitleProps) => {
   let customClassName: string = "";
 
+  const getColor = (): string => {
+    switch (props.color) {
+      case "blue-dimmed":
+        return " text-blue-dimmed";
+      case "blue-ocean":
+        return " text-blue-ocean";
+      case "blue-purple":
+        return " text-blue-purple";
+      default:
+        return " text-black";
+    }
+  };
+
   const generateClassName = (): string => {
     if (props.color) {
-      customClassName += ` text-${props.color}`;
+      customClassName += getColor();
     }
 
     if (props.customClassName) {
