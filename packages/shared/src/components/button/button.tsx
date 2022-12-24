@@ -27,7 +27,7 @@ const Button = (props: ButtonProps) => {
             ${props.padding ? props.padding : "py-3 px-6"}
             ${props.font ? props.font : "font-medium"}
             ${props.borderColor && !props.disabled ? "border-2 " + props.borderColor : "border-2 border-gray-800"}
-            ${props.disabled ? "cursor-not-allowed bg-gray-200" : null}
+            ${props.disabled ? "cursor-not-allowed border-0 bg-gray-200 hover:bg-gray-200" : null}
         `}
       onClick={props.action && props.action}
       disabled={props.disabled ? props.disabled : false}

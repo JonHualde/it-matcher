@@ -6,7 +6,7 @@ import { ShowProjectModal, LogInModal } from "@shared-components/modals";
 import { Loader } from "@shared-components/status";
 import { Paragraph } from "@shared-components/typography";
 import { Box } from "@shared-components/box";
-import { SearchBar } from "components/search";
+import { SearchBar, MobileSearch } from "components/search";
 import { Icon } from "@shared-components/icons";
 // Utils
 import { fetchJSON } from "@shared-utils";
@@ -97,6 +97,11 @@ const Search = ({ pathname }: any) => {
   return (
     <PublicPageLayout pathname={pathname}>
       <SearchBar
+        disabled={isLoading ? true : false}
+        jobTitles={jobTitles}
+        buildQuery={(filters: SearchBarFiltersTypes) => queryBuilder(filters)}
+      />
+      <MobileSearch
         disabled={isLoading ? true : false}
         jobTitles={jobTitles}
         buildQuery={(filters: SearchBarFiltersTypes) => queryBuilder(filters)}

@@ -27,22 +27,27 @@ const SearchBar = (props: SearchBarProps) => {
         e.preventDefault();
         props.buildQuery(filters);
       }}
-      className="flex h-24 w-full items-center justify-end bg-gray-100 px-6"
+      className="hidden h-24 w-full items-center justify-end gap-x-6 bg-gray-100 px-6 lg:flex"
     >
-      <div className="flex w-full">
-        <div className="flex h-12 w-max min-w-[400px] items-center justify-center bg-white">
+      <div className="grid w-full grid-cols-12 gap-x-4">
+        <div className="col-span-4 flex h-12 items-center justify-center bg-white">
           {/* Search input: project name */}
           <input
             onChange={handleChange}
             name="projectName"
-            className="h-full w-full border-0 px-4 outline-none"
+            className="h-full w-full border-0 px-3 outline-none"
             type="text"
-            placeholder="Search by project's name"
+            placeholder="Project's name"
           />
         </div>
 
         {/* Job titles filter */}
-        <select onChange={handleChange} name="jobTitle" className="mx-2 h-12 w-max bg-transparent bg-white px-4 outline-none">
+        <select
+          onChange={handleChange}
+          defaultValue="default"
+          name="jobTitle"
+          className="col-span-2 h-12 bg-transparent bg-white px-3 outline-none"
+        >
           <option value="default" disabled selected>
             Roles{" "}
           </option>
@@ -55,7 +60,12 @@ const SearchBar = (props: SearchBarProps) => {
         </select>
 
         {/* Sort by */}
-        <select onChange={handleChange} name="orderBy" className="mx-2 h-full h-12 w-max bg-transparent bg-white px-4 outline-none">
+        <select
+          onChange={handleChange}
+          defaultValue="default"
+          name="orderBy"
+          className="col-span-2 h-full h-12 bg-transparent bg-white px-4 outline-none"
+        >
           <option value="default" disabled selected>
             Sort by
           </option>
@@ -66,7 +76,12 @@ const SearchBar = (props: SearchBarProps) => {
         </select>
 
         {/* Difficulty */}
-        <select onChange={handleChange} name="difficulty" className="mx-2 h-12 w-max bg-transparent bg-white px-4 outline-none">
+        <select
+          onChange={handleChange}
+          defaultValue="default"
+          name="difficulty"
+          className="col-span-2 h-12 bg-transparent bg-white px-4 outline-none"
+        >
           <option value="default" disabled selected>
             Difficulty
           </option>
@@ -78,7 +93,7 @@ const SearchBar = (props: SearchBarProps) => {
         </select>
 
         {/* Is online */}
-        <select onChange={handleChange} name="isOnline" className="mx-2 h-12 w-max bg-transparent bg-white px-4 outline-none">
+        <select onChange={handleChange} name="isOnline" className="col-span-2 h-12 bg-transparent bg-white px-4 outline-none">
           <option value="default" disabled selected>
             Status
           </option>

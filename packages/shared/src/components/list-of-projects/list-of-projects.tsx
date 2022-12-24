@@ -30,7 +30,7 @@ const ListOfProjects = ({ projects, getProjectDetails, jobTitles }: ListOfProjec
   }
 
   return (
-    <div className="grid gap-8 overflow-y-auto p-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4" style={{ height: "calc(100vh - 150px)" }}>
+    <div className="grid gap-8 overflow-y-auto p-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" style={{ height: "calc(100vh - 150px)" }}>
       {projects.map((project, index) => (
         <div
           key={project.projectName + "-" + index}
