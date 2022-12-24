@@ -35,20 +35,20 @@ const ListOfProjects = ({ projects, getProjectDetails, jobTitles }: ListOfProjec
         <div
           key={project.projectName + "-" + index}
           onClick={() => getProjectDetails(project)}
-          className="relative flex cursor-pointer flex-col rounded-md border border-gray-200 p-4 shadow-xl transition-all duration-300 ease-in-out hover:translate-y-[-2px] hover:scale-105
-         hover:border-gray-300 hover:shadow-2xl
+          className="relative flex max-h-[400px] cursor-pointer flex-col rounded-md border border-gray-200 px-4 pt-4 pb-7 transition-all duration-300 ease-in-out hover:translate-y-[-2px]
+         hover:scale-105 hover:border-gray-300 hover:shadow-lg
           "
         >
           {/* Project's picture */}
           <div className="flex justify-between">
-            <div className="relative h-12 w-14">
+            <div className="relative h-12 w-12">
               <Image
                 loading="lazy"
                 layout="fill"
                 src={`${project.projectPicture && project.projectPicture.includes("http") ? project.projectPicture : "/images/login.png"} `}
                 alt="project_main_picture"
                 objectFit="cover"
-                className="rounded-md"
+                className="rounded-full"
               />{" "}
             </div>
             <div className="flex flex-col items-end">

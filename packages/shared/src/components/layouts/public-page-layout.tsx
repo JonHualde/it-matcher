@@ -19,7 +19,7 @@ interface PublicPageLayoutProps {
 const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
   const updateUserAuth = useStoreActions((actions: any) => actions.updateUserAuthStatus);
   const accessToken = useAccessToken();
-  const isFooterHidden = footerHiddenOnRoutes.includes(pathname);
+  const isFooterHidden = pathname ? footerHiddenOnRoutes.some((route) => pathname.includes(route)) : false;
 
   const updateUserStatus = (isLoggedIn: boolean, id: number | null) => {
     updateUserAuth({ isLoggedIn, id });

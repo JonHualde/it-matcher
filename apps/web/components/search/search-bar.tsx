@@ -1,26 +1,20 @@
 import { useState } from "react";
 import { Button } from "@shared-components/button";
-import { JobTitlesTypes } from "@shared-types";
+import { JobTitlesTypes, SearchBarFiltersTypes } from "@shared-types";
 
 interface SearchBarProps {
   jobTitles: JobTitlesTypes[];
-}
-
-interface Filters {
-  projectName: string;
-  jobTitle: string | number;
-  orderBy: string;
-  difficulty: string;
-  isOnline: boolean | null;
+  buildQuery: (filters: SearchBarFiltersTypes) => void;
+  disabled: boolean;
 }
 
 const SearchBar = (props: SearchBarProps) => {
-  const [filters, setFilters] = useState<Filters>({
+  const [filters, setFilters] = useState<SearchBarFiltersTypes>({
     projectName: "",
     jobTitle: "all",
-    orderBy: "asc",
+    orderBy: null,
     difficulty: "all",
-    isOnline: null,
+    isOnline: "all",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
@@ -28,7 +22,13 @@ const SearchBar = (props: SearchBarProps) => {
   };
 
   return (
-    <div className="flex h-24 w-full items-center justify-end bg-gray-100 px-6">
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        props.buildQuery(filters);
+      }}
+      className="flex h-24 w-full items-center justify-end bg-gray-100 px-6"
+    >
       <div className="flex w-full">
         <div className="flex h-12 w-max min-w-[400px] items-center justify-center bg-white">
           {/* Search input: project name */}
@@ -59,8 +59,8 @@ const SearchBar = (props: SearchBarProps) => {
           <option value="default" disabled selected>
             Sort by
           </option>
-          <option value="asc">Newest</option>
-          <option value="desc">Oldest</option>
+          <option value="desc">Newest</option>
+          <option value="asc">Oldest</option>
           {/* <option value="most-liked">Most liked</option>
           <option value="least-liked">Least liked</option> */}
         </select>
@@ -89,8 +89,8 @@ const SearchBar = (props: SearchBarProps) => {
       </div>
 
       {/* Search button */}
-      <Button text="Search" color="bg-blue-ocean" borderColor="border-blue-ocean" textColor="text-white" hover="bg-blue-800" />
-    </div>
+      <Button disabled={props.disabled} text="Search" type="submit" color="bg-blue-ocean" textColor="text-white" hover="bg-blue-800" />
+    </form>
   );
 };
 

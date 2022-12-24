@@ -6,15 +6,14 @@ import { ShowProjectModal, LogInModal } from "@shared-components/modals";
 import { Loader } from "@shared-components/status";
 import { Paragraph } from "@shared-components/typography";
 import { Box } from "@shared-components/box";
-import { ErrorMessage } from "@shared-components/error-message";
+import { SearchBar } from "components/search";
 import { Icon } from "@shared-components/icons";
 // Utils
 import { fetchJSON } from "@shared-utils";
 // types
-import { ProjectProps, JobTitlesTypes } from "@shared-types";
+import { ProjectProps, JobTitlesTypes, SearchBarFiltersTypes } from "@shared-types";
 // States
 import { useStoreState } from "easy-peasy";
-import { SearchBar } from "components/search";
 
 const Search = ({ pathname }: any) => {
   const [projects, setProjects] = useState<ProjectProps[]>([]);
@@ -29,7 +28,7 @@ const Search = ({ pathname }: any) => {
     setSelectedProject(project);
   };
 
-  const getJobTitlesList = async () => {
+  const getJobTitles = async () => {
     await fetchJSON("job-titles", "GET")
       .then((jobTitles: JobTitlesTypes[]) => {
         setJobTitles(() => jobTitles);
@@ -39,10 +38,14 @@ const Search = ({ pathname }: any) => {
       });
   };
 
-  const getProjects = async () => {
+  const getProjects = async (query?: string) => {
     setError(false);
 
-    await fetchJSON("project/all", "GET")
+    let url = "project/all";
+
+    if (query) url += query;
+
+    await fetchJSON(url, "GET")
       .then(async (projects: ProjectProps[]) => {
         if (!user.isLoggedIn) {
           setProjects(() => projects);
@@ -54,19 +57,51 @@ const Search = ({ pathname }: any) => {
         return;
       })
       .catch((err) => {
-        console.error("HEYYY", err);
         setError(true);
         setIsLoading(false);
       });
   };
 
   useEffect(() => {
-    getJobTitlesList();
+    getJobTitles();
     getProjects();
   }, [setProjects, setIsLoading]);
 
+  const queryBuilder = (filters: SearchBarFiltersTypes): void => {
+    // builder a query string from the filters object and return it
+    let query = "?";
+
+    if (filters.jobTitle && filters.jobTitle !== "all") {
+      query += `jobTitle=${filters.jobTitle}&`;
+    }
+
+    if (filters.projectName && filters.projectName !== "") {
+      query += `projectName=${filters.projectName}&`;
+    }
+
+    if (filters.orderBy) {
+      query += `orderBy=${filters.orderBy}&`;
+    }
+
+    if (filters.difficulty && filters.difficulty !== "all") {
+      query += `difficulty=${filters.difficulty}&`;
+    }
+
+    if (filters.isOnline && filters.isOnline !== "all") {
+      query += `isOnline=${filters.isOnline === "online" ? true : false}&`;
+    }
+
+    getProjects(query);
+  };
+
   return (
     <PublicPageLayout pathname={pathname}>
+      <SearchBar
+        disabled={isLoading ? true : false}
+        jobTitles={jobTitles}
+        buildQuery={(filters: SearchBarFiltersTypes) => queryBuilder(filters)}
+      />
+
       {isLoading && (
         <Box>
           <>
@@ -101,7 +136,6 @@ const Search = ({ pathname }: any) => {
               zIndex="z-30"
             />
           )}
-          <SearchBar jobTitles={jobTitles} />
           <ListOfProjects jobTitles={jobTitles} projects={projects} getProjectDetails={getProjectDetails} />
           {selectedProject && (
             <ShowProjectModal

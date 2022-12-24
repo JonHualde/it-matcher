@@ -5,3 +5,4 @@ export type { default as ProjectProps } from "./project";
 export type { default as User } from "./user";
 export type { default as HttpResponse } from "./httpResponse";
 export type { default as JobTitlesTypes } from "./job-titles";
+export type { default as SearchBarFiltersTypes } from "./search-bar-types";

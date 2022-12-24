@@ -10,11 +10,13 @@ interface ButtonProps {
   disabled?: boolean;
   margin?: string;
   action?: () => void;
+  type?: "submit" | "button";
 }
 
 const Button = (props: ButtonProps) => {
   return (
     <button
+      type={props.type ?? "button"}
       className={` 
          flex justify-center 
             ${props.margin ? props.margin : ""}
