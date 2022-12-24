@@ -137,11 +137,6 @@ export class FilterProjectDto {
   readonly projectName: string;
 
   @IsOptional()
-  @IsNumber()
-  @Transform(({ value }) => parseInt(value))
-  readonly userId: number;
-
-  @IsOptional()
   @IsEnum(difficultyDto)
   @IsString()
   readonly difficulty: difficultyOptions;
@@ -149,4 +144,9 @@ export class FilterProjectDto {
   @IsOptional()
   @IsEnum(orderByDto)
   readonly orderBy: orderBy;
+
+  @IsOptional()
+  @IsNumber()
+  @Transform(({ value }) => parseInt(value))
+  readonly jobTitle: number;
 }

@@ -11,9 +11,9 @@ export class ProjectService {
     return await this.prisma.project.findMany({
       take: 100,
       where: {
-        isOnline: filterProjectDto?.isOnline ?? {},
-        userId: { equals: filterProjectDto?.userId } ?? {},
         projectName: { contains: filterProjectDto?.projectName } ?? {},
+        jobTitle: { hasSome: filterProjectDto?.jobTitle } ?? {},
+        isOnline: filterProjectDto?.isOnline ?? {},
         difficulty: { equals: filterProjectDto?.difficulty } ?? {},
       },
       orderBy: { createdAt: filterProjectDto.orderBy ?? 'desc' },

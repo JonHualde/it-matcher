@@ -8,6 +8,8 @@ import { useStoreActions, useStoreState } from "easy-peasy";
 // Utils
 import { fetchJSON } from "@shared-utils";
 import { useAccessToken } from "@shared-hooks";
+// var
+import { footerHiddenOnRoutes } from "@shared-vars";
 
 interface PublicPageLayoutProps {
   children: ReactNode;
@@ -16,8 +18,8 @@ interface PublicPageLayoutProps {
 
 const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
   const updateUserAuth = useStoreActions((actions: any) => actions.updateUserAuthStatus);
-  const user = useStoreState((state: any) => state.user);
   const accessToken = useAccessToken();
+  const isFooterHidden = footerHiddenOnRoutes.includes(pathname);
 
   const updateUserStatus = (isLoggedIn: boolean, id: number | null) => {
     updateUserAuth({ isLoggedIn, id });
@@ -65,7 +67,7 @@ const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
       <PublicPageHeader />
       <PublicPageMobileHeader />
       {children}
-      {!pathname && <PublicPageFooter />}
+      {!isFooterHidden && <PublicPageFooter />}
     </div>
   );
 };

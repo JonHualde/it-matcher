@@ -90,7 +90,7 @@ const ShowProjectModal = (props: LogInModalProps) => {
         <div className="absolute left-0 w-full border border-gray-200"></div>
 
         <div className="flex flex-col">
-          <div className="mb-6 flex flex-col items-center justify-between border-b-2 border-gray-200">
+          <div className="mb-2 flex flex-col items-center justify-between border-b-2 border-gray-200">
             <div className="flex w-full items-center justify-between ">
               <Paragraph customClassName="py-1.5 font-sm text-md">Creator</Paragraph>
               <Paragraph customClassName="capitalize font-semibold text-lg">{props.selectedProject.full_name}</Paragraph>
@@ -109,8 +109,10 @@ const ShowProjectModal = (props: LogInModalProps) => {
             </div>
           </div>
           <div className="flex flex-col">
-            <h5 className="mb-2">Description</h5>
-            <p>{props.selectedProject?.description}</p>
+            <Title type="h3" customClassName="mb-4">
+              Description
+            </Title>
+            <Paragraph size="large">{props.selectedProject?.description}</Paragraph>
           </div>
         </div>
 

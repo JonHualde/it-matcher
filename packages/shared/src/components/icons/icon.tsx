@@ -31,7 +31,7 @@ const Icon = (props: IconProps) => {
         );
       case "error":
         return (
-          <div className="bg-red-300 flex items-center justify-center rounded-full p-2.5">
+          <div className="flex items-center justify-center rounded-full bg-red-300 p-2.5">
             <IoClose className="text-red-700" size={getSize()} />
           </div>
         );

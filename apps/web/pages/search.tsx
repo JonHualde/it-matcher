@@ -14,6 +14,7 @@ import { fetchJSON } from "@shared-utils";
 import { ProjectProps, JobTitlesTypes } from "@shared-types";
 // States
 import { useStoreState } from "easy-peasy";
+import { SearchBar } from "components/search";
 
 const Search = ({ pathname }: any) => {
   const [projects, setProjects] = useState<ProjectProps[]>([]);
@@ -100,6 +101,7 @@ const Search = ({ pathname }: any) => {
               zIndex="z-30"
             />
           )}
+          <SearchBar jobTitles={jobTitles} />
           <ListOfProjects jobTitles={jobTitles} projects={projects} getProjectDetails={getProjectDetails} />
           {selectedProject && (
             <ShowProjectModal

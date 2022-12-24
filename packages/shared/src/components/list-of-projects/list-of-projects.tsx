@@ -4,6 +4,8 @@ import { useStoreActions } from "easy-peasy";
 // Components
 import { Italic, Date, Paragraph, Title } from "@shared-components/typography";
 import { Badge } from "@shared-components/status";
+import { Box } from "@shared-components/box";
+import { Icon } from "@shared-components/icons";
 // types
 import { ProjectProps, JobTitlesTypes } from "@shared-types";
 
@@ -16,6 +18,17 @@ interface ListOfProjectProps {
 const ListOfProjects = ({ projects, getProjectDetails, jobTitles }: ListOfProjectProps) => {
   const updateProject = useStoreActions((actions: any) => actions.updateProject);
 
+  if (!projects.length) {
+    return (
+      <Box border="border-2 border-blue-ocean">
+        <div className="flex items-center">
+          <Icon type="info" size="small" />
+          <Paragraph customClassName="text-blue-ocean ml-4">No projects found</Paragraph>
+        </div>
+      </Box>
+    );
+  }
+
   return (
     <div className="grid gap-8 overflow-y-auto p-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4" style={{ height: "calc(100vh - 150px)" }}>
       {projects.map((project, index) => (
@@ -26,6 +39,7 @@ const ListOfProjects = ({ projects, getProjectDetails, jobTitles }: ListOfProjec
          hover:border-gray-300 hover:shadow-2xl
           "
         >
+          {/* Project's picture */}
           <div className="flex justify-between">
             <div className="relative h-12 w-14">
               <Image
@@ -44,16 +58,31 @@ const ListOfProjects = ({ projects, getProjectDetails, jobTitles }: ListOfProjec
               <Date customClassName="pl-2">{project.createdAt}</Date>
             </div>
           </div>
+
+          {/* Project's name */}
           <Title type="h5" customClassName="line-clamp-3 mb-0 mt-3">
             {project.projectName}
           </Title>
-          <Paragraph customClassName="mt-0">{project.type}</Paragraph>
+
+          {/* Info about the project */}
+          <Paragraph customClassName="mt-0">
+            <>
+              <span className="font-bold">Project type:</span> {project.type}
+            </>
+          </Paragraph>
           <Paragraph>
             <>
               <span className="font-bold">Estimated duration:</span> {project.estimatedTimeDuration}
               {" " + project.estimatedTimeDurationMetric + "(s)"}
             </>
           </Paragraph>
+          <Paragraph>
+            <div className="flex items-center">
+              <span className="mr-1 font-bold">Starting on:</span> <Date>{project.startingOn}</Date>
+            </div>
+          </Paragraph>
+
+          {/* Searching for */}
           <div className="mt-2">
             <Title type="h6" customClassName="line-clamp-3 mb-1 mt-0">
               Searching for:
@@ -69,6 +98,13 @@ const ListOfProjects = ({ projects, getProjectDetails, jobTitles }: ListOfProjec
                 }
               });
             })}
+          </div>
+
+          {/* Project's status */}
+          <div className="absolute bottom-0 right-0">
+            <Badge color={project.isOnline ? "green" : "red"} customClassName="text-[11px] font-medium px-2">
+              {project.isOnline ? "Online" : "Offline"}
+            </Badge>
           </div>
         </div>
       ))}

@@ -1,40 +1,29 @@
 import { ReactElement } from "react";
 
 interface TitleProps {
-  color?: "blue-dimmed" | "blue-ocean" | "blue-purple";
   customClassName?: string;
   children: string | ReactElement;
+  size?: "tiny" | "small" | "medium" | "large";
+  ref?: any;
 }
 
 const Paragraph = (props: TitleProps) => {
-  let customClassName: string = "";
-
-  const getColor = (): string => {
-    switch (props.color) {
-      case "blue-dimmed":
-        return " text-blue-dimmed";
-      case "blue-ocean":
-        return " text-blue-ocean";
-      case "blue-purple":
-        return " text-blue-purple";
+  const getParagraphSize = (): string => {
+    switch (props.size) {
+      case "tiny":
+        return " text-xs md:text-sm ";
+      case "small":
+        return " text-sm md:text-base ";
+      case "medium":
+        return " text-md md:text-lg";
+      case "large":
+        return " text-lg md:text-xl";
       default:
-        return " text-black";
+        return " text-md md:text-lg";
     }
   };
 
-  const generateClassName = (): string => {
-    if (props.color) {
-      customClassName += getColor();
-    }
-
-    if (props.customClassName) {
-      customClassName += ` ${props.customClassName}`;
-    }
-
-    return customClassName;
-  };
-
-  return <p className={generateClassName()}>{props.children}</p>;
+  return <p className={`${props.customClassName ?? ""} ${getParagraphSize()}`}>{props.children}</p>;
 };
 
 export default Paragraph;

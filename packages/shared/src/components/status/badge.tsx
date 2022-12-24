@@ -1,8 +1,11 @@
+import { ReactElement } from "react";
+
 interface BadgeProps {
-  color: "green" | "red" | "yellow" | "blue" | "gray";
+  color?: "green" | "red" | "yellow" | "blue" | "gray";
   customClassName?: string;
-  children: string;
+  children: string | ReactElement;
   rounded?: "sm" | "md" | "lg" | "xl" | "full";
+  icon?: ReactElement;
 }
 
 const Badge = (props: BadgeProps) => {
@@ -37,7 +40,12 @@ const Badge = (props: BadgeProps) => {
     return customClassName;
   };
 
-  return <div className={generateClassName()}>{props.children}</div>;
+  return (
+    <div className={generateClassName()}>
+      {props.children}
+      {props.icon && props.icon}
+    </div>
+  );
 };
 
 export default Badge;
