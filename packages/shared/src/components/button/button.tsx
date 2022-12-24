@@ -1,5 +1,6 @@
+import { ReactElement } from "react";
 interface ButtonProps {
-  text: string;
+  text: string | ReactElement;
   color?: string;
   hover?: string;
   textColor?: string;
@@ -11,6 +12,7 @@ interface ButtonProps {
   margin?: string;
   action?: () => void;
   type?: "submit" | "button";
+  customClass?: string;
 }
 
 const Button = (props: ButtonProps) => {
@@ -19,6 +21,7 @@ const Button = (props: ButtonProps) => {
       type={props.type ?? "button"}
       className={` 
          flex justify-center 
+            ${props.customClass ? props.customClass : ""}
             ${props.margin ? props.margin : ""}
             ${props.color && !props.disabled ? props.color : "bg-color-600"} 
             ${props.hover ? "hover:" + props.hover : ""} 

@@ -2,6 +2,7 @@ interface ModalProps {
   close: () => void;
   children: React.ReactNode | JSX.Element;
   zIndex?: "z-10" | "z-20" | "z-30" | "z-40" | "z-50";
+  customClass?: string;
   size?:
     | "max-w-xs"
     | "max-w-sm"
@@ -27,8 +28,9 @@ const Modal = (props: ModalProps) => {
         </span>
 
         <div
-          className={`inline-block ${props.size ?? "max-w-md"} transform overflow-auto rounded-lg bg-white px-8 py-10 text-left align-bottom
-          shadow-xl transition-all sm:my-8 sm:w-full sm:align-middle`}
+          className={`inline-block ${props.size ?? "max-w-md"} 
+          w-[90vw] transform overflow-auto rounded-lg bg-white px-3 py-10 text-left align-bottom shadow-xl
+          transition-all sm:my-8 sm:w-full sm:px-8 sm:align-middle`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

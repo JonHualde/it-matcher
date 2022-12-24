@@ -1,45 +1,47 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@shared-components/button";
 import { JobTitlesTypes, SearchBarFiltersTypes } from "@shared-types";
 import { Modal } from "@shared-components/modals";
-
+import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
+import { Title } from "@shared-components/typography";
 interface SearchBarProps {
   jobTitles: JobTitlesTypes[];
-  buildQuery: (filters: SearchBarFiltersTypes) => void;
   disabled: boolean;
+  filters: SearchBarFiltersTypes;
+  updateFilters: (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
+  buildQuery: () => void;
 }
 
 const MobileSearch = (props: SearchBarProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [filters, setFilters] = useState<SearchBarFiltersTypes>({
-    projectName: "",
-    jobTitle: "all",
-    orderBy: null,
-    difficulty: "all",
-    isOnline: "all",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
-  };
 
   return (
-    <div className="roundef-full absolute bottom-5 lg:hidden">
-      <Button rounded="rounded-full" text="test" action={() => setIsModalOpen(true)} />
+    <div className={`absolute bottom-4 right-4 z-10 lg:hidden`}>
+      <div
+        className=" flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-blue-dimmed text-white"
+        onClick={() => setIsModalOpen(true)}
+      >
+        <HiOutlineMagnifyingGlass className="text-3xl" />
+      </div>
       {isModalOpen && (
         <Modal size="max-w-2xl" close={() => setIsModalOpen(false)}>
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              props.buildQuery(filters);
+              props.buildQuery();
+              setIsModalOpen(false);
             }}
-            className="flex h-24 w-full items-center justify-end gap-x-6 bg-gray-100 px-6"
+            className="flex h-auto flex-col items-center justify-end gap-y-6 bg-gray-100 p-2 sm:p-6"
           >
-            <div className="grid w-full grid-cols-12 gap-x-4">
-              <div className="col-span-4 flex h-12 items-center justify-center bg-white">
+            <Title customClassName="m-0" type="h4">
+              Filters
+            </Title>
+            <div className="grid-rows-12 grid w-full gap-y-4">
+              <div className="row-span-4 flex h-12 items-center justify-center bg-white">
                 {/* Search input: project name */}
                 <input
-                  onChange={handleChange}
+                  onChange={props.updateFilters}
+                  value={props.filters.projectName}
                   name="projectName"
                   className="h-full w-full border-0 px-3 outline-none"
                   type="text"
@@ -49,10 +51,10 @@ const MobileSearch = (props: SearchBarProps) => {
 
               {/* Job titles filter */}
               <select
-                onChange={handleChange}
-                defaultValue="default"
+                onChange={props.updateFilters}
+                value={props.filters.jobTitle}
                 name="jobTitle"
-                className="col-span-2 h-12 bg-transparent bg-white px-3 outline-none"
+                className="row-span-2 h-12 bg-transparent bg-white px-3 outline-none"
               >
                 <option value="default" disabled selected>
                   Roles{" "}
@@ -67,10 +69,10 @@ const MobileSearch = (props: SearchBarProps) => {
 
               {/* Sort by */}
               <select
-                onChange={handleChange}
-                defaultValue="default"
+                onChange={props.updateFilters}
+                value={props.filters.orderBy}
                 name="orderBy"
-                className="col-span-2 h-full h-12 bg-transparent bg-white px-4 outline-none"
+                className="row-span-2 h-full h-12 bg-transparent bg-white px-4 outline-none"
               >
                 <option value="default" disabled selected>
                   Sort by
@@ -83,10 +85,10 @@ const MobileSearch = (props: SearchBarProps) => {
 
               {/* Difficulty */}
               <select
-                onChange={handleChange}
-                defaultValue="default"
+                onChange={props.updateFilters}
+                value={props.filters.difficulty}
                 name="difficulty"
-                className="col-span-2 h-12 bg-transparent bg-white px-4 outline-none"
+                className="row-span-2 h-12 bg-transparent bg-white px-4 outline-none"
               >
                 <option value="default" disabled selected>
                   Difficulty
@@ -99,7 +101,12 @@ const MobileSearch = (props: SearchBarProps) => {
               </select>
 
               {/* Is online */}
-              <select onChange={handleChange} name="isOnline" className="col-span-2 h-12 bg-transparent bg-white px-4 outline-none">
+              <select
+                onChange={props.updateFilters}
+                name="isOnline"
+                value={props.filters.isOnline}
+                className="row-span-2 h-12 bg-transparent bg-white px-4 outline-none"
+              >
                 <option value="default" disabled selected>
                   Status
                 </option>
@@ -111,6 +118,7 @@ const MobileSearch = (props: SearchBarProps) => {
 
             {/* Search button */}
             <Button
+              customClass="w-full"
               disabled={props.disabled}
               text="Search"
               type="submit"

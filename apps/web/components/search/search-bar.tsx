@@ -4,28 +4,18 @@ import { JobTitlesTypes, SearchBarFiltersTypes } from "@shared-types";
 
 interface SearchBarProps {
   jobTitles: JobTitlesTypes[];
-  buildQuery: (filters: SearchBarFiltersTypes) => void;
   disabled: boolean;
+  filters: SearchBarFiltersTypes;
+  updateFilters: (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
+  buildQuery: () => void;
 }
 
 const SearchBar = (props: SearchBarProps) => {
-  const [filters, setFilters] = useState<SearchBarFiltersTypes>({
-    projectName: "",
-    jobTitle: "all",
-    orderBy: null,
-    difficulty: "all",
-    isOnline: "all",
-  });
-
-  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
-    setFilters({ ...filters, [e.target.name]: e.target.value });
-  };
-
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        props.buildQuery(filters);
+        props.buildQuery();
       }}
       className="hidden h-24 w-full items-center justify-end gap-x-6 bg-gray-100 px-6 lg:flex"
     >
@@ -33,7 +23,8 @@ const SearchBar = (props: SearchBarProps) => {
         <div className="col-span-4 flex h-12 items-center justify-center bg-white">
           {/* Search input: project name */}
           <input
-            onChange={handleChange}
+            onChange={props.updateFilters}
+            value={props.filters.projectName}
             name="projectName"
             className="h-full w-full border-0 px-3 outline-none"
             type="text"
@@ -43,8 +34,8 @@ const SearchBar = (props: SearchBarProps) => {
 
         {/* Job titles filter */}
         <select
-          onChange={handleChange}
-          defaultValue="default"
+          onChange={props.updateFilters}
+          value={props.filters.jobTitle}
           name="jobTitle"
           className="col-span-2 h-12 bg-transparent bg-white px-3 outline-none"
         >
@@ -61,8 +52,8 @@ const SearchBar = (props: SearchBarProps) => {
 
         {/* Sort by */}
         <select
-          onChange={handleChange}
-          defaultValue="default"
+          onChange={props.updateFilters}
+          value={props.filters.orderBy}
           name="orderBy"
           className="col-span-2 h-full h-12 bg-transparent bg-white px-4 outline-none"
         >
@@ -77,8 +68,8 @@ const SearchBar = (props: SearchBarProps) => {
 
         {/* Difficulty */}
         <select
-          onChange={handleChange}
-          defaultValue="default"
+          onChange={props.updateFilters}
+          value={props.filters.difficulty}
           name="difficulty"
           className="col-span-2 h-12 bg-transparent bg-white px-4 outline-none"
         >
@@ -93,7 +84,12 @@ const SearchBar = (props: SearchBarProps) => {
         </select>
 
         {/* Is online */}
-        <select onChange={handleChange} name="isOnline" className="col-span-2 h-12 bg-transparent bg-white px-4 outline-none">
+        <select
+          onChange={props.updateFilters}
+          name="isOnline"
+          value={props.filters.isOnline}
+          className="col-span-2 h-12 bg-transparent bg-white px-4 outline-none"
+        >
           <option value="default" disabled selected>
             Status
           </option>

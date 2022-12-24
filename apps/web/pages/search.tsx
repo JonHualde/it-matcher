@@ -16,6 +16,13 @@ import { ProjectProps, JobTitlesTypes, SearchBarFiltersTypes } from "@shared-typ
 import { useStoreState } from "easy-peasy";
 
 const Search = ({ pathname }: any) => {
+  const [filters, setFilters] = useState<SearchBarFiltersTypes>({
+    projectName: "",
+    jobTitle: "default",
+    orderBy: "default",
+    difficulty: "default",
+    isOnline: "default",
+  });
   const [projects, setProjects] = useState<ProjectProps[]>([]);
   const [jobTitles, setJobTitles] = useState<JobTitlesTypes[]>([]);
   const [selectedProject, setSelectedProject] = useState<ProjectProps | null>(null);
@@ -23,6 +30,10 @@ const Search = ({ pathname }: any) => {
   const [error, setError] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const user = useStoreState((state: any) => state.user);
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
 
   const getProjectDetails = async (project: ProjectProps) => {
     setSelectedProject(project);
@@ -40,6 +51,7 @@ const Search = ({ pathname }: any) => {
 
   const getProjects = async (query?: string) => {
     setError(false);
+    setIsLoading(true);
 
     let url = "project/all";
 
@@ -67,11 +79,11 @@ const Search = ({ pathname }: any) => {
     getProjects();
   }, [setProjects, setIsLoading]);
 
-  const queryBuilder = (filters: SearchBarFiltersTypes): void => {
+  const queryBuilder = (): void => {
     // builder a query string from the filters object and return it
     let query = "?";
 
-    if (filters.jobTitle && filters.jobTitle !== "all") {
+    if (filters.jobTitle && filters.jobTitle !== "all" && filters.jobTitle !== "default") {
       query += `jobTitle=${filters.jobTitle}&`;
     }
 
@@ -79,15 +91,15 @@ const Search = ({ pathname }: any) => {
       query += `projectName=${filters.projectName}&`;
     }
 
-    if (filters.orderBy) {
+    if (filters.orderBy && filters.orderBy !== "default") {
       query += `orderBy=${filters.orderBy}&`;
     }
 
-    if (filters.difficulty && filters.difficulty !== "all") {
+    if (filters.difficulty && filters.difficulty !== "all" && filters.difficulty !== "default") {
       query += `difficulty=${filters.difficulty}&`;
     }
 
-    if (filters.isOnline && filters.isOnline !== "all") {
+    if (filters.isOnline && filters.isOnline !== "all" && filters.isOnline !== "default") {
       query += `isOnline=${filters.isOnline === "online" ? true : false}&`;
     }
 
@@ -99,12 +111,16 @@ const Search = ({ pathname }: any) => {
       <SearchBar
         disabled={isLoading ? true : false}
         jobTitles={jobTitles}
-        buildQuery={(filters: SearchBarFiltersTypes) => queryBuilder(filters)}
+        filters={filters}
+        updateFilters={handleChange}
+        buildQuery={() => queryBuilder()}
       />
       <MobileSearch
+        updateFilters={handleChange}
+        filters={filters}
         disabled={isLoading ? true : false}
         jobTitles={jobTitles}
-        buildQuery={(filters: SearchBarFiltersTypes) => queryBuilder(filters)}
+        buildQuery={() => queryBuilder()}
       />
 
       {isLoading && (

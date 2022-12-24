@@ -1,6 +1,4 @@
 import Image from "next/image";
-// store
-import { useStoreActions } from "easy-peasy";
 // Components
 import { Italic, Date, Paragraph, Title } from "@shared-components/typography";
 import { Badge } from "@shared-components/status";
@@ -16,8 +14,6 @@ interface ListOfProjectProps {
 }
 
 const ListOfProjects = ({ projects, getProjectDetails, jobTitles }: ListOfProjectProps) => {
-  const updateProject = useStoreActions((actions: any) => actions.updateProject);
-
   if (!projects.length) {
     return (
       <Box border="border-2 border-blue-ocean">
