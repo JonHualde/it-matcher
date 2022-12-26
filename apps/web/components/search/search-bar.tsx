@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Loader } from "@shared-components/status";
 import { Button } from "@shared-components/button";
 import { JobTitlesTypes, SearchBarFiltersTypes } from "@shared-types";
 
@@ -8,6 +8,7 @@ interface SearchBarProps {
   filters: SearchBarFiltersTypes;
   updateFilters: (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
   buildQuery: () => void;
+  isLoading: boolean;
 }
 
 const SearchBar = (props: SearchBarProps) => {
@@ -100,7 +101,15 @@ const SearchBar = (props: SearchBarProps) => {
       </div>
 
       {/* Search button */}
-      <Button disabled={props.disabled} text="Search" type="submit" color="bg-blue-ocean" textColor="text-white" hover="bg-blue-800" />
+      <Button
+        disabled={props.disabled}
+        text={props.isLoading ? <Loader border="border-b-2 border-r-2 border-white" /> : "Search"}
+        type="submit"
+        color="bg-blue-ocean"
+        textColor="text-white"
+        hover="bg-blue-800"
+        customClass="h-12 w-28 flex items-center justify-center"
+      />
     </form>
   );
 };

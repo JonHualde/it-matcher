@@ -1,6 +1,7 @@
 interface LoaderProps {
   customClassName?: string;
   size?: number;
+  border?: string;
 }
 
 const Loader = (props: LoaderProps) => {
@@ -20,7 +21,13 @@ const Loader = (props: LoaderProps) => {
     return customClass;
   };
 
-  return <div className={`animate-spin ${generateClassName()} rounded-full border-b-2 border-r-2 border-blue-dimmed`}></div>;
+  return (
+    <div
+      className={`animate-spin ${generateClassName()} rounded-full 
+    ${props.border ? props.border : "border-b-2 border-r-2 border-blue-dimmed"}
+  `}
+    ></div>
+  );
 };
 
 export default Loader;

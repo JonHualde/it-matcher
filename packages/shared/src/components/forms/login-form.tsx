@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import InputContainer from "../input-container/input-container";
 import { ErrorMessage } from "../error-message";
 import { Title, Paragraph } from "@shared-components/typography";
+import { Button } from "@shared-components/button";
+import { Loader } from "@shared-components/status";
 // Store
 import { useStoreActions } from "easy-peasy";
 // utils
@@ -17,12 +19,14 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
 
   const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsProcessing(true);
     setError(false);
 
     fetchJSON("auth/login", "POST", {
@@ -37,6 +41,9 @@ const LoginForm = () => {
         console.error(err);
         setError(true);
         setErrorMessage(err.message);
+      })
+      .finally(() => {
+        setIsProcessing(false);
       });
   };
 
@@ -54,15 +61,28 @@ const LoginForm = () => {
         </div>
       </Title>
       {error && <ErrorMessage errorMessage={errorMessage} />}
-      <InputContainer type="email" placeholder="email" onChange={setEmail} name="email" label="Email" />
-      <InputContainer type="password" placeholder="password" onChange={setPassword} name="password" label="Password" />
-      <button
+      <InputContainer
+        type="email"
+        placeholder="email"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+        name="email"
+        label="Email"
+      />
+      <InputContainer
+        type="password"
+        placeholder="password"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+        name="password"
+        label="Password"
+      />
+      <Button
         type="submit"
-        className="mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3 font-medium
-          text-white hover:bg-blue-800"
-      >
-        Log in
-      </button>
+        text={isProcessing ? <Loader border="border-b-2 border-r-2 border-white" /> : "Log in"}
+        customClass="mt-4 h-12 flex items-center justify-center"
+        rounded="rounded-sm"
+        color="bg-blue-ocean"
+        hover="bg-blue-800"
+      />
     </form>
   );
 };

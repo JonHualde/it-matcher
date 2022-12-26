@@ -39,7 +39,7 @@ const PrivatePageLayout = (props: PublicPageLayoutProps) => {
         transition={Zoom}
       />
       <PrivatePageHeader />
-      <div className="flex h-[calc(100%-80px)]">
+      <div className="flex h-[calc(100%-60px)]">
         <PrivatePageSidebar pathname={props.pathname} />
         <div className="flex w-full flex-col overflow-y-auto px-10 py-10 ">
           <Title title={props.title} />

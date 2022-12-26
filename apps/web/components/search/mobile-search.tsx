@@ -1,4 +1,5 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
+import { Loader } from "@shared-components/status";
 import { Button } from "@shared-components/button";
 import { JobTitlesTypes, SearchBarFiltersTypes } from "@shared-types";
 import { Modal } from "@shared-components/modals";
@@ -10,6 +11,7 @@ interface SearchBarProps {
   filters: SearchBarFiltersTypes;
   updateFilters: (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
   buildQuery: () => void;
+  isLoading: boolean;
 }
 
 const MobileSearch = (props: SearchBarProps) => {
@@ -120,7 +122,7 @@ const MobileSearch = (props: SearchBarProps) => {
             <Button
               customClass="w-full"
               disabled={props.disabled}
-              text="Search"
+              text={props.isLoading ? <Loader border="border-b-2 border-r-2 border-white" /> : "Search"}
               type="submit"
               color="bg-blue-ocean"
               textColor="text-white"

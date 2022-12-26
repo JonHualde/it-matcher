@@ -30,11 +30,11 @@ const ListOfProjects = ({ updateFavourites, favourites, isUserLoggedIn, projects
   }
 
   return (
-    <div className="grid gap-8 overflow-y-auto p-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" style={{ height: "calc(100vh - 150px)" }}>
+    <div className="grid h-full gap-8 overflow-y-auto p-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {projects.map((project, index) => (
         <div
           key={project.projectName + "-" + index}
-          className="relative flex cursor-pointer flex-col rounded-md border border-gray-200  pt-4 pb-7 transition-all duration-300 ease-in-out hover:translate-y-[-2px]
+          className="flex cursor-pointer flex-col rounded-md border border-gray-200 pt-4 pb-7 transition-all duration-300 ease-in-out hover:translate-y-[-2px]
           hover:border-gray-300 hover:shadow-lg
           "
         >
