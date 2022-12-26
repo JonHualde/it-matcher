@@ -56,9 +56,9 @@ const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
     <div className="relative flex h-screen flex-col">
       <ToastContainer
         className="z-50"
-        position="top-right"
+        position="bottom-right"
         autoClose={5000}
-        hideProgressBar={false}
+        hideProgressBar={true}
         newestOnTop={true}
         rtl={false}
         closeOnClick

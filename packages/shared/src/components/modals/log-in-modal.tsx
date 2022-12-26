@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
-import { toast, Zoom } from "react-toastify";
+import { toast } from "react-toastify";
 // Components
 import InputContainer from "../input-container/input-container";
 import { ErrorMessage } from "../error-message";

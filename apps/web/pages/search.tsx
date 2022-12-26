@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 // Components
 import PublicPageLayout from "shared/src/components/layouts/public-page-layout";
 import ListOfProjects from "shared/src/components/list-of-projects/list-of-projects";
@@ -9,13 +9,14 @@ import { Box } from "@shared-components/box";
 import { SearchBar, MobileSearch } from "components/search";
 import { Icon } from "@shared-components/icons";
 // Utils
-import { fetchJSON } from "@shared-utils";
+import { fetchJSON, notify, updateToast } from "@shared-utils";
 // types
-import { ProjectProps, JobTitlesTypes, SearchBarFiltersTypes } from "@shared-types";
+import { ProjectProps, JobTitlesTypes, SearchBarFiltersTypes, FavouritesTypes } from "@shared-types";
 // States
 import { useStoreState } from "easy-peasy";
 
 const Search = ({ pathname }: any) => {
+  const myToast = useRef<any>();
   const [filters, setFilters] = useState<SearchBarFiltersTypes>({
     projectName: "",
     jobTitle: "default",
@@ -25,6 +26,7 @@ const Search = ({ pathname }: any) => {
   });
   const [projects, setProjects] = useState<ProjectProps[]>([]);
   const [jobTitles, setJobTitles] = useState<JobTitlesTypes[]>([]);
+  const [favourites, setFavourites] = useState<FavouritesTypes[]>([]);
   const [selectedProject, setSelectedProject] = useState<ProjectProps | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<boolean>(false);
@@ -35,8 +37,37 @@ const Search = ({ pathname }: any) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
+  const updateFavourites = async (method: "POST" | "DELETE", project: ProjectProps) => {
+    notify(myToast, "Updating favourites...");
+
+    await fetchJSON(`favourite/${project.id}`, method)
+      .then((res) => {
+        if (method === "POST") {
+          setFavourites((prev) => [...prev, res]);
+          updateToast(myToast, "SUCCESS", `${project.projectName} added to favourites`);
+        } else {
+          setFavourites((prev) => prev.filter((item) => item.projectId !== project.id));
+          updateToast(myToast, "SUCCESS", `${project.projectName} removed from favourites`);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+        updateToast(myToast, "ERROR", "We could not update your favourites. Please try again later.");
+      });
+  };
+
   const getProjectDetails = async (project: ProjectProps) => {
     setSelectedProject(project);
+  };
+
+  const getFavourites = async () => {
+    await fetchJSON("favourite/user", "GET")
+      .then((favourites: FavouritesTypes[]) => {
+        setFavourites(() => favourites);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   const getJobTitles = async () => {
@@ -65,14 +96,26 @@ const Search = ({ pathname }: any) => {
           setProjects(() => projects.filter((item: ProjectProps) => item.userId !== user.id));
         }
 
+        if (query) {
+          updateToast(myToast, "SUCCESS", "Results updated");
+        }
+
         setIsLoading(false);
         return;
       })
       .catch((err) => {
+        if (query) updateToast(myToast, "ERROR", "We could not update your results. Please try again later.");
         setError(true);
         setIsLoading(false);
       });
   };
+
+  useEffect(() => {
+    // If the user logs in, we need to trigger that function again to get the updated list of favourites
+    if (user.isLoggedIn) {
+      getFavourites();
+    }
+  }, [user]);
 
   useEffect(() => {
     getJobTitles();
@@ -103,6 +146,7 @@ const Search = ({ pathname }: any) => {
       query += `isOnline=${filters.isOnline === "online" ? true : false}&`;
     }
 
+    notify(myToast, "Loading projects...");
     getProjects(query);
   };
 
@@ -116,10 +160,10 @@ const Search = ({ pathname }: any) => {
         buildQuery={() => queryBuilder()}
       />
       <MobileSearch
-        updateFilters={handleChange}
-        filters={filters}
         disabled={isLoading ? true : false}
         jobTitles={jobTitles}
+        filters={filters}
+        updateFilters={handleChange}
         buildQuery={() => queryBuilder()}
       />
 
@@ -157,7 +201,14 @@ const Search = ({ pathname }: any) => {
               zIndex="z-30"
             />
           )}
-          <ListOfProjects jobTitles={jobTitles} projects={projects} getProjectDetails={getProjectDetails} />
+          <ListOfProjects
+            isUserLoggedIn={user.isLoggedIn}
+            jobTitles={jobTitles}
+            projects={projects}
+            favourites={favourites}
+            getProjectDetails={getProjectDetails}
+            updateFavourites={updateFavourites}
+          />
           {selectedProject && (
             <ShowProjectModal
               openLogInModal={() => setIsModalOpen(true)}

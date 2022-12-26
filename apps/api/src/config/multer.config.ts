@@ -8,8 +8,8 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 const multerConfig = {
   destPictures: process.env.UPLOAD_LOCATION_PICTURES,
   destAttachments: process.env.UPLOAD_LOCATION_ATTACHMENTS,
-  imageRegex: /(jpg|jpeg|png|gif)$/,
-  attachmentRegex: /(jpg|jpeg|png|gif|pdf|doc|docx|csv|png|jpeg|jpg|xlsx|xls)$/,
+  imageRegex: /(jpg|jpeg|png)$/,
+  attachmentRegex: /(jpg|jpeg|png|pdf|doc|docx|csv|png|jpeg|jpg|xlsx|xls)$/,
 };
 
 // Check if a variable contains the string "picture" in it (case insensitive)
