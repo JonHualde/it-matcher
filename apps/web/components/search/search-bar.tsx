@@ -40,7 +40,7 @@ const SearchBar = (props: SearchBarProps) => {
           name="jobTitle"
           className="col-span-2 h-12 bg-transparent bg-white px-3 outline-none"
         >
-          <option value="default" disabled selected>
+          <option value="default" disabled>
             Roles{" "}
           </option>
           <option value="all">All</option>
@@ -58,7 +58,7 @@ const SearchBar = (props: SearchBarProps) => {
           name="orderBy"
           className="col-span-2 h-full h-12 bg-transparent bg-white px-4 outline-none"
         >
-          <option value="default" disabled selected>
+          <option value="default" disabled>
             Sort by
           </option>
           <option value="desc">Newest</option>
@@ -74,7 +74,7 @@ const SearchBar = (props: SearchBarProps) => {
           name="difficulty"
           className="col-span-2 h-12 bg-transparent bg-white px-4 outline-none"
         >
-          <option value="default" disabled selected>
+          <option value="default" disabled>
             Difficulty
           </option>
           <option value="all">All</option>
@@ -91,7 +91,7 @@ const SearchBar = (props: SearchBarProps) => {
           value={props.filters.isOnline}
           className="col-span-2 h-12 bg-transparent bg-white px-4 outline-none"
         >
-          <option value="default" disabled selected>
+          <option value="default" disabled>
             Status
           </option>
           <option value="all">All</option>
