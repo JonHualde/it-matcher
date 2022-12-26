@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import PrivatePageHeader from "../private-page-header/private-page-header";
 import PrivatePageSidebar from "../private-page-sidebar/private-page-sidebar";
 import Title from "../title/title";
+import { ToastContainer, Zoom } from "react-toastify";
 // Hooks
 import { useTokenVerification } from "@shared-hooks";
 
@@ -17,8 +18,6 @@ const PrivatePageLayout = (props: PublicPageLayoutProps) => {
   const router = useRouter();
   const isTokenValid = useTokenVerification();
 
-  console.log("isTokenValid", isTokenValid);
-
   if (isTokenValid === null) {
     return <div>Loading...</div>;
   }
@@ -29,6 +28,16 @@ const PrivatePageLayout = (props: PublicPageLayoutProps) => {
 
   return (
     <div className="max-w-screen flex h-screen flex-col">
+      <ToastContainer
+        className="z-50"
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={true}
+        newestOnTop={true}
+        rtl={false}
+        closeOnClick
+        transition={Zoom}
+      />
       <PrivatePageHeader />
       <div className="flex h-[calc(100%-80px)]">
         <PrivatePageSidebar pathname={props.pathname} />

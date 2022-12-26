@@ -4,7 +4,7 @@ import PublicPageHeader from "../public-page-header/public-page-header";
 import PublicPageMobileHeader from "../public-page-header/public-page-mobile-header";
 import { ToastContainer, Zoom } from "react-toastify";
 // States
-import { useStoreActions, useStoreState } from "easy-peasy";
+import { useStoreActions } from "easy-peasy";
 // Utils
 import { fetchJSON } from "@shared-utils";
 import { useAccessToken } from "@shared-hooks";

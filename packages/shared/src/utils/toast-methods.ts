@@ -1,10 +1,11 @@
-import { toast } from "react-toastify";
+import { toast, Zoom } from "react-toastify";
 
-export const notify = (myToast: any, message: string) =>
+export const notify = (myToast: any, message: string, autoClose?: boolean) =>
   (myToast.current = toast(message, {
-    autoClose: false,
+    autoClose: autoClose ? 6000 : false,
     closeButton: false,
     type: toast.TYPE.INFO,
+    transition: Zoom,
   }));
 
 export const updateToast = (myToast: any, type: "SUCCESS" | "ERROR" | "INFO", message: string) => {
@@ -12,5 +13,6 @@ export const updateToast = (myToast: any, type: "SUCCESS" | "ERROR" | "INFO", me
     render: message,
     type: toast.TYPE[type],
     autoClose: 6000,
+    transition: Zoom,
   });
 };

@@ -66,7 +66,7 @@ const Applications = (props: any) => {
 
   return (
     <PrivatePageLayout title="APPLICATIONS RECEIVED" pathname={props.pathname}>
-      <ToastContainer position="top-right" autoClose={5000} hideProgressBar={true} newestOnTop={false} rtl={false} pauseOnFocusLoss />
+      {/* <ToastContainer position="top-right" autoClose={5000} hideProgressBar={true} newestOnTop={false} rtl={false} pauseOnFocusLoss /> */}
       <FilterApplications filterApps={filterApps} />
       {isLoading ? <div className="mt-6">Loading...</div> : <ApplicationsTable applications={filteredApplications} />}
     </PrivatePageLayout>

@@ -5,6 +5,7 @@ interface TitleProps {
   customClassName?: string;
   children: string | ReactElement;
   type: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  action?: () => void;
 }
 
 const Title = (props: TitleProps) => {
@@ -35,22 +36,56 @@ const Title = (props: TitleProps) => {
     return customClassName;
   };
 
+  const handleClick = (): void => {
+    if (props.action) {
+      props.action();
+    }
+  };
+
   const generateTag = (): ReactElement => {
     switch (props.type) {
       case "h1":
-        return <h1 className={generateClassName()}>{props.children}</h1>;
+        return (
+          <h1 onClick={handleClick} className={generateClassName()}>
+            {props.children}
+          </h1>
+        );
       case "h2":
-        return <h2 className={generateClassName()}>{props.children}</h2>;
+        return (
+          <h2 onClick={handleClick} className={generateClassName()}>
+            {props.children}
+          </h2>
+        );
       case "h3":
-        return <h3 className={generateClassName()}>{props.children}</h3>;
+        return (
+          <h3 onClick={handleClick} className={generateClassName()}>
+            {props.children}
+          </h3>
+        );
       case "h4":
-        return <h4 className={generateClassName()}>{props.children}</h4>;
+        return (
+          <h4 onClick={handleClick} className={generateClassName()}>
+            {props.children}
+          </h4>
+        );
       case "h5":
-        return <h5 className={generateClassName()}>{props.children}</h5>;
+        return (
+          <h5 onClick={handleClick} className={generateClassName()}>
+            {props.children}
+          </h5>
+        );
       case "h6":
-        return <h6 className={generateClassName()}>{props.children}</h6>;
+        return (
+          <h6 onClick={handleClick} className={generateClassName()}>
+            {props.children}
+          </h6>
+        );
       default:
-        return <h1 className={generateClassName()}>{props.children}</h1>;
+        return (
+          <h1 onClick={handleClick} className={generateClassName()}>
+            {props.children}
+          </h1>
+        );
     }
   };
 
