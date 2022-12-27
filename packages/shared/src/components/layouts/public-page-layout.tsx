@@ -16,6 +16,11 @@ interface PublicPageLayoutProps {
   pathname?: any;
 }
 
+type VerifyTokenResponse = {
+  userId?: number;
+  message: string;
+};
+
 const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
   const updateUserAuth = useStoreActions((actions: any) => actions.updateUserAuthStatus);
   const accessToken = useAccessToken();
@@ -26,11 +31,11 @@ const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
   };
 
   const verifyToken = async () => {
-    const token = await fetchJSON("auth/verify-token", "GET")
-      .then((res) => {
+    const token: { isLoggedIn: boolean; userId: number | null } = await fetchJSON("auth/verify-token", "GET")
+      .then((response: VerifyTokenResponse) => {
         return {
           isLoggedIn: true,
-          userId: res.userId,
+          userId: response.userId || null,
         };
       })
       .catch(() => {

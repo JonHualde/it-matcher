@@ -3,7 +3,7 @@ import { toast, Zoom } from "react-toastify";
 export const notify = (myToast: any, message: string, autoClose?: boolean) =>
   (myToast.current = toast(message, {
     autoClose: autoClose ? 6000 : false,
-    closeButton: false,
+    closeButton: true,
     type: toast.TYPE.INFO,
     transition: Zoom,
   }));

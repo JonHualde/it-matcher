@@ -34,7 +34,7 @@ const ListOfProjects = ({ updateFavourites, favourites, isUserLoggedIn, projects
       {projects.map((project, index) => (
         <div
           key={project.projectName + "-" + index}
-          className="flex cursor-pointer flex-col rounded-md border border-gray-200 pt-4 pb-7 transition-all duration-300 ease-in-out hover:translate-y-[-2px]
+          className="relative flex cursor-pointer flex-col rounded-md border border-gray-200 pt-4 pb-7 transition-all duration-300 ease-in-out hover:translate-y-[-2px]
           hover:border-gray-300 hover:shadow-lg
           "
         >

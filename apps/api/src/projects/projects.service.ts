@@ -2,6 +2,10 @@ import { Injectable, ForbiddenException } from '@nestjs/common';
 import { JwtDecodeDto } from 'src/auth/dtos/jwt-decoded.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { FilterProjectDto, ProjectDto } from './dtos/project.dto';
+import { v4 as uuid } from 'uuid';
+const AWS = require('aws-sdk');
+// Types
+import { S3UploadResponse } from '@types';
 
 @Injectable()
 export class ProjectService {
@@ -84,10 +88,25 @@ export class ProjectService {
     // }
   }
 
-  async createNewProject(files: any, project: ProjectDto, user: JwtDecodeDto) {
-    console.log('project', project);
-    console.log('files', files);
+  async uploadMedia(
+    files: any[],
+    type: 'pictures' | 'attachments',
+  ): Promise<S3UploadResponse[]> {
+    const s3 = new AWS.S3();
 
+    const params = files.map((file) => {
+      return {
+        Bucket: process.env.AWS_S3_BUCKET_NAME,
+        Key: `${type}/${uuid()}-${file.originalname}`,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+      };
+    });
+
+    return await Promise.all(params.map((param) => s3.upload(param).promise()));
+  }
+
+  async createNewProject(files: any, project: ProjectDto, user: JwtDecodeDto) {
     const numberOfProject = await this.prisma.project.findMany({
       where: { userId: user.id },
     });
@@ -98,13 +117,20 @@ export class ProjectService {
       );
     }
 
-    const attachments: string[] = [];
+    const projectPicture: S3UploadResponse[] = await this.uploadMedia(
+      files.projectPicture,
+      'pictures',
+    );
 
-    if (files.attachments) {
-      files.attachments.forEach((file: any) => {
-        attachments.push(file.updatedFilename);
-      });
-    }
+    const attachments: S3UploadResponse[] = await this.uploadMedia(
+      files.attachments,
+      'attachments',
+    );
+
+    const attachmentsKeys: string[] = attachments.map(
+      (attachment) => attachment.key,
+    );
+
     return await this.prisma.project.create({
       data: {
         userId: user.id,
@@ -122,8 +148,8 @@ export class ProjectService {
         isOnline: project.isOnline,
         toolsAndTechnologies: project.toolsAndTechnologies,
         jobTitle: project.jobTitle,
-        projectPicture: files.projectPicture[0].filename,
-        attachments,
+        projectPicture: projectPicture[0].key,
+        attachments: attachmentsKeys,
       },
     });
   }

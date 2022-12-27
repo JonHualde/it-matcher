@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { ToastContainer, toast, Zoom } from "react-toastify";
+import { toast, Zoom } from "react-toastify";
 import { useSWRConfig } from "swr";
 // Components
 import { ErrorMessage } from "../error-message";
@@ -94,11 +94,14 @@ const UploadProfilePictureForm = ({ profilePicture }: ProfilePictureFormProps) =
     //     <div>...loading</div>
     //   ) : (
     <form onSubmit={handleSubmit} className="mt-8 w-full max-w-xl">
-      <ToastContainer position="top-right" hideProgressBar={true} newestOnTop={false} rtl={false} pauseOnFocusLoss />
       {error && <ErrorMessage errorMessage={errorMessage} />}
       <div className="flex flex-row items-end justify-between">
         <div className="w-1/2">
-          <img className="h-auto h-[280px] rounded-full object-cover" src={image ? image : "/images/placeholder.png"} alt="test" />
+          <img
+            className="h-[280px] w-full rounded-full object-cover"
+            src={"https://expert-matcher-s3-bucket.s3.eu-central-1.amazonaws.com/pictures/image.jpg"}
+            alt="test"
+          />
         </div>
 
         <div className="ml-6 w-1/2">
@@ -113,8 +116,8 @@ const UploadProfilePictureForm = ({ profilePicture }: ProfilePictureFormProps) =
           <img src={image ?? ""} alt="profile_picture" />
           <button
             type="submit"
-            className="hover:bg-blue-800 mt-4 flex w-9/12 justify-center rounded-sm bg-blue-ocean py-3
-                font-medium text-white"
+            className="mt-4 flex w-9/12 justify-center rounded-sm bg-blue-ocean py-3 font-medium
+                text-white hover:bg-blue-800"
           >
             Upload New Picture
           </button>

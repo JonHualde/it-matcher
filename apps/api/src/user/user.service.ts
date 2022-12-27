@@ -31,4 +31,20 @@ export class UserService {
     delete user.password;
     return user;
   }
+
+  async uploadPicture(user: JwtDecodeDto, files: any) {
+    const { profilePicture } = files;
+
+    const userUpdated = await this.prisma.user.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        profile_picture_ref: profilePicture[0].filename,
+      },
+    });
+
+    delete userUpdated.password;
+    return userUpdated;
+  }
 }

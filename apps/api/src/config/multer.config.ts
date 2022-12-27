@@ -1,7 +1,5 @@
 import { extname } from 'path';
-import { existsSync, mkdirSync } from 'fs';
-import { diskStorage } from 'multer';
-import { v4 as uuid } from 'uuid';
+import { memoryStorage } from 'multer';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
 // Multer configuration
@@ -43,24 +41,26 @@ export const multerOptions = () => ({
     }
   },
   // Storage properties
-  storage: diskStorage({
-    // Destination storage path details
-    destination: (req: any, file: any, cb: any) => {
-      const uploadPath =
-        multerConfig[
-          isPicture(file.fieldname) ? 'destPictures' : 'destAttachments'
-        ];
-      // Create folder if doesn't exist
-      if (!existsSync(uploadPath)) {
-        mkdirSync(uploadPath);
-      }
-      cb(null, uploadPath);
-    },
-    // File modification details
-    filename: (req: any, file: any, cb: any) => {
-      file.updatedFilename = `${uuid()}${extname(file.originalname)}`;
-      // Calling the callback passing the random name generated with the original extension name
-      cb(null, `${uuid()}${extname(file.originalname)}`);
-    },
-  }),
+  storage: memoryStorage(),
 });
+
+// storage: diskStorage({
+//   // Destination storage path details
+//   destination: (req: any, file: any, cb: any) => {
+//     const uploadPath =
+//       multerConfig[
+//         isPicture(file.fieldname) ? 'destPictures' : 'destAttachments'
+//       ];
+//     // Create folder if doesn't exist
+//     if (!existsSync(uploadPath)) {
+//       mkdirSync(uploadPath);
+//     }
+//     cb(null, uploadPath);
+//   },
+//   // File modification details
+//   filename: (req: any, file: any, cb: any) => {
+//     file.updatedFilename = `${uuid()}${extname(file.originalname)}`;
+//     // Calling the callback passing the random name generated with the original extension name
+//     cb(null, `${uuid()}${extname(file.originalname)}`);
+//   },
+// }),

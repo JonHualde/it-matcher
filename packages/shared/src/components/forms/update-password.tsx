@@ -60,7 +60,6 @@ const UpdatePasswordForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="mt-16 flex w-full max-w-xl flex-col">
-      <ToastContainer position="top-right" hideProgressBar={true} newestOnTop={false} rtl={false} pauseOnFocusLoss />
       <h5 className="text-blue-dimmed">CHANGE PASSWORD</h5>
       {error && <ErrorMessage errorMessage={errorMessage} />}
       <InputContainer
@@ -80,8 +79,8 @@ const UpdatePasswordForm = () => {
       />
       <button
         type="submit"
-        className="hover:bg-blue-800 mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3
-            font-medium text-white"
+        className="mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3 font-medium
+            text-white hover:bg-blue-800"
       >
         Update Password
       </button>
