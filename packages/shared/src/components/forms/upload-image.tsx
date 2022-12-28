@@ -1,92 +1,58 @@
 import React, { useRef, useEffect, useState } from "react";
-import { toast, Zoom } from "react-toastify";
-import { useSWRConfig } from "swr";
 // Components
 import { ErrorMessage } from "../error-message";
-import Toast from "../toast/toast";
+import { Loader } from "@shared-components/status";
+// utils
+import { fetchFormData, notify, updateToast } from "../../utils";
+// Types
+import { User } from "../../types";
 
 interface ProfilePictureFormProps {
-  profilePicture: string | null | undefined;
+  profilePicture: string | null;
+  setUserData: React.Dispatch<React.SetStateAction<User>>;
 }
 
-const UploadProfilePictureForm = ({ profilePicture }: ProfilePictureFormProps) => {
+const UploadProfilePictureForm = ({ profilePicture, setUserData }: ProfilePictureFormProps) => {
   const userProfilePicture = React.useRef<Blob | any>();
   const myToast = useRef<any>();
-  const [image, setImage] = useState<string | null | undefined>(profilePicture);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const { mutate } = useSWRConfig();
-
-  // const { profilePicture, isLoading, isError } = getUserPicture();
-
-  const notify = () =>
-    (myToast.current = toast(<Toast successMessage="Uploading your picture..." />, {
-      autoClose: false,
-      closeButton: false,
-      type: toast.TYPE.INFO,
-      transition: Zoom,
-    }));
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    notify();
     e.preventDefault();
+
+    if (!userProfilePicture.current.files[0]) {
+      notify(myToast, "Please select a picture to upload", true);
+      return;
+    }
     setError(false);
+    setIsSubmitting(true);
 
-    let form = new FormData();
-    form.append("profilePicture", userProfilePicture.current);
+    notify(myToast, "Uploading your picture...");
 
-    fetch("/api/user/upload-profile-picture", {
-      method: "post",
-      body: form,
-    })
-      .then((res) => res.json())
-      .then(async (result) => {
-        if (result.error) throw new Error(result.errorMessage);
-        toast.update(myToast.current, {
-          type: toast.TYPE.SUCCESS,
-          autoClose: 5000,
-          render: "Your picture has been saved successfully",
-        });
+    const form = new FormData();
+    form.append("profilePicture", userProfilePicture.current.files[0]);
 
-        if (error) throw new Error("We could not display your new profile picture, please reload the page");
-
-        mutate(["/user/get-profile-picture", undefined, true]);
+    fetchFormData("user/upload-picture", "POST", form)
+      .then((user: User) => {
+        updateToast(myToast, "SUCCESS", "Your picture has been saved successfully");
+        setUserData((userData) => ({
+          ...userData,
+          profile_picture_ref: user.profile_picture_ref,
+        }));
+        userProfilePicture.current = null;
       })
       .catch((error) => {
         console.error(error);
         setError(true);
         setErrorMessage(error.message);
-
-        toast.update(myToast.current, {
-          type: toast.TYPE.ERROR,
-          autoClose: 5000,
-          render: error.message,
-        });
+        updateToast(myToast, "ERROR", error.message);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
   };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      userProfilePicture.current = e.target.files[0];
-    }
-  };
-
-  // useEffect(() => {
-  //   if (!isLoading && !profilePicture && isError.error) {
-  //     setImage(() => "");
-  //     setError(() => true);
-  //     setErrorMessage(() => isError.message)
-  //   }
-
-  //   if (!isLoading && profilePicture && !isError?.error) {
-  //     if(profilePicture.size === 27) {
-  //       setImage(() => "/images/placeholder.png");
-  //     } else {
-  //       const imageObjectUrl = URL.createObjectURL(profilePicture);
-  //       setImage(() => imageObjectUrl);
-  //     }
-  //   }
-  // }, [setImage, profilePicture, isLoading, isError]);
 
   return (
     // <>
@@ -99,7 +65,9 @@ const UploadProfilePictureForm = ({ profilePicture }: ProfilePictureFormProps) =
         <div className="w-1/2">
           <img
             className="h-[280px] w-full rounded-full object-cover"
-            src={"https://expert-matcher-s3-bucket.s3.eu-central-1.amazonaws.com/pictures/image.jpg"}
+            src={`${process.env.NEXT_PUBLIC_AWS_S3_LINK}${
+              profilePicture ? "/" + profilePicture : "/pictures/Generic-Profile-1600x1600.png"
+            } `}
             alt="test"
           />
         </div>
@@ -109,17 +77,16 @@ const UploadProfilePictureForm = ({ profilePicture }: ProfilePictureFormProps) =
             ref={userProfilePicture}
             accept="image/*"
             type="file"
-            onChange={handleImageChange}
+            // onChange={handleImageChange}
             name="userProfilePicture"
             className="w-9/12"
           />
-          <img src={image ?? ""} alt="profile_picture" />
           <button
             type="submit"
             className="mt-4 flex w-9/12 justify-center rounded-sm bg-blue-ocean py-3 font-medium
                 text-white hover:bg-blue-800"
           >
-            Upload New Picture
+            {isSubmitting ? <Loader border="border-b-2 border-r-2 border-white" /> : "Upload"}
           </button>
           <p className="mt-3">Accepted files: .jpg, .jpeg. </p>
           <p>The file cannot exceed 2Mb</p>

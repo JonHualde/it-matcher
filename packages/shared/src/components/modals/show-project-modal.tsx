@@ -7,39 +7,23 @@ import Toast from "../toast/toast";
 import { Date, Title, Paragraph } from "@shared-components/typography";
 import { Badge } from "@shared-components/status";
 // Store
-import { useStoreActions, useStoreState } from "easy-peasy";
+import { useStoreState } from "easy-peasy";
 // types
-import { ProjectProps } from "@shared-types";
+import { ProjectProps, GetUserApplicationsResponse } from "@shared-types";
 // Utils
-import { fetchJSON } from "@shared-utils";
+import { fetchJSON, notify, updateToast } from "@shared-utils";
 
 interface LogInModalProps {
-  close: () => void;
   selectedProject: ProjectProps;
+  applications: GetUserApplicationsResponse[];
+  close: () => void;
   openLogInModal: () => void;
+  setApplications: (applications: GetUserApplicationsResponse[]) => void;
 }
 
 const ShowProjectModal = (props: LogInModalProps) => {
   let isLoggedIn = useStoreState((state: any) => state.user.isLoggedIn);
   const myToast = useRef<any>();
-  const [disabledButton, setDisabledButton] = useState(false);
-
-  const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
-  const notify = () =>
-    (myToast.current = toast("Processing your application request...", {
-      autoClose: false,
-      closeButton: false,
-      type: toast.TYPE.INFO,
-    }));
-
-  const updateToast = (type: "SUCCESS" | "ERROR" | "INFO", message: string) => {
-    toast.update(myToast.current, {
-      type: toast.TYPE[type],
-      render: message,
-      transition: Zoom,
-      autoClose: 6000,
-    });
-  };
 
   const sendApplication = async (shownProject: any) => {
     if (!isLoggedIn) {
@@ -47,17 +31,16 @@ const ShowProjectModal = (props: LogInModalProps) => {
       return;
     }
 
-    notify();
-
+    notify(myToast, "Processing your application request...");
     fetchJSON("application", "POST", {
       projectId: shownProject.id,
     })
-      .then(() => {
-        setDisabledButton(true);
-        updateToast("SUCCESS", "Your application has been sent correctly.");
+      .then((res: GetUserApplicationsResponse) => {
+        props.setApplications([...props.applications, res]);
+        updateToast(myToast, "SUCCESS", `Your application for ${props.selectedProject.projectName} has been sent correctly.`);
       })
       .catch((err) => {
-        updateToast("ERROR", err.message);
+        updateToast(myToast, "ERROR", err.message);
       });
   };
 
@@ -72,7 +55,11 @@ const ShowProjectModal = (props: LogInModalProps) => {
           {/* Main Picture */}
           <div className="relative my-4 flex h-80 w-full items-center">
             <img
-              src={`${props.selectedProject?.projectPicture ?? "/images/login.png"} `}
+              src={`${process.env.NEXT_PUBLIC_AWS_S3_LINK}${
+                props.selectedProject.projectPicture
+                  ? "/" + props.selectedProject.projectPicture
+                  : "/pictures/Generic-Profile-1600x1600.png"
+              } `}
               alt="project_main_picture"
               className="h-full w-full rounded-md object-cover"
             />
@@ -83,7 +70,7 @@ const ShowProjectModal = (props: LogInModalProps) => {
             <Title type="h3" customClassName="my-0 capitalize">
               {props.selectedProject.projectName}
             </Title>
-            <Paragraph customClassName="mt-4 capitalize">{getStatus(props.selectedProject.isOnline)}</Paragraph>
+            <div className="mt-4 capitalize">{getStatus(props.selectedProject.isOnline)}</div>
           </div>
         </div>
 
@@ -119,14 +106,16 @@ const ShowProjectModal = (props: LogInModalProps) => {
         {/* Apply / favourite */}
         <div className="flex w-full items-center justify-center py-8">
           <Button
-            text={!disabledButton ? "Apply" : "Application Sent"}
+            text={
+              props.applications.some((application) => application.projectId === props.selectedProject.id) ? "Application Sent" : "Apply"
+            }
             color="bg-blue-ocean"
             textColor="text-white"
             hover="text-blue-800"
             rounded="rounded-md"
             padding="px-3 py-1"
             borderColor="border-blue-ocean"
-            disabled={disabledButton}
+            disabled={props.applications.some((application) => application.projectId === props.selectedProject.id) ? true : false}
             action={() => sendApplication(props.selectedProject)}
           />
           <div className="relative flex items-center pl-4">

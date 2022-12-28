@@ -6,7 +6,7 @@ interface ErrorMessageProps {
 
 const ErrorMessage = ({ errorMessage }: ErrorMessageProps) => {
   return (
-    <div className="my-3 py-3 px-6 text-lg bg-red rounded-sm text-white text-sm flex items-center">
+    <div className="my-3 flex items-center rounded-sm bg-red-600 py-3 px-6 text-lg text-sm text-white">
       <FiAlertCircle className="mr-3" />
       {errorMessage}
     </div>

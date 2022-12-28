@@ -16,7 +16,7 @@ const run = async () => {
   const salt = bcrypt.genSaltSync();
 
   // 1) Generating users
-  await Promise.all(
+  const users = await Promise.all(
     userData.map(async (user) => {
       return await prisma.user.upsert({
         where: { email: user.email },
@@ -31,7 +31,7 @@ const run = async () => {
           website_url: user.websiteUrl,
           notion_page_url: user.notionPageUrl,
           permission: user.Permission,
-          profile_picture_ref: '',
+          profile_picture_ref: user.profile_picture_ref,
         },
       });
     }),
@@ -45,7 +45,6 @@ const run = async () => {
           user: {
             connect: { id: project.userId },
           },
-          projectPicture: project.projectPicture,
           projectName: project.projectName,
           startingOn: project.startingOn,
           estimatedTimeDuration: project.estimatedTimeDuration,
@@ -60,6 +59,8 @@ const run = async () => {
           initialInvestmentCost: project.initialInvestmentCost,
           toolsAndTechnologies: project.toolsAndTechnologies,
           jobTitle: project.jobTitle,
+          projectPicture: project.projectPicture,
+          attachments: project.attachments,
         },
       });
     }),

@@ -40,7 +40,7 @@ async function bootstrap() {
     cors: getCors(),
   });
 
-  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.use(cookieParser());
 
   const { httpAdapter } = app.get(HttpAdapterHost);

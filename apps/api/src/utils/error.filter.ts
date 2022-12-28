@@ -21,22 +21,22 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
 
-    const getFiles = (files: Express.Multer.File[] | unknown | undefined) => {
-      if (!files) return [];
-      if (isArray(files)) return files;
-      return Object.values(files);
-    };
+    // const getFiles = (files: Express.Multer.File[] | unknown | undefined) => {
+    //   if (!files) return [];
+    //   if (isArray(files)) return files;
+    //   return Object.values(files);
+    // };
 
-    const filePaths = getFiles(request.files);
+    // const filePaths = getFiles(request.files);
 
-    for (const file of filePaths) {
-      fs.unlink(file[0].path, (err) => {
-        if (err) {
-          console.error(err);
-          return err;
-        }
-      });
-    }
+    // for (const file of filePaths) {
+    //   fs.unlink(file[0].path, (err) => {
+    //     if (err) {
+    //       console.error(err);
+    //       return err;
+    //     }
+    //   });
+    // }
 
     // Handle prisma exceptions
     if (exception instanceof PrismaClientKnownRequestError) {

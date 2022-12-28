@@ -11,7 +11,7 @@ import { Icon } from "@shared-components/icons";
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 // types
-import { ProjectProps, JobTitlesTypes, SearchBarFiltersTypes, FavouritesTypes } from "@shared-types";
+import { ProjectProps, JobTitlesTypes, SearchBarFiltersTypes, FavouritesTypes, GetUserApplicationsResponse } from "@shared-types";
 // States
 import { useStoreState } from "easy-peasy";
 
@@ -27,6 +27,7 @@ const Search = ({ pathname }: any) => {
   const [projects, setProjects] = useState<ProjectProps[]>([]);
   const [jobTitles, setJobTitles] = useState<JobTitlesTypes[]>([]);
   const [favourites, setFavourites] = useState<FavouritesTypes[]>([]);
+  const [applications, setApplications] = useState<GetUserApplicationsResponse[]>([]);
   const [selectedProject, setSelectedProject] = useState<ProjectProps | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<boolean>(false);
@@ -64,6 +65,16 @@ const Search = ({ pathname }: any) => {
     await fetchJSON("favourite/user", "GET")
       .then((favourites: FavouritesTypes[]) => {
         setFavourites(() => favourites);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const getApplications = async () => {
+    await fetchJSON("application/user", "GET")
+      .then((applications: GetUserApplicationsResponse[]) => {
+        setApplications(() => applications);
       })
       .catch((err) => {
         console.error(err);
@@ -113,6 +124,7 @@ const Search = ({ pathname }: any) => {
     // If the user logs in, we need to trigger that function again to get the updated list of favourites
     if (user.isLoggedIn) {
       getFavourites();
+      getApplications();
     }
   }, [user]);
 
@@ -212,6 +224,8 @@ const Search = ({ pathname }: any) => {
           />
           {selectedProject && (
             <ShowProjectModal
+              setApplications={setApplications}
+              applications={applications}
               openLogInModal={() => setIsModalOpen(true)}
               selectedProject={selectedProject}
               close={() => setSelectedProject(null)}

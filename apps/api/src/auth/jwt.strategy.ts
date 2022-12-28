@@ -6,6 +6,7 @@ import { JwtDecodeDto } from './dtos/jwt-decoded.dto';
 import { ConfigType } from '@nestjs/config';
 // Custom config
 import authConfig from '@config/auth.config';
+import { UserResponse } from '@types';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -27,18 +28,18 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(payload: any): Promise<JwtDecodeDto | false> {
+  async validate(accessToken: JwtDecodeDto): Promise<JwtDecodeDto | false> {
     // Payload is the decode value of the access token
     // At this stage, the acess token is already extracted and verified.
     // We just need to check if the user exists in the DB
     try {
-      const user = await this.prisma.user.findUnique({
-        where: { id: payload.id },
+      const user: UserResponse = await this.prisma.user.findUnique({
+        where: { id: accessToken.id },
       });
 
       if (!user) return false;
 
-      return payload;
+      return accessToken;
     } catch (error) {
       return false;
     }

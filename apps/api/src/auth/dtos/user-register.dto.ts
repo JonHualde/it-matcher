@@ -33,6 +33,10 @@ export class UserRegisterDto {
 
   @IsString()
   @IsOptional()
+  readonly githubUrl?: string;
+
+  @IsString()
+  @IsOptional()
   readonly instagramUsername?: string;
 
   @IsString()

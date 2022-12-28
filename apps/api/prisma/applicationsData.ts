@@ -14,10 +14,8 @@ const {
 const data = () => ({
   status: status[Math.floor(Math.random() * 2) + 1],
   projectId:
-    Math.floor(Math.random() * (projectLastId - projectFirstId + 1)) +
-    projectFirstId,
-  userId:
-    Math.floor(Math.random() * (lastUserId - firstUserId + 1)) + firstUserId,
+    Math.floor(Math.random() * (projectLastId - projectFirstId + 1)) + 1,
+  userId: Math.floor(Math.random() * (lastUserId - firstUserId + 1)) + 1,
 });
 
 const applicationsData: Array<any> = [];

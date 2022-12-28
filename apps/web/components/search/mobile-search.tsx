@@ -23,7 +23,7 @@ const MobileSearch = (props: SearchBarProps) => {
         className=" flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-blue-dimmed text-white"
         onClick={() => setIsModalOpen(true)}
       >
-        <HiOutlineMagnifyingGlass className="text-3xl" />
+        <HiOutlineMagnifyingGlass aria-hidden={true} className="text-3xl" />
       </div>
       {isModalOpen && (
         <Modal size="max-w-2xl" close={() => setIsModalOpen(false)}>

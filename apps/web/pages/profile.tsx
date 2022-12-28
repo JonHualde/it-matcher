@@ -5,7 +5,7 @@ import UploadProfilePictureForm from "shared/src/components/forms/upload-image";
 import PrivatePageLayout from "shared/src/components/layouts/private-page-layout";
 import { ErrorMessage } from "@shared-components/error-message";
 // Utils
-import { fetchJSON, notify, updateToast } from "@shared-utils";
+import { fetchJSON, notify, updateToast, dismiss } from "@shared-utils";
 // Types
 import { User } from "@shared-types";
 
@@ -16,6 +16,7 @@ interface ProfileProps {
 
 const Profile = (props: ProfileProps) => {
   const myToast = useRef<any>();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [userData, setUserData] = useState<User>({
@@ -42,8 +43,7 @@ const Profile = (props: ProfileProps) => {
   };
 
   const getUserInfo = async () => {
-    console.log("ehey");
-    notify(myToast, "Getting your account details...");
+    notify(myToast, "Getting your account details...", true);
     await fetchJSON("user", "GET")
       .then((res) => {
         setUserData(res);
@@ -52,6 +52,9 @@ const Profile = (props: ProfileProps) => {
       .catch((err) => {
         console.log(err);
         updateToast(myToast, "ERROR", err.message);
+      })
+      .finally(() => {
+        dismiss(myToast);
       });
   };
 
@@ -60,45 +63,51 @@ const Profile = (props: ProfileProps) => {
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    notify(myToast, "Updating your account details...");
-
     e.preventDefault();
     setError(false);
+    setIsSubmitting(true);
 
-    fetch("/api/user/update-profile", {
-      method: "put",
-      headers: {
-        "Content-Type": "Application/json",
-      },
-      body: JSON.stringify({
-        email: userData.email,
-        firstname: userData.first_name,
-        lastname: userData.last_name,
-        linkedInUrl: userData.linkedIn_url,
-        githubUrl: userData.github_url,
-        instagramUsername: userData.instagram_username,
-        websiteUrl: userData.website_url,
-        notionPageUrl: userData.notion_page_url,
-      }),
+    notify(myToast, "Updating your account details...");
+
+    // Update user info
+    fetchJSON("user", "PATCH", {
+      first_name: userData.first_name,
+      last_name: userData.last_name,
+      linkedIn_url: userData.linkedIn_url,
+      github_url: userData.github_url,
+      instagram_username: userData.instagram_username,
+      website_url: userData.website_url,
+      notion_page_url: userData.notion_page_url,
     })
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.error) throw new Error(result.errorMessage);
+      .then((user: User) => {
         updateToast(myToast, "SUCCESS", "Your account details have been updated successfully");
-        setUserData(result.user);
+        setUserData((userData) => ({
+          ...userData,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          linkedIn_url: user.linkedIn_url,
+          github_url: user.github_url,
+          instagram_username: user.instagram_username,
+          website_url: user.website_url,
+          notion_page_url: user.notion_page_url,
+        }));
       })
-      .catch((error) => {
+      .catch((err) => {
+        console.log(err);
+        updateToast(myToast, "ERROR", err.message);
         setError(true);
-        setErrorMessage(error.message);
-        updateToast(myToast, "ERROR", error.message);
+        setErrorMessage(err.message);
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
   };
 
   return (
     <PrivatePageLayout pathname={props.pathname} title={"Edit Information"}>
       {error && <ErrorMessage errorMessage={errorMessage} />}
-      <UploadProfilePictureForm profilePicture={userData.profile_picture_ref} />
-      <AccountInformationForm handleSubmit={handleSubmit} userData={userData} updateUserData={updateUserData} />
+      <UploadProfilePictureForm setUserData={setUserData} profilePicture={userData.profile_picture_ref as string} />
+      <AccountInformationForm isSubmitting={isSubmitting} handleSubmit={handleSubmit} userData={userData} updateUserData={updateUserData} />
       <UpdatePasswordForm />
     </PrivatePageLayout>
   );

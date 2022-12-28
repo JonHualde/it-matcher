@@ -1,17 +1,19 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 // Components
 import InputContainer from "../input-container/input-container";
 import { Title } from "@shared-components/typography";
+import { Loader } from "@shared-components/status";
 // Types
 import { User } from "@shared-types";
 
 interface AccountInformationFormProps {
   userData: User;
+  isSubmitting: boolean;
   updateUserData: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const AccountInformationForm = ({ handleSubmit, updateUserData, userData }: AccountInformationFormProps) => {
+const AccountInformationForm = ({ isSubmitting, handleSubmit, updateUserData, userData }: AccountInformationFormProps) => {
   return (
     <form onSubmit={handleSubmit} className="mt-8 flex w-full max-w-xl flex-col">
       <Title type="h5" customClassName="text-blue-dimmed">
@@ -87,7 +89,7 @@ const AccountInformationForm = ({ handleSubmit, updateUserData, userData }: Acco
         className="mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3 font-medium
             text-white hover:bg-blue-800"
       >
-        Update Personal Information
+        {isSubmitting ? <Loader border="border-b-2 border-r-2 border-white" /> : "Update Personal Information"}
       </button>
     </form>
   );

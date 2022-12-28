@@ -1,7 +1,7 @@
 import Image from "next/image";
 // Components
 import { Italic, Date, Paragraph, Title } from "@shared-components/typography";
-import { Badge } from "@shared-components/status";
+import { Badge, Loader } from "@shared-components/status";
 import { Box } from "@shared-components/box";
 import { Icon } from "@shared-components/icons";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
@@ -45,8 +45,8 @@ const ListOfProjects = ({ updateFavourites, favourites, isUserLoggedIn, projects
                 <Image
                   loading="lazy"
                   layout="fill"
-                  src={`${
-                    project.projectPicture && project.projectPicture.includes("http") ? project.projectPicture : "/images/login.png"
+                  src={`${process.env.NEXT_PUBLIC_AWS_S3_LINK}${
+                    project.projectPicture ? "/" + project.projectPicture : "/pictures/Generic-Profile-1600x1600.png"
                   } `}
                   alt="project_main_picture"
                   objectFit="cover"
@@ -65,27 +65,28 @@ const ListOfProjects = ({ updateFavourites, favourites, isUserLoggedIn, projects
               {project.projectName}
             </Title>
             {/* Info about the project */}
-            <Paragraph customClassName="mt-0">
+            <div className="text-md mt-0 md:text-lg">
               <>
                 <span className="font-bold">Project type:</span> {project.type}
               </>
-            </Paragraph>
-            <Paragraph>
+            </div>
+            <div className="text-md md:text-lg">
               <>
                 <span className="font-bold">Estimated duration:</span> {project.estimatedTimeDuration}
                 {" " + project.estimatedTimeDurationMetric + "(s)"}
               </>
-            </Paragraph>
-            <Paragraph>
+            </div>
+            <div className="text-md md:text-lg">
               <div className="flex items-center">
                 <span className="mr-1 font-bold">Starting on:</span> <Date>{project.startingOn}</Date>
               </div>
-            </Paragraph>
+            </div>
             {/* Searching for */}
             <div className="mt-2">
               <Title type="h6" customClassName="line-clamp-3 mb-1 mt-0">
                 Searching for:
               </Title>
+              {!jobTitles.length && <Loader />}
               {jobTitles.map((jobTitle, index) => {
                 return project.jobTitle.map((item) => {
                   if (item === jobTitle.id) {

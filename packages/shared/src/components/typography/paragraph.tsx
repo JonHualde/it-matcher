@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 
 interface TitleProps {
   customClassName?: string;
-  children: string | ReactElement;
+  children: string;
   size?: "tiny" | "small" | "medium" | "large";
   ref?: any;
 }

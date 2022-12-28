@@ -9,8 +9,6 @@ import {
   Post,
   UseInterceptors,
   UploadedFiles,
-  ParseFilePipe,
-  Param,
   Query,
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
@@ -55,8 +53,6 @@ export class ProjectController {
     },
     @Request() req,
   ) {
-    // @TODO EXTRA
-    // 4) Create a S3 bucket on AWS and upload files and attachments there
     return this.projectService.createNewProject(files, project, req.user);
   }
 

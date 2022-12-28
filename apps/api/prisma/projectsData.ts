@@ -9,10 +9,21 @@ import config from './config';
 
 const { firstUserId, lastUserId, loopIteration } = config;
 
+const projectPictureUrls = [
+  'pictures/e7b12e8b-01c4-401c-96db-fd1e6c9eb04c-svpp.jpeg',
+  'pictures/1e245af3-a921-4055-9d1d-299971fa66b7-twitter 2 (1).jpeg',
+  'pictures/a4f24fd7-e510-4b7c-879b-7583e990a0b8-image.jpg',
+];
+
+const attachmentUrls = [
+  'attachments/b7078446-4032-45ec-8029-98fc51995eec-svpp.jpeg',
+  'attachments/b11ec556-0198-41f4-8921-11ba428c4353-domenico-loia-EhTcC9sYXsw-unsplash.jpg',
+  'attachments/5fe031da-9847-4831-b0a2-08d30affbd73-domenico-loia-EhTcC9sYXsw-unsplash.jpg',
+];
+
 const data = () => ({
   userId:
     Math.floor(Math.random() * (lastUserId - firstUserId + 1)) + firstUserId,
-  projectPicture: faker.image.abstract(),
   projectName: faker.name.findName(),
   startingOn: faker.date.between('2022-06-01', '2022-08-05'),
   estimatedTimeDuration: faker.datatype.number({ max: 10 }),
@@ -30,6 +41,8 @@ const data = () => ({
   toolsAndTechnologies: faker.helpers.arrayElements([
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
   ]),
+  projectPicture: projectPictureUrls[Math.floor(Math.random() * 2) + 1],
+  attachments: [attachmentUrls[Math.floor(Math.random() * 2) + 1]],
 });
 
 const projectData: Array<any> = [];

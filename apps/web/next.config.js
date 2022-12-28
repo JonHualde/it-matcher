@@ -5,8 +5,12 @@ module.exports = withTM({
   images: {
     remotePatterns: [
       {
-        protocol: process.env.NODE_ENV === "production" ? "https" : "http",
+        protocol: "http",
         hostname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "expert-matcher-s3-bucket.s3.eu-central-1.amazonaws.com",
       },
     ],
     domains: null,

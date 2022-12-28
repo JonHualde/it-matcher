@@ -30,6 +30,7 @@ const run = async () => {
           isOnline: true,
           toolsAndTechnologies: project.toolsAndTechnologies,
           jobTitle: project.jobTitle,
+          attachments: project.attachments,
         },
       });
     }),

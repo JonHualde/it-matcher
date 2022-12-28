@@ -118,6 +118,10 @@ export class ProjectDto {
   @IsOptional()
   @IsNotEmpty()
   readonly projectPicture: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  readonly attachments: string;
 }
 
 export class FilterProjectDto {

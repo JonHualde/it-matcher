@@ -7,3 +7,4 @@ export type { default as HttpResponse } from "./httpResponse";
 export type { default as JobTitlesTypes } from "./job-titles";
 export type { default as SearchBarFiltersTypes } from "./search-bar-types";
 export type { default as FavouritesTypes } from "./favourites.types";
+export type { default as GetUserApplicationsResponse } from "./get-user-applications.types";

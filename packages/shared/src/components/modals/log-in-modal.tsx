@@ -88,8 +88,14 @@ const LogInModal = (props: LogInModalProps) => {
             </div>
             <form onSubmit={handleSubmit} className="flex flex-col">
               {error && <ErrorMessage errorMessage={errorMessage} />}
-              <InputContainer type="email" placeholder="email" onChange={setEmail} name="email" label="Email" />
-              <InputContainer type="password" placeholder="password" onChange={setPassword} name="password" label="Password" />
+              <InputContainer type="email" placeholder="email" onChange={(e) => setEmail(e.target.value)} name="email" label="Email" />
+              <InputContainer
+                type="password"
+                placeholder="password"
+                onChange={(e) => setPassword(e.target.value)}
+                name="password"
+                label="Password"
+              />
               <button
                 type="submit"
                 className="mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3 font-medium text-white hover:bg-blue-800"

@@ -1,15 +1,17 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { JwtDecodeDto } from 'src/auth/dtos/jwt-decoded.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { MediaService } from 'src/media/media.service';
 import { FilterProjectDto, ProjectDto } from './dtos/project.dto';
-import { v4 as uuid } from 'uuid';
-const AWS = require('aws-sdk');
 // Types
 import { S3UploadResponse } from '@types';
 
 @Injectable()
 export class ProjectService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private mediaService: MediaService,
+  ) {}
 
   async getAllProjects(filterProjectDto?: FilterProjectDto) {
     const where = {
@@ -47,63 +49,21 @@ export class ProjectService {
     });
   }
 
-  async deleteMedia(file: any, type: 'picture' | 'attachment', userId: number) {
-    // @TODO
-    // Check if the file exists
-    // Delete the file or throw an error
-    // @FROM CHATGPT --> Local file deletion
-    //     const fs = require('fs');
-    // function deleteImage(filePath) {
-    //   // Delete the local file
-    //   fs.unlink(filePath, (error) => {
-    //     if (error) {
-    //       console.error(`Error deleting image: ${error}`);
-    //     } else {
-    //       console.log('Image successfully deleted.');
-    //     }
-    //   });
-    // }
-    // @FROM CHATGPT --> Remove server image deletion
-    //     const fs = require('fs');
-    // const request = require('request');
-    // function deleteImage(imageUrl) {
-    //   // Retrieve the image from the server using the URL
-    //   request.get(imageUrl, (error, response, body) => {
-    //     if (error) {
-    //       console.error(`Error retrieving image: ${error}`);
-    //       return;
-    //     }
-    //     // Save the image to a local file
-    //     const filePath = './image.jpg';
-    //     fs.writeFileSync(filePath, body);
-    //     // Delete the local file
-    //     fs.unlink(filePath, (error) => {
-    //       if (error) {
-    //         console.error(`Error deleting image: ${error}`);
-    //       } else {
-    //         console.log('Image successfully deleted.');
-    //       }
-    //     });
-    //   });
-    // }
-  }
-
-  async uploadMedia(
-    files: any[],
-    type: 'pictures' | 'attachments',
-  ): Promise<S3UploadResponse[]> {
-    const s3 = new AWS.S3();
-
-    const params = files.map((file) => {
-      return {
-        Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Key: `${type}/${uuid()}-${file.originalname}`,
-        Body: file.buffer,
-        ContentType: file.mimetype,
-      };
+  async delete(projectId: number, user: JwtDecodeDto) {
+    const project = await this.prisma.project.findUniqueOrThrow({
+      where: { id: projectId },
     });
 
-    return await Promise.all(params.map((param) => s3.upload(param).promise()));
+    if (project.userId !== user.id) {
+      throw new ForbiddenException(
+        'You are not allowed to delete this project.',
+      );
+    }
+    await this.prisma.project.delete({
+      where: { id: projectId },
+    });
+
+    return project;
   }
 
   async createNewProject(files: any, project: ProjectDto, user: JwtDecodeDto) {
@@ -111,18 +71,26 @@ export class ProjectService {
       where: { userId: user.id },
     });
 
-    if (user.permission === 0 && numberOfProject.length > 3) {
+    const duplicateProjectName = await this.prisma.project.findUnique({
+      where: { projectName: project.projectName },
+    });
+
+    if (duplicateProjectName) {
       throw new ForbiddenException(
-        'You cannot create more than 3 projects at the time.',
+        'This project name is already taken. Please choose another one.',
       );
     }
 
-    const projectPicture: S3UploadResponse[] = await this.uploadMedia(
-      files.projectPicture,
-      'pictures',
-    );
+    if (user.permission === 0 && numberOfProject.length > 3) {
+      throw new ForbiddenException(
+        'You cannot create more than 3 projects at the same time.',
+      );
+    }
 
-    const attachments: S3UploadResponse[] = await this.uploadMedia(
+    const projectPicture: S3UploadResponse[] =
+      await this.mediaService.uploadMedia(files.projectPicture, 'pictures');
+
+    const attachments: S3UploadResponse[] = await this.mediaService.uploadMedia(
       files.attachments,
       'attachments',
     );
@@ -152,23 +120,6 @@ export class ProjectService {
         attachments: attachmentsKeys,
       },
     });
-  }
-
-  async delete(projectId: number, user: JwtDecodeDto) {
-    const project = await this.prisma.project.findUniqueOrThrow({
-      where: { id: projectId },
-    });
-
-    if (project.userId !== user.id) {
-      throw new ForbiddenException(
-        'You are not allowed to delete this project.',
-      );
-    }
-    await this.prisma.project.delete({
-      where: { id: projectId },
-    });
-
-    return project;
   }
 
   async updateProject(files: any, project: ProjectDto, user: JwtDecodeDto) {

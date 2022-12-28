@@ -12,7 +12,8 @@ import {
 import { ResetPassword } from './dtos/password.dto';
 import { UserService } from 'src/user/user.service';
 import { ConfigType } from '@nestjs/config';
-
+// types
+import { UserResponse } from '@types';
 // Custom config
 import authConfig from '@config/auth.config';
 
@@ -35,7 +36,7 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     if (!email || !password) return null;
 
-    const user = await this.prisma.user.findUniqueOrThrow({
+    const user: UserResponse = await this.prisma.user.findUniqueOrThrow({
       where: { email },
     });
 
@@ -52,9 +53,9 @@ export class AuthService {
     return passwordHash;
   }
 
-  async login(user: UserRegisterDto, res: Response) {
-    this.generateAccessToken(res, user);
-    this.generateRefreshToken(res, user);
+  async login(user: UserResponse, res: Response) {
+    this.generateAccessToken(user, res);
+    this.generateRefreshToken(user, res);
 
     return user;
   }
@@ -62,7 +63,7 @@ export class AuthService {
   async register(userData: UserRegisterDto, res: Response) {
     const passwordHash = this.preparePassword(userData.password);
 
-    const user = await this.prisma.user.create({
+    const user: UserResponse = await this.prisma.user.create({
       data: {
         email: userData.email,
         password: passwordHash,
@@ -71,19 +72,20 @@ export class AuthService {
         linkedIn_url: userData.linkedInUrl,
         instagram_username: userData.instagramUsername,
         website_url: userData.websiteUrl,
+        github_url: userData.githubUrl,
         notion_page_url: userData.notionPageUrl,
         permission: 0,
         profile_picture_ref: '',
       },
     });
 
-    this.generateAccessToken(res, user);
-    this.generateRefreshToken(res, user);
+    this.generateAccessToken(user, res);
+    this.generateRefreshToken(user, res);
 
     return user;
   }
 
-  async generateAccessToken(res: Response, user: any) {
+  async generateAccessToken(user: UserResponse, res: Response) {
     res.cookie(
       'access_token',
       this.jwtService.sign(
@@ -102,7 +104,7 @@ export class AuthService {
     );
   }
 
-  async generateRefreshToken(res: Response, user: any) {
+  async generateRefreshToken(user: UserResponse, res: Response) {
     res.cookie(
       'refresh_token',
       this.jwtService.sign(
@@ -128,9 +130,9 @@ export class AuthService {
     if (tokenData.tokenType !== TokenType.REFRESH)
       throw new BadRequestException('Invalid refresh token');
 
-    const user = await this.userService.findById(tokenData.id);
+    const user: UserResponse = await this.userService.findById(tokenData.id);
 
-    this.generateAccessToken(res, user);
+    this.generateAccessToken(user, res);
 
     return res.status(200).json({ message: 'Token refreshed successfully' });
   }
@@ -160,7 +162,7 @@ export class AuthService {
   }
 
   async resetPassword(body: ResetPassword, user: JwtDecodeDto) {
-    const userData = await this.prisma.user.findUniqueOrThrow({
+    const userData: UserResponse = await this.prisma.user.findUniqueOrThrow({
       where: { id: user.id },
     });
 
