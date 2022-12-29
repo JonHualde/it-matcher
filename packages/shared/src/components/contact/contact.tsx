@@ -4,7 +4,7 @@ import * as Yup from "yup";
 
 // components
 import { ErrorMessage } from "../error-message";
-import InputContainer from "../input-container/input-container";
+import { InputContainer } from "@shared-components/input-container";
 
 const ContactForm = () => {
   const [error, setError] = useState<boolean>(false);
@@ -14,9 +14,7 @@ const ContactForm = () => {
   );
 
   const validationSchema = Yup.object().shape({
-    senderEmail: Yup.string()
-      .email("Email not valid")
-      .required("Email is required"),
+    senderEmail: Yup.string().email("Email not valid").required("Email is required"),
     firstname: Yup.string()
       .required("A first name is required")
       .min(2, "The first name must be 2 characters long minimum")
@@ -31,15 +29,7 @@ const ContactForm = () => {
       .max(5000, "The message field cannot exceed 5000 characters"),
   });
 
-  const {
-    handleSubmit,
-    handleChange,
-    values,
-    errors,
-    touched,
-    isSubmitting,
-    resetForm,
-  } = useFormik({
+  const { handleSubmit, handleChange, values, errors, touched, isSubmitting, resetForm } = useFormik({
     initialValues: {
       firstname: "",
       lastname: "",
@@ -56,28 +46,25 @@ const ContactForm = () => {
   return (
     <React.Fragment>
       <div
-        className="flex
-        items-center
-        justify-center
+        className="my-4
+        mx-auto
+        flex
 			w-full
 			max-w-screen-lg
+			items-center
+			justify-center
 			rounded-lg
+            px-4
 			filter
-			my-4
-            lg:my-12
-			mx-auto
 			md:my-8
-			px-4"
+			lg:my-12"
       >
-        <form
-          onSubmit={handleSubmit}
-          className="formContainer w-full max-w-xl border-2 border-gray-200 px-8 py-8 rounded-xl shadow-lg"
-        >
-          <h3 className="mb-6 text-left  mt-0">Contact us</h3>
+        <form onSubmit={handleSubmit} className="formContainer w-full max-w-xl rounded-xl border-2 border-gray-200 px-8 py-8 shadow-lg">
+          <h3 className="mb-6 mt-0  text-left">Contact us</h3>
 
           {error && <ErrorMessage errorMessage={errorMessage} />}
 
-          <div className="form-group flex flex-col relative">
+          <div className="form-group relative flex flex-col">
             <InputContainer
               type="text"
               placeholder="john"
@@ -88,7 +75,7 @@ const ContactForm = () => {
               errors={errors.firstname}
             />
           </div>
-          <div className="form-group flex flex-col relative">
+          <div className="form-group relative flex flex-col">
             <InputContainer
               type="text"
               placeholder="Doe"
@@ -100,7 +87,7 @@ const ContactForm = () => {
             />
           </div>
 
-          <div className="form-group flex flex-col relative">
+          <div className="form-group relative flex flex-col">
             <InputContainer
               type="email"
               placeholder="email"
@@ -111,7 +98,7 @@ const ContactForm = () => {
               errors={errors.senderEmail}
             />
           </div>
-          <div className="form-group flex flex-col relative">
+          <div className="form-group relative flex flex-col">
             <InputContainer
               type="text"
               placeholder="Your message"
@@ -123,17 +110,13 @@ const ContactForm = () => {
             />
           </div>
 
-          {messageSent && (
-            <p className="text-lg font-extrabold text-green-700">
-              Your message has been sent, thank you.
-            </p>
-          )}
+          {messageSent && <p className="text-lg font-extrabold text-green-700">Your message has been sent, thank you.</p>}
 
           <div className="mt-4 text-left">
             <button
               type="submit"
-              className="w-full bg-blue-ocean py-3 rounded-sm flex justify-center text-white font-medium
-          hover:bg-blue-800 mt-4"
+              className="mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3 font-medium
+          text-white hover:bg-blue-800"
             >
               {isSubmitting ? "Sending message..." : "Send enquiry"}
             </button>

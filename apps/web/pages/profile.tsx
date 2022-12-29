@@ -5,7 +5,7 @@ import UploadProfilePictureForm from "shared/src/components/forms/upload-image";
 import PrivatePageLayout from "shared/src/components/layouts/private-page-layout";
 import { ErrorMessage } from "@shared-components/error-message";
 // Utils
-import { fetchJSON, notify, updateToast, dismiss } from "@shared-utils";
+import { fetchJSON, notify, updateToast } from "@shared-utils";
 // Types
 import { User } from "@shared-types";
 
@@ -36,6 +36,8 @@ const Profile = (props: ProfileProps) => {
   const updateUserData = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
+    console.log("name", name, "value", value);
+
     setUserData((userData) => ({
       ...userData,
       [name]: value,
@@ -43,18 +45,15 @@ const Profile = (props: ProfileProps) => {
   };
 
   const getUserInfo = async () => {
-    notify(myToast, "Getting your account details...", true);
+    notify({ myToast, toastId: 1, message: "Getting your account details..." });
     await fetchJSON("user", "GET")
       .then((res) => {
         setUserData(res);
-        updateToast(myToast, "SUCCESS", "Your account details successfully retrieved");
+        updateToast({ myToast, toastId: 1, type: "SUCCESS", message: "Your account details successfully retrieved" });
       })
       .catch((err) => {
         console.log(err);
-        updateToast(myToast, "ERROR", err.message);
-      })
-      .finally(() => {
-        dismiss(myToast);
+        updateToast({ myToast, toastId: 1, type: "ERROR", message: err.message });
       });
   };
 
@@ -67,7 +66,7 @@ const Profile = (props: ProfileProps) => {
     setError(false);
     setIsSubmitting(true);
 
-    notify(myToast, "Updating your account details...");
+    notify({ myToast, toastId: 2, message: "Updating your account details..." });
 
     // Update user info
     fetchJSON("user", "PATCH", {
@@ -80,7 +79,7 @@ const Profile = (props: ProfileProps) => {
       notion_page_url: userData.notion_page_url,
     })
       .then((user: User) => {
-        updateToast(myToast, "SUCCESS", "Your account details have been updated successfully");
+        updateToast({ myToast, toastId: 2, type: "SUCCESS", message: "Your account details have been updated successfully" });
         setUserData((userData) => ({
           ...userData,
           first_name: user.first_name,
@@ -94,7 +93,7 @@ const Profile = (props: ProfileProps) => {
       })
       .catch((err) => {
         console.log(err);
-        updateToast(myToast, "ERROR", err.message);
+        updateToast({ myToast, toastId: 2, type: "ERROR", message: err.message[0] });
         setError(true);
         setErrorMessage(err.message);
       })

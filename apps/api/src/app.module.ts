@@ -7,6 +7,8 @@ import { ProjectModule } from './projects/projects.module';
 import { FavouritesModule } from './favourites/favourites.module';
 import { UserModule } from './user/user.module';
 import { JobTitlesModule } from './job-titles/job-titles.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { MediaModule } from './media/media.module';
 
 @Module({
   imports: [

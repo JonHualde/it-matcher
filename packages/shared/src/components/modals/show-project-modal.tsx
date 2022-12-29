@@ -31,16 +31,23 @@ const ShowProjectModal = (props: LogInModalProps) => {
       return;
     }
 
-    notify(myToast, "Processing your application request...");
+    notify({ myToast, toastId: 3, message: "Processing your application request..." });
+
     fetchJSON("application", "POST", {
       projectId: shownProject.id,
     })
       .then((res: GetUserApplicationsResponse) => {
         props.setApplications([...props.applications, res]);
-        updateToast(myToast, "SUCCESS", `Your application for ${props.selectedProject.projectName} has been sent correctly.`);
+        updateToast({
+          myToast,
+          toastId: 3,
+          type: "SUCCESS",
+          message: `Your application for ${props.selectedProject.projectName} has been sent correctly.`,
+        });
       })
       .catch((err) => {
-        updateToast(myToast, "ERROR", err.message);
+        console.error(err);
+        updateToast({ myToast, toastId: 3, type: "ERROR", message: err.message[0] });
       });
   };
 

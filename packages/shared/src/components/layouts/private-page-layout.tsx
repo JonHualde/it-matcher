@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 // Components
 import PrivatePageHeader from "../private-page-header/private-page-header";
 import PrivatePageSidebar from "../private-page-sidebar/private-page-sidebar";
-import Title from "../title/title";
+import { Title } from "@shared-components/typography";
 import { ToastContainer, Zoom } from "react-toastify";
 // Hooks
 import { useTokenVerification } from "@shared-hooks";
@@ -31,7 +31,7 @@ const PrivatePageLayout = (props: PublicPageLayoutProps) => {
       <ToastContainer
         className="z-50"
         position="bottom-right"
-        autoClose={4000}
+        autoClose={5000}
         hideProgressBar={true}
         newestOnTop={true}
         rtl={false}
@@ -41,8 +41,10 @@ const PrivatePageLayout = (props: PublicPageLayoutProps) => {
       <PrivatePageHeader />
       <div className="flex h-[calc(100%-60px)]">
         <PrivatePageSidebar pathname={props.pathname} />
-        <div className="flex w-full flex-col overflow-y-auto px-10 py-10 ">
-          <Title title={props.title} />
+        <div className="flex w-full flex-col overflow-y-auto px-10 py-8">
+          <Title type="h2" customClassName="text-blue-dimmed my-0 mb-4">
+            {props.title}
+          </Title>
           {props.children}
         </div>
       </div>

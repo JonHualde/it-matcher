@@ -39,21 +39,21 @@ const Search = ({ pathname }: any) => {
   };
 
   const updateFavourites = async (method: "POST" | "DELETE", project: ProjectProps) => {
-    notify(myToast, "Updating favourites...");
+    notify({ myToast, toastId: 1, message: "Updating favourites..." });
 
     await fetchJSON(`favourite/${project.id}`, method)
       .then((res) => {
         if (method === "POST") {
           setFavourites((prev) => [...prev, res]);
-          updateToast(myToast, "SUCCESS", `${project.projectName} added to favourites`);
+          updateToast({ myToast, toastId: 1, type: "SUCCESS", message: `${project.projectName} added to favourites` });
         } else {
           setFavourites((prev) => prev.filter((item) => item.projectId !== project.id));
-          updateToast(myToast, "SUCCESS", `${project.projectName} removed from favourites`);
+          updateToast({ myToast, toastId: 1, type: "SUCCESS", message: `${project.projectName} removed from favourites` });
         }
       })
       .catch((err) => {
         console.error(err);
-        updateToast(myToast, "ERROR", "We could not update your favourites. Please try again later.");
+        updateToast({ myToast, toastId: 1, type: "ERROR", message: "We could not update your favourites. Please try again later." });
       });
   };
 
@@ -108,11 +108,13 @@ const Search = ({ pathname }: any) => {
         }
 
         if (query) {
-          updateToast(myToast, "SUCCESS", "Results updated");
+          updateToast({ myToast, toastId: 2, type: "SUCCESS", message: "Results updated" });
         }
       })
       .catch((err) => {
-        if (query) updateToast(myToast, "ERROR", "We could not update your results. Please try again later.");
+        if (query) {
+          updateToast({ myToast, toastId: 2, type: "ERROR", message: "We could not update your results. Please try again later." });
+        }
         setError(true);
       })
       .finally(() => {
@@ -157,7 +159,7 @@ const Search = ({ pathname }: any) => {
       query += `isOnline=${filters.isOnline === "online" ? true : false}&`;
     }
 
-    notify(myToast, "Loading projects...");
+    notify({ myToast, toastId: 2, message: "Loading projects..." });
     getProjects(query);
   };
 

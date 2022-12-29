@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 // Components
-import InputContainer from "../input-container/input-container";
+import { InputContainer } from "@shared-components/input-container";
 import { ErrorMessage } from "../error-message";
 import { Title, Paragraph } from "@shared-components/typography";
 import { Button } from "@shared-components/button";

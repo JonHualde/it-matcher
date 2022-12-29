@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 // Components
-import InputContainer from "../input-container/input-container";
+import { InputContainer } from "@shared-components/input-container";
 import { ErrorMessage } from "../error-message";
 
 const SignUpForm = () => {
@@ -60,20 +60,34 @@ const SignUpForm = () => {
       <h6 className="mb-4 lg:mb-8">
         Already have an account?
         <Link href="/login">
-          <a className="ml-1 text-link-color underline">Log in</a>
+          <a className="text-link-color ml-1 underline">Log in</a>
         </Link>
       </h6>
       {error && <ErrorMessage errorMessage={errorMessage} />}
       <div className="flex flex-col lg:flex-row">
-        <InputContainer type="text" placeholder="John" onChange={setFirstname} name="firstName" label="First name" width="full lg:mr-2" />
-        <InputContainer type="text" placeholder="Doe" onChange={setLastname} name="lastName" label="Last name" width="full lg:ml-2" />
+        <InputContainer
+          type="text"
+          placeholder="John"
+          onChange={(e) => setFirstname(e.target.value)}
+          name="firstName"
+          label="First name"
+          width="full lg:mr-2"
+        />
+        <InputContainer
+          type="text"
+          placeholder="Doe"
+          onChange={(e) => setLastname(e.target.value)}
+          name="lastName"
+          label="Last name"
+          width="full lg:ml-2"
+        />
       </div>
-      <InputContainer type="email" placeholder="email" onChange={setEmail} name="email" label="Email" />
+      <InputContainer type="email" placeholder="email" onChange={(e) => setEmail(e.target.value)} name="email" label="Email" />
       <div className="flex flex-col lg:flex-row">
         <InputContainer
           type="password"
           placeholder="password"
-          onChange={setPassword}
+          onChange={(e) => setPassword(e.target.value)}
           name="password"
           label="Password"
           width="full lg:mr-2"
@@ -81,7 +95,7 @@ const SignUpForm = () => {
         <InputContainer
           type="password"
           placeholder="confirmPassword"
-          onChange={setConfirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           name="confirmPassword"
           label="Confirm Password"
           width="full lg:ml-2"
@@ -89,8 +103,8 @@ const SignUpForm = () => {
       </div>
       <button
         type="submit"
-        className="w-full bg-blue-ocean py-3 rounded-sm flex justify-center text-white font-medium
-        hover:bg-blue-800 mt-4"
+        className="mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3 font-medium
+        text-white hover:bg-blue-800"
       >
         Sign up{" "}
       </button>

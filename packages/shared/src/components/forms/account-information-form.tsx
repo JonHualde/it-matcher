@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 // Components
-import InputContainer from "../input-container/input-container";
+import { InputContainer } from "@shared-components/input-container";
 import { Title } from "@shared-components/typography";
 import { Loader } from "@shared-components/status";
 // Types
@@ -57,7 +57,7 @@ const AccountInformationForm = ({ isSubmitting, handleSubmit, updateUserData, us
         placeholder="https://..."
         onChange={(e: ChangeEvent<HTMLInputElement>) => updateUserData(e)}
         value={userData.github_url ?? ""}
-        name="githubUrl"
+        name="github_url"
         label="GitHub URL"
       />
       <InputContainer
@@ -65,7 +65,7 @@ const AccountInformationForm = ({ isSubmitting, handleSubmit, updateUserData, us
         placeholder=""
         onChange={(e: ChangeEvent<HTMLInputElement>) => updateUserData(e)}
         value={userData.instagram_username ?? ""}
-        name="instagramUsername"
+        name="instagram_username"
         label="Instagram Username"
       />
       <InputContainer
@@ -73,7 +73,7 @@ const AccountInformationForm = ({ isSubmitting, handleSubmit, updateUserData, us
         placeholder="https://..."
         onChange={(e: ChangeEvent<HTMLInputElement>) => updateUserData(e)}
         value={userData.website_url ?? ""}
-        name="websiteUrl"
+        name="website_url"
         label="Website URL"
       />
       <InputContainer
@@ -81,7 +81,7 @@ const AccountInformationForm = ({ isSubmitting, handleSubmit, updateUserData, us
         placeholder="https://..."
         onChange={(e: ChangeEvent<HTMLInputElement>) => updateUserData(e)}
         value={userData.notion_page_url ?? ""}
-        name="notionPageUrl"
+        name="notion_page_url"
         label="Notion Page URL"
       />
       <button

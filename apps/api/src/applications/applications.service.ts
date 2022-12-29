@@ -1,10 +1,11 @@
 import {
-  BadGatewayException,
+  BadRequestException,
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
 import { JwtDecodeDto } from 'src/auth/dtos/jwt-decoded.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ProjectService } from 'src/projects/projects.service';
 import { UserService } from 'src/user/user.service';
 import {
   ApplicationDto,
@@ -17,6 +18,7 @@ export class ApplicationService {
   constructor(
     private prisma: PrismaService,
     private userService: UserService,
+    private projectService: ProjectService,
   ) {}
 
   async getAllApplications(status?: StatusDto) {
@@ -30,9 +32,43 @@ export class ApplicationService {
   }
 
   async getUserApplications(user: JwtDecodeDto) {
-    return await this.prisma.application.findMany({
+    const applications = await this.prisma.application.findMany({
       where: { userId: user.id },
     });
+
+    if (!applications.length) {
+      return [];
+    }
+
+    const applicationsWithDetails = await Promise.all(
+      applications.map(async (application) => {
+        const project = await this.projectService.getProjectById(
+          application.projectId,
+        );
+
+        const user = await this.userService.findById(application.userId);
+
+        return {
+          ...application,
+          project: {
+            projectName: project.projectName,
+          },
+          user: {
+            email: user.email,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            github_url: user.github_url,
+            linkedIn_url: user.linkedIn_url,
+            instagram_username: user.instagram_username,
+            website_url: user.website_url,
+            notion_page_url: user.notion_page_url,
+            profile_picture_ref: user.profile_picture_ref,
+          },
+        };
+      }),
+    );
+
+    return applicationsWithDetails;
   }
 
   async getApplicationById(applicationId: number) {

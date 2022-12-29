@@ -4,103 +4,70 @@ import PrivatePageLayout from "shared/src/components/layouts/private-page-layout
 import ApplicationsTable from "shared/src/components/tables/applications-table";
 import Toast from "shared/src/components/toast/toast";
 import { ToastContainer, toast, Zoom } from "react-toastify";
-// helpers
-import Jwt from "../utils/jwt";
-// Hooks
-import { getUserApplications } from "../hooks/applications";
+import { ErrorMessage } from "@shared-components/error-message";
 // types
-import { FilterApplicationsData, ApplicationsTableProps } from "@types";
+import { GetUserApplicationsResponse, FilterApplicationsData, ApplicationsTableProps } from "@shared-types";
+// Utils
+import { fetchJSON, notify, updateToast } from "@shared-utils";
 
 const Applications = (props: any) => {
+  const [filters, setFilters] = useState<{ projectName: string; applicationStatus: string }>({
+    projectName: "",
+    applicationStatus: "default",
+  });
   const myToast = useRef<any>();
-  const [applications, setApplications] = useState([] as ApplicationsTableProps[]);
-  const [filteredApplications, setFilteredApplications] = useState([] as ApplicationsTableProps[]);
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [applications, setApplications] = useState<GetUserApplicationsResponse[]>([]);
 
-  const { data, isLoading, isError } = getUserApplications();
+  const applicationsFilter = () => {
+    // Use the filters.applicationStatus to filter through the applications, and update the applications state
+  };
 
-  const filterApps = ({ projectName, status }: FilterApplicationsData) => {
-    let newArray = applications;
-    let filtered: any = applications;
+  const updateFilters = (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
+    setFilters({ ...filters, [e.target.name]: e.target.value });
+  };
 
-    if (projectName) {
-      filtered = newArray.filter((element: any) => element.projectName.includes(projectName));
-    }
+  const getApplications = async () => {
+    notify({ myToast, toastId: 1, message: "Getting applications..." });
 
-    if (status && status !== "all") {
-      if (filtered) {
-        filtered = filtered.filter((element: any) => element.status === status);
-      } else {
-        filtered = newArray.filter((element: any) => element.status === status);
-      }
-    }
-
-    setFilteredApplications([...filtered]);
+    await fetchJSON("application/user", "GET")
+      .then((applications: GetUserApplicationsResponse[]) => {
+        setApplications(applications);
+        // setFilteredApplications(applications);
+        updateToast({ myToast, toastId: 1, type: "SUCCESS", message: "Applications successfully retrieved" });
+      })
+      .catch((error) => {
+        console.error(error);
+        setError(true);
+        setErrorMessage(error.message);
+        updateToast({
+          myToast,
+          toastId: 1,
+          type: "ERROR",
+          message: "Something wrong happen while getting the applications, please reload the page.",
+        });
+      });
   };
 
   useEffect(() => {
-    if (!isLoading && !data && isError.error) {
-      myToast.current = toast(<Toast successMessage="Something wrong happen while getting the applications, please reload the page." />, {
-        autoClose: 5000,
-        closeButton: false,
-        type: toast.TYPE.ERROR,
-        transition: Zoom,
-        toastId: Math.floor(Math.random() * 10),
-      });
-    }
-
-    if (!isLoading && data && !isError?.error) {
-      if (!toast.isActive(myToast.current)) {
-        myToast.current = toast(<Toast successMessage="Table updated" />, {
-          autoClose: 5000,
-          closeButton: false,
-          type: toast.TYPE.SUCCESS,
-          transition: Zoom,
-          toastId: Math.floor(Math.random() * 10),
-        });
-      }
-
-      setApplications(data.applications);
-      setFilteredApplications(data.applications);
-    }
-  }, [data, isLoading, isError]);
+    getApplications();
+  }, []);
 
   return (
-    <PrivatePageLayout title="APPLICATIONS RECEIVED" pathname={props.pathname}>
-      {/* <ToastContainer position="top-right" autoClose={5000} hideProgressBar={true} newestOnTop={false} rtl={false} pauseOnFocusLoss /> */}
-      <FilterApplications filterApps={filterApps} />
-      {isLoading ? <div className="mt-6">Loading...</div> : <ApplicationsTable applications={filteredApplications} />}
+    <PrivatePageLayout title="Applications received" pathname={props.pathname}>
+      {error && <ErrorMessage errorMessage={errorMessage} />}
+      <FilterApplications filters={filters} updateFilters={(e) => updateFilters(e)} applicationsFilter={applicationsFilter} />
+      <ApplicationsTable applications={applications} />
     </PrivatePageLayout>
   );
 };
 
 export async function getServerSideProps(ctx: any) {
-  let user;
-
-  try {
-    user = new Jwt(ctx.req.cookies.access_token).verifyToken();
-
-    if (user.error) {
-      throw new Error();
-    }
-  } catch (error) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: "/login",
-      },
-    };
-  }
-
   return {
     props: {
-      user: {
-        id: user.id,
-        email: user.email,
-        permission: user.permission,
-      },
       pathname: ctx.resolvedUrl,
     },
   };
 }
-
 export default Applications;

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Navigation from "./navigation";
 import { useRouter } from "next/router";
+import { FiLogOut } from "react-icons/fi";
 // Store
 import { useStoreActions } from "easy-peasy";
 // Utils
@@ -20,12 +21,14 @@ const PrivatePageSidebar = ({ pathname }: any) => {
   };
 
   return (
-    <div className="privatePageSidebar relative flex flex-col border-r border-pastel px-8">
-      <ul className="mt-12 space-y-10">
+    <div className="privatePageSidebar relative flex flex-col border-r border-pastel px-5">
+      <ul className="mt-10">
         {Navigation.map((item) => (
           <Link key={item.routeName} href={item.routeLink}>
             <li
-              className={`flex cursor-pointer items-center text-lg ${pathname === item.routeLink.toLowerCase() ? "text-pastel-dark" : ""}`}
+              className={`text-md mb-10 flex cursor-pointer items-center ${
+                pathname === item.routeLink.toLowerCase() ? "text-pastel-dark" : ""
+              }`}
             >
               {item.icon(pathname === item.routeLink.toLowerCase())} {item.routeName}
             </li>
@@ -33,7 +36,7 @@ const PrivatePageSidebar = ({ pathname }: any) => {
         ))}
       </ul>
       <div onClick={logout} className="absolute bottom-8 flex cursor-pointer items-center text-lg hover:text-pastel-dark">
-        <img src="/images/logout.svg" className="mr-3 h-6 w-6" />
+        <FiLogOut size={20} className="mr-3 text-black" />
         Logout
       </div>
     </div>

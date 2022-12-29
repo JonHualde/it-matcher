@@ -12,14 +12,16 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 // Custom config
 import authConfig from '@config/auth.config';
+import { MediaService } from 'src/media/media.service';
+import { MediaModule } from 'src/media/media.module';
 
 @Module({
   imports: [
+    PrismaModule,
+    MediaModule,
     ConfigModule.forRoot({
       load: [authConfig],
     }),
-    PrismaModule,
-    UserModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [
@@ -33,6 +35,6 @@ import authConfig from '@config/auth.config';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, LocalStrategy, UserService],
+  providers: [UserService, AuthService, JwtStrategy, LocalStrategy],
 })
 export class AuthModule {}

@@ -16,7 +16,7 @@ const run = async () => {
   const salt = bcrypt.genSaltSync();
 
   // 1) Generating users
-  const users = await Promise.all(
+  await Promise.all(
     userData.map(async (user) => {
       return await prisma.user.upsert({
         where: { email: user.email },
@@ -115,6 +115,7 @@ const run = async () => {
       });
     }),
   );
+
   // 6) Creating tools and technologies
   await Promise.all(
     toolsAndTechnologiesData.map(async (tools) => {

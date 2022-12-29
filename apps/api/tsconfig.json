@@ -15,6 +15,7 @@
     "paths": {
       "@config/*": ["./src/config/*"],
       "@types": ["./src/types/index.ts"],
+      "@decorators/*": ["./src/utils/decorators/*"],
     }
   }
 }

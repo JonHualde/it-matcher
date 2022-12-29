@@ -2,13 +2,13 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
 // Components
-import InputContainer from "../input-container/input-container";
+import { InputContainer } from "@shared-components/input-container";
 import { ErrorMessage } from "../error-message";
 import { Modal } from "@shared-components/modals";
 // Store
 import { useStoreActions } from "easy-peasy";
 // utils
-import { fetchJSON } from "@shared-utils";
+import { fetchJSON, notify, updateToast } from "@shared-utils";
 // types
 import { User } from "@shared-types";
 
@@ -29,25 +29,11 @@ const LogInModal = (props: LogInModalProps) => {
   const [errorMessage, setErrorMessage] = useState("");
   const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
-  const notify = () =>
-    (myToast.current = toast("Logging you in...", {
-      autoClose: false,
-      closeButton: false,
-      type: toast.TYPE.INFO,
-    }));
-
-  const updateToast = (type: "SUCCESS" | "ERROR" | "INFO", message: string) => {
-    toast.update(myToast.current, {
-      render: message,
-      type: toast.TYPE[type],
-      autoClose: 6000,
-    });
-  };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(false);
-    notify();
+
+    notify({ myToast, toastId: 6, message: "Logging you in..." });
 
     fetchJSON("auth/login", "POST", {
       email,
@@ -55,16 +41,15 @@ const LogInModal = (props: LogInModalProps) => {
     })
       .then((user: User) => {
         updateAuthStatus({ isLoggedIn: true, id: user.id });
-        updateToast("SUCCESS", "You are now logged in");
+        updateToast({ myToast, toastId: 6, type: "SUCCESS", message: "You are now logged in" });
 
         props.close();
       })
       .catch(async (err) => {
         console.error(err);
-        updateToast("ERROR", err.message);
-
         setError(true);
         setErrorMessage(err.message);
+        updateToast({ myToast, toastId: 6, type: "ERROR", message: err.message });
       });
   };
 

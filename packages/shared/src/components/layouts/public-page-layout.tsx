@@ -62,7 +62,7 @@ const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
       <ToastContainer
         className="z-50"
         position="bottom-right"
-        autoClose={4000}
+        autoClose={5000}
         hideProgressBar={true}
         newestOnTop={true}
         rtl={false}

@@ -8,11 +8,10 @@ import { UpdateUserDetailsDto } from './dtos/account-details.dto';
 
 @Injectable()
 export class UserService {
-  mediaService: MediaService;
-
-  constructor(private prisma: PrismaService) {
-    this.mediaService = new MediaService();
-  }
+  constructor(
+    private prisma: PrismaService,
+    private mediaService: MediaService,
+  ) {}
 
   async getUser(user: JwtDecodeDto) {
     return this.findById(user.id);

@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useState } from "react";
 // Components
 import { ErrorMessage } from "../error-message";
 import { Loader } from "@shared-components/status";
+import { Title } from "@shared-components/typography";
 // utils
 import { fetchFormData, notify, updateToast } from "../../utils";
 // Types
@@ -23,31 +24,31 @@ const UploadProfilePictureForm = ({ profilePicture, setUserData }: ProfilePictur
     e.preventDefault();
 
     if (!userProfilePicture.current.files[0]) {
-      notify(myToast, "Please select a picture to upload", true);
+      notify({ myToast, toastId: 3, message: "Please select a picture to upload", autoClose: 3000 });
       return;
     }
     setError(false);
     setIsSubmitting(true);
 
-    notify(myToast, "Uploading your picture...");
+    notify({ myToast, toastId: 4, message: "Uploading your picture..." });
 
     const form = new FormData();
     form.append("profilePicture", userProfilePicture.current.files[0]);
 
     fetchFormData("user/upload-picture", "POST", form)
       .then((user: User) => {
-        updateToast(myToast, "SUCCESS", "Your picture has been saved successfully");
+        updateToast({ myToast, toastId: 4, type: "SUCCESS", message: "Your picture has been saved successfully" });
         setUserData((userData) => ({
           ...userData,
           profile_picture_ref: user.profile_picture_ref,
         }));
-        userProfilePicture.current = null;
+        userProfilePicture.current.value = "";
       })
       .catch((error) => {
         console.error(error);
         setError(true);
         setErrorMessage(error.message);
-        updateToast(myToast, "ERROR", error.message);
+        updateToast({ myToast, toastId: 4, type: "ERROR", message: error.message[0] });
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -60,6 +61,9 @@ const UploadProfilePictureForm = ({ profilePicture, setUserData }: ProfilePictur
     //     <div>...loading</div>
     //   ) : (
     <form onSubmit={handleSubmit} className="mt-8 w-full max-w-xl">
+      <Title type="h5" customClassName="text-blue-dimmed mb-8">
+        PROFILE PICTURE
+      </Title>
       {error && <ErrorMessage errorMessage={errorMessage} />}
       <div className="flex flex-row items-end justify-between">
         <div className="w-1/2">
@@ -73,14 +77,7 @@ const UploadProfilePictureForm = ({ profilePicture, setUserData }: ProfilePictur
         </div>
 
         <div className="ml-6 w-1/2">
-          <input
-            ref={userProfilePicture}
-            accept="image/*"
-            type="file"
-            // onChange={handleImageChange}
-            name="userProfilePicture"
-            className="w-9/12"
-          />
+          <input ref={userProfilePicture} accept="image/*" type="file" name="userProfilePicture" className="w-9/12" />
           <button
             type="submit"
             className="mt-4 flex w-9/12 justify-center rounded-sm bg-blue-ocean py-3 font-medium
