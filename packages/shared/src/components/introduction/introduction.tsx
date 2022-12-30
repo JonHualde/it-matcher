@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 // Components
-import Button from "../button/button";
+import Button from "../buttons/button";
 
 const Introduction = () => {
   const router = useRouter();

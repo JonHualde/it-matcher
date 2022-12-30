@@ -1,57 +1,116 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent } from "react";
 // Components
 import { InputContainer } from "@shared-components/input-container";
+import { Loader } from "@shared-components/status";
+import { Button } from "@shared-components/buttons";
 // types
-import { FilterApplicationsData } from "@shared-types";
-
+import { ApplicationsFiltersTypes } from "@shared-types";
 interface FilterApplicationsProps {
-  filters: { projectName: string; applicationStatus: string };
+  filters: ApplicationsFiltersTypes;
+  isFiltering: boolean;
   updateFilters: (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
   applicationsFilter: () => void;
 }
 
 const FilterApplications = (props: FilterApplicationsProps) => {
+  const resetFilters = () => {
+    props.updateFilters({
+      target: {
+        name: "applicantName",
+        value: "",
+      },
+    } as ChangeEvent<HTMLInputElement>);
+    props.updateFilters({
+      target: {
+        name: "projectName",
+        value: "",
+      },
+    } as ChangeEvent<HTMLInputElement>);
+    props.updateFilters({
+      target: {
+        name: "status",
+        value: "all",
+      },
+    } as ChangeEvent<HTMLSelectElement>);
+  };
+
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
         props.applicationsFilter();
       }}
-      className="flex items-center justify-center gap-x-2 bg-pastel-light bg-opacity-50 py-4 px-4"
+      className="flex items-center justify-center gap-x-2 bg-pastel-light  py-4 px-4"
     >
-      <InputContainer
-        type="text"
-        onChange={props.updateFilters}
-        value={props.filters.projectName}
-        name="projectName"
-        label="Project name"
-        customClass="py-2"
-      />
-      <div className="mb-4 flex w-full flex-col">
-        <label htmlFor="status"> Status </label>
-        <select
-          value={props.filters.applicationStatus}
-          name="applicationStatus"
-          id="status"
-          className="border-2 border-gray-200 py-3 px-3 focus:outline-none"
-          onChange={props.updateFilters}
-        >
-          <option value="default" disabled>
-            Choose a status
-          </option>
-          <option value="all">All</option>
-          <option value="Pending">Pending</option>
-          <option value="Validated">Validated</option>
-          <option value="Rejected">Rejected</option>
-        </select>
+      {" "}
+      <div className="grid w-full grid-cols-12 gap-x-4">
+        <div className="col-span-3">
+          <InputContainer
+            type="text"
+            onChange={props.updateFilters}
+            value={props.filters.applicantName}
+            placeholder="Applicant's name"
+            name="applicantName"
+            customClass="h-full h-12 w-full border-0 px-3 outline-none"
+            margin="mb-0"
+          />
+        </div>
+        <div className="col-span-3">
+          <InputContainer
+            type="text"
+            onChange={props.updateFilters}
+            value={props.filters.projectName}
+            placeholder="Project's name"
+            name="projectName"
+            customClass="h-full h-12 w-full border-0 px-3 outline-none"
+            margin="mb-0"
+          />
+        </div>
+
+        <div className="col-span-3">
+          <select
+            value={props.filters.status}
+            name="status"
+            id="status"
+            className="text-md col-span-2 h-12 w-full rounded-md bg-transparent bg-white px-3 outline-none"
+            onChange={props.updateFilters}
+          >
+            <option value="default" disabled>
+              Choose a status
+            </option>
+            <option value="All">All</option>
+            <option value="Pending">Pending</option>
+            <option value="Accepted">Accepted</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+        <div className="col-span-3 flex justify-end gap-x-1">
+          <Button
+            disabled={props.isFiltering}
+            text={props.isFiltering ? <Loader border="border-b-2 border-r-2 border-white" /> : "Search"}
+            type="submit"
+            color="bg-blue-ocean"
+            textColor="text-white"
+            hover="hover:bg-blue-700"
+            border="border-0"
+            customClass="h-12 w-28 flex items-center justify-center"
+          />
+          <Button
+            disabled={props.isFiltering}
+            text={props.isFiltering ? <Loader border="border-b-2 border-r-2 border-white" /> : "Reset"}
+            type="button"
+            color="bg-gray-200"
+            textColor="text-neutral-800"
+            hover="hover:bg-gray-300"
+            border="border-2 border-neutral-700"
+            customClass="h-12 w-28 flex items-center justify-center"
+            action={() => {
+              resetFilters();
+              props.applicationsFilter();
+            }}
+          />
+        </div>
       </div>
-      <button
-        type="submit"
-        className="mt-4 flex w-full max-w-[200px] justify-center rounded-sm border-2 border-blue-ocean
-        bg-blue-ocean py-2 font-medium text-white hover:bg-blue-800"
-      >
-        SEARCH
-      </button>
     </form>
   );
 };

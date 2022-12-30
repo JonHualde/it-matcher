@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { toast, Zoom } from "react-toastify";
 // Components
 import { Modal } from "@shared-components/modals";
-import { Button } from "@shared-components/button";
+import { Button } from "@shared-components/buttons";
 import Toast from "../toast/toast";
 import { Date, Title, Paragraph } from "@shared-components/typography";
 import { Badge } from "@shared-components/status";

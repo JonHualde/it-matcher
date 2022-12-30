@@ -1,6 +1,6 @@
 // Components
 import Cross from "@shared-components/icons/cross";
-import Button from "../button/button";
+import Button from "../buttons/button";
 // type
 import { ProjectProps } from "@types";
 import UpdateProjectForm from "@shared-components/forms/update-project-form";

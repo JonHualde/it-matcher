@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Loader } from "@shared-components/status";
-import { Button } from "@shared-components/button";
+import { Button } from "shared/src/components/buttons";
 import { JobTitlesTypes, SearchBarFiltersTypes } from "@shared-types";
 import { Modal } from "@shared-components/modals";
 import { HiOutlineMagnifyingGlass } from "react-icons/hi2";

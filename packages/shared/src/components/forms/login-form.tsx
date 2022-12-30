@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { InputContainer } from "@shared-components/input-container";
 import { ErrorMessage } from "../error-message";
 import { Title, Paragraph } from "@shared-components/typography";
-import { Button } from "@shared-components/button";
+import { Button } from "@shared-components/buttons";
 import { Loader } from "@shared-components/status";
 // Store
 import { useStoreActions } from "easy-peasy";

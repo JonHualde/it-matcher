@@ -1,5 +1,5 @@
 import { Loader } from "@shared-components/status";
-import { Button } from "@shared-components/button";
+import { Button } from "shared/src/components/buttons";
 import { JobTitlesTypes, SearchBarFiltersTypes } from "@shared-types";
 
 interface SearchBarProps {

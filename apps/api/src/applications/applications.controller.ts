@@ -29,9 +29,14 @@ export class ApplicationController {
     return this.applicationService.getAllApplications(status);
   }
 
-  @Get('user')
-  async getUserApplications(@Request() req) {
-    return this.applicationService.getUserApplications(req.user);
+  @Get('user-received')
+  async getReceivedApplications(@Request() req) {
+    return this.applicationService.getReceivedApplications(req.user);
+  }
+
+  @Get('user-sent')
+  async getSentApplications(@Request() req) {
+    return this.applicationService.getSentApplications(req.user);
   }
 
   @Get(':applicationId')

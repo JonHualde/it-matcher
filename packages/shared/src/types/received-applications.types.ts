@@ -1,13 +1,13 @@
-export default interface GetUserApplicationsResponse {
+import ProjectProps from "./project";
+
+export default interface GetUserReceivedApplicationsResponse {
   id: number;
   createdAt: string | Date;
   updatedAt: string | Date;
   status: "Accepted" | "Pending" | "Rejected";
   projectId: number;
   userId: number;
-  project: {
-    projectName: string;
-  };
+  project: ProjectProps;
   user: {
     email: string;
     first_name: string;

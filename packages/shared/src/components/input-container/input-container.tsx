@@ -9,7 +9,8 @@ interface inputContainerProps {
   name: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type: string;
-  label: string;
+  margin?: string;
+  label?: string;
   value?: string;
   errors?: any;
   customClass?: string;
@@ -64,15 +65,17 @@ const InputContainer = (props: inputContainerProps) => {
   };
 
   return (
-    <div className={`relative mb-5 flex flex-col ${props.width ? "w-" + props.width : "w-full"}`}>
-      <label
-        htmlFor={props.name}
-        className={` ${props.errors && "text-red"}
-        text-base font-light capitalize
-      `}
-      >
-        {props.label}
-      </label>
+    <div className={`relative ${props.margin ? props.margin : "mb-5"} flex flex-col ${props.width ? "w-" + props.width : "w-full"}`}>
+      {props.label && (
+        <label
+          htmlFor={props.name}
+          className={` ${props.errors && "text-red"}
+        font-base text-lg capitalize
+        `}
+        >
+          {props.label}
+        </label>
+      )}
       <input
         ref={inputRef}
         type={props.type}

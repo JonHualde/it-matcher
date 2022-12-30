@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { Box } from "@shared-components/box";
 import { Icon } from "@shared-components/icons";
-import { Italic, Date, Paragraph, Title } from "@shared-components/typography";
+import { Paragraph } from "@shared-components/typography";
 
 interface TableProps {
   tableHeaders: {
@@ -31,12 +31,12 @@ const Table = (props: TableProps) => {
   }
 
   return (
-    <table className="mt-8 w-full">
-      <thead>
+    <table className="mt-8 w-full border shadow-xl">
+      <thead className="border-b-2 border-blue-ocean bg-pastel-light">
         <tr className="text-left">
           {Object.keys(props.tableHeaders).map((keys, index) => {
             return (
-              <th key={index} className="pb-2 text-lg font-medium md:text-xl">
+              <th key={index} className="py-2 pl-2 text-lg font-medium italic text-neutral-800 md:text-xl">
                 {props.tableHeaders[keys]}
               </th>
             );
@@ -44,14 +44,14 @@ const Table = (props: TableProps) => {
         </tr>
       </thead>
 
-      <tbody className="">
+      <tbody className="bg-stone-50">
         {props.tableData.map((item: any) => (
           <tr>
             {Object.keys(props.tableHeaders).map((tableHeaderKey: any, index) => {
               if (item.hasOwnProperty(tableHeaderKey)) {
                 const value = item[tableHeaderKey];
                 return (
-                  <td key={index} className="text-md py-3 md:text-lg">
+                  <td key={index} className="text-md py-3 pl-2 md:text-lg">
                     {props.tableBody[tableHeaderKey](value)}
                   </td>
                 );
@@ -59,7 +59,7 @@ const Table = (props: TableProps) => {
 
               if (props.tableBody.hasOwnProperty(tableHeaderKey)) {
                 return (
-                  <td key={index} className="text-md py-3 md:text-lg">
+                  <td key={index} className="text-md py-3 pl-2 md:text-lg">
                     {props.tableBody[tableHeaderKey](item)}
                   </td>
                 );

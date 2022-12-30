@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Button from "../button/button";
+import Button from "../buttons/button";
 import Link from "next/link";
 // Store
 import { useStoreActions, useStoreState } from "easy-peasy";
@@ -43,7 +43,7 @@ const PublicPageMobileHeader = () => {
       >
         <FiX className="absolute top-8 right-10 h-10 w-10 cursor-pointer text-pastel-dark" onClick={() => setShowMenu(false)} />
         <h1
-          className="text-blue-500 mb-20 cursor-pointer text-center font-oswald  font-semibold text-blue-dimmed"
+          className="mb-20 cursor-pointer text-center font-oswald font-semibold  text-blue-500 text-blue-dimmed"
           onClick={() => router.push("/")}
         >
           EXPERT MATCHER

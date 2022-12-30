@@ -31,9 +31,31 @@ export class ApplicationService {
     return applications;
   }
 
-  async getUserApplications(user: JwtDecodeDto) {
-    // Get the user's projects
+  async getSentApplications(user: JwtDecodeDto) {
+    const applicationsSent = await this.prisma.application.findMany({
+      where: { userId: user.id },
+    });
 
+    if (!applicationsSent.length) {
+      return [];
+    }
+
+    // Get project details for each application sent
+    return await Promise.all(
+      applicationsSent.map(async (application) => {
+        const project = await this.projectService.getProjectById(
+          application.projectId,
+        );
+
+        return {
+          ...application,
+          project,
+        };
+      }),
+    );
+  }
+
+  async getReceivedApplications(user: JwtDecodeDto) {
     const userProjects = await this.prisma.project.findMany({
       where: { userId: user.id },
     });
@@ -57,9 +79,7 @@ export class ApplicationService {
         (project) => project.id === application.projectId,
       );
 
-      application.project = {
-        projectName: project.projectName,
-      };
+      application.project = project;
     });
 
     // Get user details for each application received

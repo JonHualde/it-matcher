@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import Button from "../button/button";
+import Button from "../buttons/button";
 import PublicPageNavigation from "../public-page-navigation/public-page-navigation";
 // Store
 import { useStoreActions, useStoreState } from "easy-peasy";
@@ -30,7 +30,7 @@ const PublicPageHeader = () => {
     <div className="relative hidden items-center justify-between bg-pastel-light py-8 px-8 lg:flex">
       <PublicPageNavigation />
       <h3
-        className="text-blue-500 absolute left-1/2 -translate-x-1/2 cursor-pointer font-oswald font-semibold text-blue-dimmed"
+        className="absolute left-1/2 -translate-x-1/2 cursor-pointer font-oswald font-semibold text-blue-500 text-blue-dimmed"
         onClick={() => router.push("/")}
       >
         EXPERT MATCHER

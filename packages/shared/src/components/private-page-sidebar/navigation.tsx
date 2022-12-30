@@ -1,8 +1,8 @@
 import { CgProfile } from "react-icons/cg";
-import { AiOutlinePullRequest } from "react-icons/ai";
 import { BiMessageDetail } from "react-icons/bi";
 import { HiOutlinePresentationChartBar } from "react-icons/hi";
-import { RiMailSendLine, RiPlantLine } from "react-icons/ri";
+import { RiPlantLine } from "react-icons/ri";
+import { CgMailReply, CgMailForward } from "react-icons/cg";
 
 const Navigation = [
   {
@@ -19,22 +19,22 @@ const Navigation = [
     routeLink: "/dashboard",
   },
   {
-    icon: (isPageOpen: boolean) => <RiMailSendLine size={20} className={`${isPageOpen ? "text-pastel-dark" : "text-black"} mr-3`} />,
+    icon: (isPageOpen: boolean) => <BiMessageDetail size={20} className={`${isPageOpen ? "text-pastel-dark" : "text-black"} mr-3`} />,
 
     routeName: "Messages",
     routeLink: "/messages",
   },
   {
-    icon: (isPageOpen: boolean) => <AiOutlinePullRequest size={20} className={`${isPageOpen ? "text-pastel-dark" : "text-black"} mr-3`} />,
+    icon: (isPageOpen: boolean) => <CgMailReply size={20} className={`${isPageOpen ? "text-pastel-dark" : "text-black"} mr-3`} />,
 
     routeName: "Applications Received",
-    routeLink: "/applications",
+    routeLink: "/applications-received",
   },
   {
-    icon: (isPageOpen: boolean) => <BiMessageDetail size={20} className={`${isPageOpen ? "text-pastel-dark" : "text-black"} mr-3`} />,
+    icon: (isPageOpen: boolean) => <CgMailForward size={20} className={`${isPageOpen ? "text-pastel-dark" : "text-black"} mr-3`} />,
 
-    routeName: "Requests Sent",
-    routeLink: "/requests",
+    routeName: "Applications Sent",
+    routeLink: "/applications-sent",
   },
   {
     icon: (isPageOpen: boolean) => <RiPlantLine size={20} className={`${isPageOpen ? "text-pastel-dark" : "text-black"} mr-3`} />,

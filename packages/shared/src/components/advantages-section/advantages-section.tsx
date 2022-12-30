@@ -2,7 +2,7 @@ import React from "react";
 import { useRouter } from "next/router";
 
 // Components
-import Button from "../button/button";
+import Button from "../buttons/button";
 
 const AdvantagesSection = () => {
   const router = useRouter();
