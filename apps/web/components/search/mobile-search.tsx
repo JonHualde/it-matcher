@@ -126,7 +126,7 @@ const MobileSearch = (props: SearchBarProps) => {
               type="submit"
               color="bg-blue-ocean"
               textColor="text-white"
-              hover="bg-blue-800"
+              hover="hover:bg-blue-800"
             />
           </form>
         </Modal>

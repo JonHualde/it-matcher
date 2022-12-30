@@ -32,27 +32,45 @@ export class ApplicationService {
   }
 
   async getUserApplications(user: JwtDecodeDto) {
-    const applications = await this.prisma.application.findMany({
+    // Get the user's projects
+
+    const userProjects = await this.prisma.project.findMany({
       where: { userId: user.id },
     });
 
-    if (!applications.length) {
+    // Get applications received by user's projects
+    const applicationsReceived = await this.prisma.application.findMany({
+      where: {
+        projectId: {
+          in: userProjects.map((project) => project.id),
+        },
+      },
+    });
+
+    if (!applicationsReceived.length) {
       return [];
     }
 
-    const applicationsWithDetails = await Promise.all(
-      applications.map(async (application) => {
-        const project = await this.projectService.getProjectById(
-          application.projectId,
-        );
+    // Add project name to each application received
+    applicationsReceived.forEach((application: any) => {
+      const project = userProjects.find(
+        (project) => project.id === application.projectId,
+      );
 
-        const user = await this.userService.findById(application.userId);
+      application.project = {
+        projectName: project.projectName,
+      };
+    });
+
+    // Get user details for each application received
+    return await Promise.all(
+      applicationsReceived.map(async (application) => {
+        const user = await this.userService.findById(
+          application && application.userId,
+        );
 
         return {
           ...application,
-          project: {
-            projectName: project.projectName,
-          },
           user: {
             email: user.email,
             first_name: user.first_name,
@@ -67,8 +85,6 @@ export class ApplicationService {
         };
       }),
     );
-
-    return applicationsWithDetails;
   }
 
   async getApplicationById(applicationId: number) {

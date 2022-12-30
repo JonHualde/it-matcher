@@ -7,7 +7,7 @@ interface ButtonProps {
   rounded?: string;
   padding?: string;
   font?: string;
-  borderColor?: string;
+  border?: string;
   disabled?: boolean;
   margin?: string;
   action?: () => void;
@@ -23,13 +23,13 @@ const Button = (props: ButtonProps) => {
          flex justify-center 
             ${props.customClass ? props.customClass : ""}
             ${props.margin ? props.margin : ""}
-            ${props.color && !props.disabled ? props.color : "bg-color-600"} 
-            ${props.hover ? "hover:" + props.hover : ""} 
+            ${props.color ? props.color : "bg-blue-400"} 
+            ${props.hover ? props.hover : "hover:bg-blue-600"} 
             ${props.textColor ? props.textColor : "text-white"} 
             ${props.rounded ? props.rounded : "rounded-sm"} 
             ${props.padding ? props.padding : "py-3 px-6"}
             ${props.font ? props.font : "font-medium"}
-            ${props.borderColor && !props.disabled ? "border-2 " + props.borderColor : "border-2 border-gray-800"}
+            ${props.border ? props.border : "border-2 border-gray-800"}
             ${props.disabled ? "cursor-not-allowed border-0 bg-gray-200 hover:bg-gray-200" : null}
         `}
       onClick={props.action && props.action}

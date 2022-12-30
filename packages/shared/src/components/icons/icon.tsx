@@ -4,12 +4,14 @@ import { CiWarning } from "react-icons/ci";
 
 interface IconProps {
   type: "success" | "error" | "info" | "warning";
-  size?: "small" | "medium" | "large";
+  size?: "tiny" | "small" | "medium" | "large";
 }
 
 const Icon = (props: IconProps) => {
   const getSize = () => {
     switch (props?.size) {
+      case "tiny":
+        return 10;
       case "small":
         return 20;
       case "medium":
