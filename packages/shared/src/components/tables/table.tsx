@@ -36,7 +36,7 @@ const Table = (props: TableProps) => {
         <tr className="text-left">
           {Object.keys(props.tableHeaders).map((keys, index) => {
             return (
-              <th key={index} className="py-2 pl-2 text-lg font-medium italic text-neutral-800 md:text-xl">
+              <th key={index} className="py-2 px-4 text-lg font-medium italic text-neutral-800 md:text-xl">
                 {props.tableHeaders[keys]}
               </th>
             );
@@ -47,19 +47,21 @@ const Table = (props: TableProps) => {
       <tbody className="bg-stone-50">
         {props.tableData.map((item: any) => (
           <tr>
-            {Object.keys(props.tableHeaders).map((tableHeaderKey: any, index) => {
+            {Object.keys(props.tableHeaders).map((tableHeaderKey: string, index: number) => {
               if (item.hasOwnProperty(tableHeaderKey)) {
-                const value = item[tableHeaderKey];
+                // Passing the value contained in the tableHeaderKey
+                const itemKeyValue = item[tableHeaderKey];
                 return (
-                  <td key={index} className="text-md py-3 pl-2 md:text-lg">
-                    {props.tableBody[tableHeaderKey](value)}
+                  <td key={index} className="text-md py-3 px-4 md:text-lg">
+                    {props.tableBody[tableHeaderKey](itemKeyValue)}
                   </td>
                 );
               }
 
               if (props.tableBody.hasOwnProperty(tableHeaderKey)) {
+                // Passing the entire item object
                 return (
-                  <td key={index} className="text-md py-3 pl-2 md:text-lg">
+                  <td key={index} className="text-md py-3 px-4 md:text-lg">
                     {props.tableBody[tableHeaderKey](item)}
                   </td>
                 );

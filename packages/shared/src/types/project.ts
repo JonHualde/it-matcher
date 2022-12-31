@@ -1,8 +1,8 @@
-export default interface ProjectProps {
+export default interface ProjectTypes {
   id: number;
   createdAt: Date | string;
   updatedAt: Date | string;
-  isOnline: true;
+  isOnline: boolean;
   projectName: string;
   startingOn: Date | string;
   full_name: string;

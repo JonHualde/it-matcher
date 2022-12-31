@@ -6,18 +6,18 @@ import { Box } from "@shared-components/box";
 import { Icon } from "@shared-components/icons";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 // types
-import { ProjectProps, JobTitlesTypes, FavouritesTypes } from "@shared-types";
+import { ProjectTypes, JobTitlesTypes, FavouritesTypes } from "@shared-types";
 
-interface ListOfProjectProps {
-  projects: ProjectProps[];
+interface ListOfProjectTypes {
+  projects: ProjectTypes[];
   jobTitles: JobTitlesTypes[];
   isUserLoggedIn: boolean;
   favourites: FavouritesTypes[];
-  getProjectDetails: (project: ProjectProps) => void;
-  updateFavourites: (method: "POST" | "DELETE", project: ProjectProps) => void;
+  getProjectDetails: (project: ProjectTypes) => void;
+  updateFavourites: (method: "POST" | "DELETE", project: ProjectTypes) => void;
 }
 
-const ListOfProjects = ({ updateFavourites, favourites, isUserLoggedIn, projects, getProjectDetails, jobTitles }: ListOfProjectProps) => {
+const ListOfProjects = ({ updateFavourites, favourites, isUserLoggedIn, projects, getProjectDetails, jobTitles }: ListOfProjectTypes) => {
   if (!projects.length) {
     return (
       <Box border="border-2 border-blue-ocean">

@@ -12,6 +12,14 @@ import {
   StatusDto,
   UpdateApplicationDto,
 } from './dtos/application.dto';
+// types
+import {
+  GetUserReceivedApplicationsResponse,
+  UserSentApplicationsResponse,
+  ProjectTypes,
+  ApplicationTypes,
+  User,
+} from '@shared-types';
 
 @Injectable()
 export class ApplicationService {
@@ -31,7 +39,9 @@ export class ApplicationService {
     return applications;
   }
 
-  async getSentApplications(user: JwtDecodeDto) {
+  async getSentApplications(
+    user: JwtDecodeDto,
+  ): Promise<UserSentApplicationsResponse[]> {
     const applicationsSent = await this.prisma.application.findMany({
       where: { userId: user.id },
     });
@@ -40,71 +50,95 @@ export class ApplicationService {
       return [];
     }
 
-    // Get project details for each application sent
-    return await Promise.all(
+    const projects: ProjectTypes[] = await Promise.all(
       applicationsSent.map(async (application) => {
         const project = await this.projectService.getProjectById(
           application.projectId,
         );
 
-        return {
-          ...application,
-          project,
-        };
+        return project;
       }),
     );
+
+    // Add project to each application in a new variable called result
+    const result: UserSentApplicationsResponse[] = applicationsSent.map(
+      (application) => {
+        const project = projects.find(
+          (project) => project.id === application.projectId,
+        );
+
+        return {
+          ...application,
+          status: application.status as 'Accepted' | 'Pending' | 'Rejected',
+          project,
+        };
+      },
+    );
+
+    return result;
   }
 
-  async getReceivedApplications(user: JwtDecodeDto) {
-    const userProjects = await this.prisma.project.findMany({
+  async getReceivedApplications(
+    user: JwtDecodeDto,
+  ): Promise<GetUserReceivedApplicationsResponse[]> {
+    // Get user's projects
+    const userProjects: ProjectTypes[] = await this.prisma.project.findMany({
       where: { userId: user.id },
     });
 
     // Get applications received by user's projects
-    const applicationsReceived = await this.prisma.application.findMany({
-      where: {
-        projectId: {
-          in: userProjects.map((project) => project.id),
+    const applicationsReceived: ApplicationTypes[] =
+      await this.prisma.application.findMany({
+        where: {
+          projectId: {
+            in: userProjects.map((project) => project.id),
+          },
         },
-      },
-    });
+      });
 
     if (!applicationsReceived.length) {
       return [];
     }
 
-    // Add project name to each application received
-    applicationsReceived.forEach((application: any) => {
-      const project = userProjects.find(
-        (project) => project.id === application.projectId,
-      );
-
-      application.project = project;
-    });
-
-    // Get user details for each application received
-    return await Promise.all(
+    // Get applicants' details of applicants who applied to user's projects
+    const users: User[] = await Promise.all(
       applicationsReceived.map(async (application) => {
         const user = await this.userService.findById(
           application && application.userId,
         );
 
+        return user;
+      }),
+    );
+
+    // Add project and user details to each application in a new variable called result
+    const result: GetUserReceivedApplicationsResponse[] =
+      applicationsReceived.map((application) => {
+        const user = users.find((user) => user.id === application.userId);
+
+        const project = userProjects.find(
+          (project) => project.id === application.projectId,
+        );
+
         return {
           ...application,
+          status: application.status as 'Accepted' | 'Pending' | 'Rejected',
+          project,
           user: {
             email: user.email,
             first_name: user.first_name,
             last_name: user.last_name,
-            github_url: user.github_url,
             linkedIn_url: user.linkedIn_url,
             instagram_username: user.instagram_username,
+            github_url: user.github_url,
             website_url: user.website_url,
             notion_page_url: user.notion_page_url,
             profile_picture_ref: user.profile_picture_ref,
           },
         };
-      }),
-    );
+      });
+
+    return result;
   }
 
   async getApplicationById(applicationId: number) {
@@ -129,28 +163,47 @@ export class ApplicationService {
     return applications;
   }
 
-  async createNewApplication(application: ApplicationDto, user: JwtDecodeDto) {
-    const existingApplication = await this.prisma.application.findMany({
-      where: { projectId: application.projectId, userId: user.id },
-    });
+  async createNewApplication(
+    application: ApplicationDto,
+    user: JwtDecodeDto,
+  ): Promise<UserSentApplicationsResponse> {
+    const existingApplication: ApplicationTypes[] =
+      await this.prisma.application.findMany({
+        where: { projectId: application.projectId, userId: user.id },
+      });
 
     if (existingApplication.length) {
       throw new ForbiddenException('You already applied to this project.');
     }
 
-    return await this.prisma.application.create({
-      data: {
-        status: 'Pending',
-        userId: user.id,
-        projectId: application.projectId,
-      },
-    });
+    const newApplication: ApplicationTypes =
+      await this.prisma.application.create({
+        data: {
+          status: 'Pending',
+          userId: user.id,
+          projectId: application.projectId,
+        },
+      });
+
+    const project: ProjectTypes = await this.projectService.getProjectById(
+      newApplication.projectId,
+    );
+
+    return {
+      ...newApplication,
+      status: newApplication.status as 'Accepted' | 'Pending' | 'Rejected',
+      project,
+    };
   }
 
-  async deleteApplicationById(applicationId: number, user: JwtDecodeDto) {
-    const application = await this.prisma.application.findUniqueOrThrow({
-      where: { id: applicationId },
-    });
+  async deleteApplicationById(
+    applicationId: number,
+    user: JwtDecodeDto,
+  ): Promise<ApplicationTypes> {
+    const application: ApplicationTypes =
+      await this.prisma.application.findUniqueOrThrow({
+        where: { id: applicationId },
+      });
 
     if (application.userId !== user.id) {
       throw new ForbiddenException(

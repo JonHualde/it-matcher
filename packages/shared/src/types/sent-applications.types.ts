@@ -1,11 +1,11 @@
-import ProjectProps from "./project";
+import ProjectTypes from "./project";
 
-export default interface GetUserSentApplicationsResponse {
+export default interface UserSentApplicationsResponse {
   id: number;
   createdAt: string | Date;
   updatedAt: string | Date;
   status: "Accepted" | "Pending" | "Rejected";
   projectId: number;
   userId: number;
-  project: ProjectProps;
+  project: ProjectTypes;
 }

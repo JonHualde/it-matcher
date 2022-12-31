@@ -1,11 +1,11 @@
 // Components
 import { Button } from "@shared-components/buttons";
 // types
-import { GetUserApplicationsResponse } from "@shared-types";
+import { GetUserReceivedApplicationsResponse } from "@shared-types";
 
 interface ApplicationTableButtonsProps {
-  item: GetUserApplicationsResponse;
-  action: (item: GetUserApplicationsResponse, status: "Accepted" | "Rejected") => void;
+  item: GetUserReceivedApplicationsResponse;
+  action: (item: GetUserReceivedApplicationsResponse, status: "Accepted" | "Rejected") => void;
 }
 
 const ApplicationTableButtons = (props: ApplicationTableButtonsProps) => {

@@ -2,12 +2,12 @@
 import Cross from "@shared-components/icons/cross";
 import Button from "../buttons/button";
 // type
-import { ProjectProps } from "@types";
+import { ProjectTypes } from "@types";
 import UpdateProjectForm from "@shared-components/forms/update-project-form";
 
 interface ModalProps {
   close: () => void;
-  save: (projectData: ProjectProps) => void;
+  save: (projectData: ProjectTypes) => void;
   linkText?: string;
   link?: string;
   projectId: number;

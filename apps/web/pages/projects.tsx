@@ -12,7 +12,7 @@ import DeleteProjectModal from "shared/src/components/modals/delete-project-moda
 import { getUserProjects } from "../hooks/projects";
 import EditProjectModal from "components/modals/edit-project-modal";
 // type
-import { ProjectProps } from "@types";
+import { ProjectTypes } from "@types";
 
 const Projects = (props: any) => {
   const myToast = useRef<any>();
@@ -32,7 +32,7 @@ const Projects = (props: any) => {
     setShowEditProjectModal(true);
   };
 
-  const updateProjectData = (projectData: ProjectProps) => {};
+  const updateProjectData = (projectData: ProjectTypes) => {};
 
   useEffect(() => {
     if (!isLoading && !data && isError.error) {
@@ -88,7 +88,7 @@ const Projects = (props: any) => {
       {showEditProjectModal && (
         <EditProjectModal
           close={() => setShowEditProjectModal(false)}
-          save={(projectData: ProjectProps) => updateProjectData(projectData)}
+          save={(projectData: ProjectTypes) => updateProjectData(projectData)}
           projectId={toDeleteProjectId}
           projects={projects}
           setProjects={setProjects}

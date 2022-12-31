@@ -7,8 +7,9 @@ import { Badge, Loader } from "@shared-components/status";
 import { Box } from "@shared-components/box";
 import { Paragraph } from "@shared-components/typography";
 import { ApplicationTableButtons } from "shared/src/components/buttons";
+import { ShowProjectModal, ShowUserModal } from "@shared-components/modals";
 // types
-import { GetUserReceivedApplicationsResponse, ApplicationsFiltersTypes } from "@shared-types";
+import { User, GetUserReceivedApplicationsResponse, ApplicationsFiltersTypes, ProjectTypes } from "@shared-types";
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 
@@ -23,6 +24,8 @@ const ApplicationsReceived = (props: any) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedProject, setSelectedProject] = useState<ProjectTypes | null>(null);
   const [applications, setApplications] = useState<GetUserReceivedApplicationsResponse[]>([]);
   const [filteredApplications, setFilteredApplications] = useState<GetUserReceivedApplicationsResponse[]>([]);
 
@@ -108,7 +111,7 @@ const ApplicationsReceived = (props: any) => {
   }, []);
 
   return (
-    <PrivatePageLayout title="Applications received" pathname={props.pathname}>
+    <PrivatePageLayout title="Applications Received" pathname={props.pathname}>
       {error && <ErrorMessage errorMessage={errorMessage} />}
       <FilterApplications
         isFiltering={isFiltering}
@@ -117,10 +120,10 @@ const ApplicationsReceived = (props: any) => {
         applicationsFilter={applicationsFilter}
       />
       {isLoading ? (
-        <Box>
+        <Box border="border border-blue-ocean">
           <>
             <Paragraph customClassName="flex items-center m-0 p-0 text-blue-dimmed italic text-xl font-semibold mb-4">
-              Loading projects
+              Loading applications...
             </Paragraph>
             <Loader size={10} />
           </>
@@ -132,11 +135,32 @@ const ApplicationsReceived = (props: any) => {
             project: "Project Name",
             createdAt: "Sent at",
             status: "Status",
+            // Element added to the end of the table row, not part of applications data
             action: "Action",
           }}
           tableBody={{
-            user: (value) => `${value.first_name} ${value.last_name}`,
-            project: (value) => value.projectName,
+            user: (user: User) => (
+              <>
+                {selectedUser && <ShowUserModal user={selectedUser} close={() => setSelectedUser(null)} />}
+                <Paragraph
+                  click={() => setSelectedUser(user)}
+                  customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
+                >
+                  {user.first_name + " " + user.last_name}
+                </Paragraph>
+              </>
+            ),
+            project: (project: ProjectTypes) => (
+              <>
+                {selectedProject && <ShowProjectModal selectedProject={selectedProject} close={() => setSelectedProject(null)} />}
+                <Paragraph
+                  click={() => setSelectedProject(project)}
+                  customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
+                >
+                  {project.full_name}
+                </Paragraph>
+              </>
+            ),
             createdAt: (value) => new Date(value).toLocaleDateString(),
             status: (value) => (
               <Badge customClassName="capitalize w-min" color={value === "Pending" ? "yellow" : value === "Accepted" ? "green" : "red"}>

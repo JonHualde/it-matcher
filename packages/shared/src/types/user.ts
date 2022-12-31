@@ -1,11 +1,12 @@
 export default interface User {
-  id: number;
+  id?: number;
   createdAt?: Date;
   updatedAt?: Date;
+  permission?: number;
+  password?: string;
   email: string;
   first_name: string;
   last_name: string;
-  permission: 0 | 1;
   linkedIn_url: string | null;
   instagram_username: string | null;
   github_url: string | null;

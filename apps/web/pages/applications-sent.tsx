@@ -1,12 +1,15 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, ReactElement } from "react";
 import FilterApplications from "shared/src/components/forms/filter-applications";
 import PrivatePageLayout from "shared/src/components/layouts/private-page-layout";
 import { ErrorMessage } from "@shared-components/error-message";
 import { Table } from "@shared-components/tables";
 import { Badge, Loader } from "@shared-components/status";
 import { Box } from "@shared-components/box";
-import { Paragraph } from "@shared-components/typography"; // types
-import { GetUserSentApplicationsResponse, ApplicationsFiltersTypes } from "@shared-types";
+import { Paragraph } from "@shared-components/typography";
+import { Button } from "@shared-components/buttons";
+import { ShowProjectModal } from "@shared-components/modals";
+// types
+import { UserSentApplicationsResponse, ApplicationsFiltersTypes, ProjectTypes, ApplicationTypes } from "@shared-types";
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 
@@ -21,13 +24,14 @@ const Requests = (props: any) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
-  const [applications, setApplications] = useState<GetUserSentApplicationsResponse[]>([]);
-  const [filteredApplications, setFilteredApplications] = useState<GetUserSentApplicationsResponse[]>([]);
+  const [selectedProject, setSelectedProject] = useState<ProjectTypes | null>(null);
+  const [applications, setApplications] = useState<UserSentApplicationsResponse[]>([]);
+  const [filteredApplications, setFilteredApplications] = useState<UserSentApplicationsResponse[]>([]);
 
   const applicationsFilter = () => {
     setIsFiltering(true);
     setFilteredApplications(() =>
-      applications.filter((application: GetUserSentApplicationsResponse) => {
+      applications.filter((application: UserSentApplicationsResponse) => {
         if (
           (filters.projectName === "" || application.project.projectName.toLowerCase().includes(filters.projectName.toLowerCase())) &&
           (filters.status === "default" || filters.status === "All" || application.status === filters.status)
@@ -47,7 +51,7 @@ const Requests = (props: any) => {
     notify({ myToast, toastId: 1, message: "Getting applications..." });
 
     await fetchJSON("application/user-sent", "GET")
-      .then((applications: GetUserSentApplicationsResponse[]) => {
+      .then((applications: UserSentApplicationsResponse[]) => {
         setApplications(applications);
         updateToast({ myToast, toastId: 1, type: "SUCCESS", message: "Applications successfully retrieved" });
       })
@@ -64,6 +68,27 @@ const Requests = (props: any) => {
       })
       .finally(() => {
         setIsLoading(false);
+      });
+  };
+
+  const deleteApplication = async (applicationId: number) => {
+    notify({ myToast, toastId: 3, message: "Deleting application..." });
+
+    await fetchJSON(`application/${applicationId}`, "DELETE")
+      .then((deletedApplication: ApplicationTypes) => {
+        updateToast({ myToast, toastId: 3, type: "SUCCESS", message: "Application successfully deleted" });
+        setApplications(applications.filter((application: UserSentApplicationsResponse) => deletedApplication.id !== application.id));
+      })
+      .catch((error) => {
+        console.error(error);
+        setError(true);
+        setErrorMessage(error.message);
+        updateToast({
+          myToast,
+          toastId: 3,
+          type: "ERROR",
+          message: error.message || "Something wrong happen while deleting the application, please reload the page.",
+        });
       });
   };
 
@@ -84,7 +109,7 @@ const Requests = (props: any) => {
         <Box>
           <>
             <Paragraph customClassName="flex items-center m-0 p-0 text-blue-dimmed italic text-xl font-semibold mb-4">
-              Loading projects
+              Loading applications...
             </Paragraph>
             <Loader size={10} />
           </>
@@ -95,17 +120,49 @@ const Requests = (props: any) => {
             project: "Project Name",
             createdAt: "Sent at",
             status: "Status",
+            // Element added to the end of the table row, not part of applications data
             action: "Action",
           }}
           tableBody={{
-            project: (value) => value.projectName,
+            project: (project: ProjectTypes) => (
+              <>
+                {selectedProject && <ShowProjectModal selectedProject={selectedProject} close={() => setSelectedProject(null)} />}
+                <Paragraph
+                  click={() => setSelectedProject(project)}
+                  customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
+                >
+                  {project.full_name}
+                </Paragraph>
+              </>
+            ),
             createdAt: (value) => new Date(value).toLocaleDateString(),
             status: (value) => (
               <Badge customClassName="capitalize w-min" color={value === "Pending" ? "yellow" : value === "Accepted" ? "green" : "red"}>
                 {value}
               </Badge>
             ),
-            action: () => <p>test</p>,
+            action: (application: UserSentApplicationsResponse): ReactElement | string => {
+              if (application.status === "Pending") {
+                return (
+                  <Button
+                    customClass="w-min"
+                    padding="px-4 py-1.5"
+                    text={"Delete"}
+                    rounded="rounded-sm"
+                    type="button"
+                    color="bg-red-100"
+                    textColor="text-red-800"
+                    hover="hover:scale-105 transform transition duration-100 ease-in-out"
+                    border="border border-red-800"
+                    action={() => {
+                      deleteApplication(application.id);
+                    }}
+                  />
+                );
+              }
+
+              return "-";
+            },
           }}
           tableData={filteredApplications.length > 0 ? filteredApplications : applications}
           emptyData="There is no applications to show"

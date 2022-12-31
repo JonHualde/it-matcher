@@ -5,6 +5,7 @@ interface TitleProps {
   children: string;
   size?: "tiny" | "small" | "medium" | "large";
   ref?: any;
+  click?: () => void;
 }
 
 const Paragraph = (props: TitleProps) => {
@@ -23,7 +24,11 @@ const Paragraph = (props: TitleProps) => {
     }
   };
 
-  return <p className={`${props.customClassName ?? ""} ${getParagraphSize()}`}>{props.children}</p>;
+  return (
+    <p onClick={props.click} className={`${props.customClassName ?? ""} ${getParagraphSize()}`}>
+      {props.children}
+    </p>
+  );
 };
 
 export default Paragraph;

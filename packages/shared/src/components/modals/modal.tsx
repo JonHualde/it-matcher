@@ -21,7 +21,7 @@ const Modal = (props: ModalProps) => {
   return (
     <div className={`fixed -inset-6 ${props.zIndex ?? "z-20"} overflow-auto`} aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex min-h-screen items-center justify-center text-center sm:block">
-        <div className="fixed inset-0 bg-gray-200 bg-opacity-80 transition-opacity" aria-hidden="true" onClick={props.close}></div>
+        <div className="fixed inset-0 bg-gray-200 bg-opacity-40 transition-opacity" aria-hidden="true" onClick={props.close}></div>
 
         <span className="hidden sm:inline-block sm:h-screen sm:align-middle" aria-hidden="true">
           &#8203;
@@ -29,7 +29,7 @@ const Modal = (props: ModalProps) => {
 
         <div
           className={`inline-block ${props.size ?? "max-w-md"} 
-          w-[90vw] transform overflow-auto rounded-lg bg-white px-3 py-10 text-left align-bottom shadow-xl
+          w-[90vw] transform overflow-auto rounded-lg bg-white px-3 py-10 text-left align-bottom shadow-lg
           transition-all sm:my-8 sm:w-full sm:px-8 sm:align-middle`}
         >
           <svg

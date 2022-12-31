@@ -9,16 +9,16 @@ import { Badge } from "@shared-components/status";
 // Store
 import { useStoreState } from "easy-peasy";
 // types
-import { ProjectProps, GetUserApplicationsResponse } from "@shared-types";
+import { ProjectTypes, UserSentApplicationsResponse } from "@shared-types";
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 
 interface LogInModalProps {
-  selectedProject: ProjectProps;
-  applications: GetUserApplicationsResponse[];
+  selectedProject: ProjectTypes;
   close: () => void;
-  openLogInModal: () => void;
-  setApplications: (applications: GetUserApplicationsResponse[]) => void;
+  applications?: UserSentApplicationsResponse[];
+  openLogInModal?: () => void;
+  setApplications?: (applications: UserSentApplicationsResponse[]) => void;
 }
 
 const ShowProjectModal = (props: LogInModalProps) => {
@@ -26,7 +26,7 @@ const ShowProjectModal = (props: LogInModalProps) => {
   const myToast = useRef<any>();
 
   const sendApplication = async (shownProject: any) => {
-    if (!isLoggedIn) {
+    if (!isLoggedIn && props.openLogInModal) {
       props.openLogInModal();
       return;
     }
@@ -36,8 +36,10 @@ const ShowProjectModal = (props: LogInModalProps) => {
     fetchJSON("application", "POST", {
       projectId: shownProject.id,
     })
-      .then((res: GetUserApplicationsResponse) => {
-        props.setApplications([...props.applications, res]);
+      .then((res: UserSentApplicationsResponse) => {
+        if (props.setApplications && props.applications) {
+          props.setApplications([...props.applications, res]);
+        }
         updateToast({
           myToast,
           toastId: 3,
@@ -111,24 +113,32 @@ const ShowProjectModal = (props: LogInModalProps) => {
         </div>
 
         {/* Apply / favourite */}
-        <div className="flex w-full items-center justify-center py-8">
-          <Button
-            text={
-              props.applications.some((application) => application.projectId === props.selectedProject.id) ? "Application Sent" : "Apply"
-            }
-            color="bg-blue-ocean"
-            textColor="text-white"
-            hover="text-blue-800"
-            rounded="rounded-md"
-            padding="px-3 py-1"
-            borderColor="border-blue-ocean"
-            disabled={props.applications.some((application) => application.projectId === props.selectedProject.id) ? true : false}
-            action={() => sendApplication(props.selectedProject)}
-          />
-          <div className="relative flex items-center pl-4">
-            <img src="/images/heart.png" alt="" className="rounded-md" />
+        {props.setApplications && (
+          <div className="flex w-full items-center justify-center py-8">
+            <Button
+              text={
+                props.applications && props.applications.some((application) => application.projectId === props.selectedProject.id)
+                  ? "Application Sent"
+                  : "Apply"
+              }
+              color="bg-blue-ocean"
+              textColor="text-white"
+              hover="text-blue-800"
+              rounded="rounded-md"
+              padding="px-3 py-1"
+              border="border border-blue-ocean"
+              disabled={
+                props.applications && props.applications.some((application) => application.projectId === props.selectedProject.id)
+                  ? true
+                  : false
+              }
+              action={() => sendApplication(props.selectedProject)}
+            />
+            <div className="relative flex items-center pl-4">
+              <img src="/images/heart.png" alt="" className="rounded-md" />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </Modal>
   );

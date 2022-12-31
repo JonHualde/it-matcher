@@ -11,7 +11,7 @@ import { Icon } from "@shared-components/icons";
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 // types
-import { ProjectProps, JobTitlesTypes, SearchBarFiltersTypes, FavouritesTypes, GetUserApplicationsResponse } from "@shared-types";
+import { ProjectTypes, JobTitlesTypes, SearchBarFiltersTypes, FavouritesTypes, UserSentApplicationsResponse } from "@shared-types";
 // States
 import { useStoreState } from "easy-peasy";
 
@@ -24,11 +24,11 @@ const Search = ({ pathname }: any) => {
     difficulty: "default",
     isOnline: "default",
   });
-  const [projects, setProjects] = useState<ProjectProps[]>([]);
+  const [projects, setProjects] = useState<ProjectTypes[]>([]);
   const [jobTitles, setJobTitles] = useState<JobTitlesTypes[]>([]);
   const [favourites, setFavourites] = useState<FavouritesTypes[]>([]);
-  const [applications, setApplications] = useState<GetUserApplicationsResponse[]>([]);
-  const [selectedProject, setSelectedProject] = useState<ProjectProps | null>(null);
+  const [applications, setApplications] = useState<UserSentApplicationsResponse[]>([]);
+  const [selectedProject, setSelectedProject] = useState<ProjectTypes | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +38,7 @@ const Search = ({ pathname }: any) => {
     setFilters({ ...filters, [e.target.name]: e.target.value });
   };
 
-  const updateFavourites = async (method: "POST" | "DELETE", project: ProjectProps) => {
+  const updateFavourites = async (method: "POST" | "DELETE", project: ProjectTypes) => {
     notify({ myToast, toastId: 1, message: "Updating favourites..." });
 
     await fetchJSON(`favourite/${project.id}`, method)
@@ -57,7 +57,7 @@ const Search = ({ pathname }: any) => {
       });
   };
 
-  const getProjectDetails = async (project: ProjectProps) => {
+  const getProjectDetails = async (project: ProjectTypes) => {
     setSelectedProject(project);
   };
 
@@ -72,8 +72,8 @@ const Search = ({ pathname }: any) => {
   };
 
   const getApplications = async () => {
-    await fetchJSON("application/user", "GET")
-      .then((applications: GetUserApplicationsResponse[]) => {
+    await fetchJSON("application/user-sent", "GET")
+      .then((applications: UserSentApplicationsResponse[]) => {
         setApplications(() => applications);
       })
       .catch((err) => {
@@ -100,11 +100,11 @@ const Search = ({ pathname }: any) => {
     if (query) url += query;
 
     await fetchJSON(url, "GET")
-      .then(async (projects: ProjectProps[]) => {
+      .then(async (projects: ProjectTypes[]) => {
         if (!user.isLoggedIn) {
           setProjects(() => projects);
         } else {
-          setProjects(() => projects.filter((item: ProjectProps) => item.userId !== user.id));
+          setProjects(() => projects.filter((item: ProjectTypes) => item.userId !== user.id));
         }
 
         if (query) {
