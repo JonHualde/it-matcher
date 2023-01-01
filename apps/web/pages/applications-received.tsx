@@ -9,7 +9,13 @@ import { Paragraph, Italic } from "@shared-components/typography";
 import { ApplicationTableButtons } from "shared/src/components/buttons";
 import { ShowProjectModal, ShowUserModal } from "@shared-components/modals";
 // types
-import { User, GetUserReceivedApplicationsResponse, ApplicationsFiltersTypes, ProjectTypes, JobTitlesTypes } from "@shared-types";
+import {
+  BasicUserDetails,
+  GetUserReceivedApplicationsResponse,
+  ApplicationsFiltersTypes,
+  ProjectTypes,
+  JobTitlesTypes,
+} from "@shared-types";
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 
@@ -24,7 +30,7 @@ const ApplicationsReceived = (props: { pathname: string }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [selectedUser, setSelectedUser] = useState<BasicUserDetails | null>(null);
   const [selectedProject, setSelectedProject] = useState<ProjectTypes | null>(null);
   const [jobTitles, setJobTitles] = useState<JobTitlesTypes[]>([]);
   const [applications, setApplications] = useState<GetUserReceivedApplicationsResponse[]>([]);
@@ -152,7 +158,7 @@ const ApplicationsReceived = (props: { pathname: string }) => {
             action: "Action",
           }}
           tableBody={{
-            user: (user: User) => (
+            user: (user: BasicUserDetails) => (
               <>
                 {selectedUser && <ShowUserModal user={selectedUser} close={() => setSelectedUser(null)} />}
                 <Paragraph

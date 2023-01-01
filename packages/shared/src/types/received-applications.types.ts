@@ -1,5 +1,5 @@
 import ProjectTypes from "./project.types";
-import User from "./user.types";
+import BasicUserDetails from "./basic-user-details.types";
 export default interface GetUserReceivedApplicationsResponse {
   id: number;
   created_at: string | Date;
@@ -9,5 +9,5 @@ export default interface GetUserReceivedApplicationsResponse {
   user_id: number;
   job_title_id: number;
   project: ProjectTypes;
-  user: User;
+  user: BasicUserDetails;
 }

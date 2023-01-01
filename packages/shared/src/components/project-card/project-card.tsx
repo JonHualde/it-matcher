@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import Image from "next/image";
 // Components
 import {
@@ -10,17 +11,41 @@ import {
 } from "react-icons/hi";
 import { Popover } from "@shared-components/popover";
 import { Badge } from "@shared-components/status";
-import { Title, Paragraph, Italic, DateTag } from "@shared-components/typography";
+import { Title, Paragraph } from "@shared-components/typography";
 // types
-import { ProjectTypes } from "@shared-types";
+import { ProjectTypes, BasicUserDetails } from "@shared-types";
+// utils
+import { fetchJSON, notify, updateToast } from "@shared-utils";
 
 interface ProjectCardInterface {
   project: ProjectTypes;
+  setSelectedUser: (user: BasicUserDetails) => void;
   openDeleteProjectModal: () => void;
   openEditProjectModal: () => void;
 }
 
 const ProjectCard = (props: ProjectCardInterface) => {
+  const [usersDetails, setUsersDetails] = useState<BasicUserDetails[]>([]);
+
+  const getParticipantsDetails = async () => {
+    props.project.participants_ids.map(async (participant_id: number) => {
+      await fetchJSON("user/basic-details", "POST", {
+        user_id: participant_id,
+        project_id: props.project.id,
+      })
+        .then((user: BasicUserDetails) => {
+          setUsersDetails((prevState) => [...prevState, user]);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    });
+  };
+
+  useEffect(() => {
+    getParticipantsDetails();
+  }, []);
+
   return (
     <div className="w-full rounded-md border border-gray-200 px-6 py-6 shadow-xl transition-all hover:scale-105">
       {/* Project's card header */}
@@ -92,55 +117,36 @@ const ProjectCard = (props: ProjectCardInterface) => {
         </div>
         <div className="relative mx-0 flex items-center justify-start">
           <HiOutlineUsers fontSize={"25px"} className="mr-3 text-blue-dimmed" />
-          <Badge color="green" customClassName="font-medium px-2 py-0.5">
-            4
+          <Badge color="blue" customClassName="font-medium px-2 py-0.5">
+            {props.project.job_titles_filled.length}
           </Badge>
           &nbsp; members have joined
           <div className="absolute top-8 left-8 flex items-center">
-            <img
-              className="rounded-full object-cover"
-              src="/images/placeholder.png"
-              alt="placeholderImage"
-              style={{
-                width: "25px",
-                height: "25px",
-              }}
-            />
-            <img
-              className="-ml-1 rounded-full object-cover"
-              src="/images/placeholder.png"
-              alt="placeholderImage"
-              style={{
-                width: "25px",
-                height: "25px",
-              }}
-            />
-            <img
-              className="-ml-1 rounded-full object-cover"
-              src="/images/placeholder.png"
-              alt="placeholderImage"
-              style={{
-                width: "25px",
-                height: "25px",
-              }}
-            />
-            <img
-              className="-ml-1 rounded-full object-cover"
-              src="/images/placeholder.png"
-              alt="placeholderImage"
-              style={{
-                width: "25px",
-                height: "25px",
-              }}
-            />
+            {usersDetails.map((user: BasicUserDetails, index: number) => (
+              <div
+                onClick={() => props.setSelectedUser(user)}
+                key={index}
+                className={`${index === 0 ? "" : "-ml-1"} relative h-8 w-8 cursor-pointer transition-all
+              duration-200 ease-in-out hover:scale-125
+              `}
+              >
+                <Image
+                  src={`${process.env.NEXT_PUBLIC_AWS_S3_LINK}${
+                    user.profile_picture_ref ? "/" + user.profile_picture_ref : "/pictures/Generic-Profile-1600x1600.png"
+                  } `}
+                  className="rounded-full"
+                  objectFit="cover"
+                  alt="profile_picture"
+                  layout="fill"
+                />
+              </div>
+            ))}
           </div>
         </div>
         <div className="mx-0 flex items-center justify-start">
           <HiOutlineExclamationCircle fontSize={"25px"} className="mr-3 text-blue-dimmed" />
           Currently missing:&nbsp;
-          <Badge color="green" customClassName="font-medium px-2 py-0.5">
-            {/* Get the participants number based on the job_titles_filled variable */}
-
+          <Badge color="blue" customClassName="font-medium px-2 py-0.5">
             {props.project.number_of_participants - props.project.job_titles_filled.length}
           </Badge>
           &nbsp;people

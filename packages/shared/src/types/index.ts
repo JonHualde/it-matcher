@@ -1,6 +1,7 @@
 export type { default as FilterApplicationsData } from "./filter-application-data";
 export type { default as ProjectTypes } from "./project.types";
 export type { default as User } from "./user.types";
+export type { default as BasicUserDetails } from "./basic-user-details.types";
 export type { default as HttpResponse } from "./httpResponse";
 export type { default as JobTitlesTypes } from "./job-titles.types";
 export type { default as SearchBarFiltersTypes } from "./search-bar-types";

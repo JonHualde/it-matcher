@@ -5,10 +5,10 @@ import ProjectCard from "shared/src/components/project-card/project-card";
 import { Loader } from "@shared-components/status";
 import { Box } from "@shared-components/box";
 import { Paragraph } from "@shared-components/typography";
-import { DeleteProjectModal } from "shared/src/components/modals";
-import { EditProjectModal } from "@shared-components/modals";
+import { EditProjectModal, ShowUserModal, DeleteProjectModal } from "@shared-components/modals";
+
 // type
-import { ProjectTypes } from "@shared-types";
+import { ProjectTypes, BasicUserDetails } from "@shared-types";
 // utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 
@@ -18,6 +18,7 @@ const Projects = (props: any) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<BasicUserDetails | null>(null);
   const [selectedProject, setSelectedProject] = useState<ProjectTypes | null>(null);
   const [projects, setProjects] = useState<ProjectTypes[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<ProjectTypes[]>([]);
@@ -60,6 +61,7 @@ const Projects = (props: any) => {
 
   return (
     <PrivatePageLayout title="My projects" pathname={props.pathname}>
+      {selectedUser && <ShowUserModal user={selectedUser} close={() => setSelectedUser(null)} />}
       {isLoading ? (
         <Box border="border border-blue-ocean">
           <>
@@ -74,6 +76,7 @@ const Projects = (props: any) => {
           {!!projects.length &&
             projects.map((project: any, index: number) => (
               <ProjectCard
+                setSelectedUser={(user: BasicUserDetails) => setSelectedUser(user)}
                 project={project}
                 key={index}
                 openDeleteProjectModal={openDeleteProjectModal}

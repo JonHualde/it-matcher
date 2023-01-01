@@ -4,7 +4,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { MediaService } from 'src/media/media.service';
 // Types
 import { S3UploadResponse, UserResponse } from '@types';
+import { BasicUserDetails } from '@shared-types';
+// dtos
 import { UpdateUserDetailsDto } from './dtos/account-details.dto';
+import { BasicDetailsDto } from './dtos/basic-details.dto';
 
 @Injectable()
 export class UserService {
@@ -37,6 +40,49 @@ export class UserService {
 
     delete user.password;
     return user;
+  }
+
+  async getBasicDetails(
+    body: BasicDetailsDto,
+    user: JwtDecodeDto,
+  ): Promise<BasicUserDetails> {
+    // Find project using project_id
+    const project = await this.prisma.project.findUniqueOrThrow({
+      where: {
+        id: body.project_id,
+      },
+    });
+
+    // Check if the project user id is the same as the user id
+    if (project.user_id !== user.id) {
+      throw new BadRequestException(
+        'You are not authorized to get this information.',
+      );
+    }
+
+    // Checks if the project participants_ids contains the user id in the body.user_id
+    if (!project.participants_ids.includes(body.user_id)) {
+      throw new BadRequestException(
+        'You are not authorized to get this information.',
+      );
+    }
+
+    return await this.prisma.user.findUniqueOrThrow({
+      where: {
+        id: body.user_id,
+      },
+      select: {
+        email: true,
+        first_name: true,
+        last_name: true,
+        linkedIn_url: true,
+        instagram_username: true,
+        website_url: true,
+        github_url: true,
+        notion_page_url: true,
+        profile_picture_ref: true,
+      },
+    });
   }
 
   async updateUserDetails(

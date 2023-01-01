@@ -17,6 +17,7 @@ import { multerOptions } from 'src/config/multer.config';
 // dtos
 import { ProfilePictureDto } from './dtos/profile-picture.dto';
 import { UpdateUserDetailsDto } from './dtos/account-details.dto';
+import { BasicDetailsDto } from './dtos/basic-details.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('user')
@@ -26,6 +27,11 @@ export class UserController {
   @Get()
   async getUser(@Request() req) {
     return this.userService.getUser(req.user);
+  }
+
+  @Post('basic-details')
+  async getBasicDetails(@Body() body: BasicDetailsDto, @Request() req) {
+    return this.userService.getBasicDetails(body, req.user);
   }
 
   @Patch()

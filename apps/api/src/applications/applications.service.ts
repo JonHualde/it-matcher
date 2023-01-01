@@ -19,6 +19,7 @@ import {
   ProjectTypes,
   ApplicationTypes,
   User,
+  BasicUserDetails,
 } from '@shared-types';
 
 @Injectable()
@@ -279,13 +280,16 @@ export class ApplicationService {
       throw new ForbiddenException('This role has already been taken.');
     }
 
-    // Updates the job_titles_filled array if status is accepted
+    // Updates the job_titles_filled array if status is accepted and the participants_ids column
     if (application.status === 'Accepted') {
       await this.prisma.project.update({
         where: { id: project.id },
         data: {
           job_titles_filled: {
             push: applicationToUpdate.job_title_id,
+          },
+          participants_ids: {
+            push: applicationToUpdate.user_id,
           },
         },
       });

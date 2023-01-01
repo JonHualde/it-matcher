@@ -4,17 +4,17 @@ import { Title } from "@shared-components/typography";
 import { Badge } from "@shared-components/status";
 import { BsLinkedin } from "react-icons/bs";
 // types
-import { User } from "@shared-types";
+import { BasicUserDetails } from "@shared-types";
 
 interface LogInModalProps {
-  user: User;
+  user: BasicUserDetails;
   close: () => void;
 }
 
 const ShowUserModal = (props: LogInModalProps) => {
   return (
-    <Modal size="max-w-2xl" close={() => props.close()}>
-      <div className="relative rounded-md" style={{ height: "calc(100vh - 150px)" }}>
+    <Modal size="max-w-xl" close={() => props.close()}>
+      <div className="relative h-auto max-h-[90vh] rounded-md">
         <div className="mb-8 flex flex-col items-center">
           {/* Main Picture */}
           <div className="relative my-4 flex h-80 h-40 w-40 items-center rounded-full">
