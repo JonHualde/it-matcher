@@ -73,7 +73,7 @@ export class ProjectService {
     });
 
     const duplicateproject_name = await this.prisma.project.findUnique({
-      where: { project_name: project.project_name },
+      where: { project_name: project.project_name.trim() },
     });
 
     if (duplicateproject_name) {
@@ -106,12 +106,12 @@ export class ProjectService {
     return await this.prisma.project.create({
       data: {
         user_id: user.id,
-        project_name: project.project_name,
+        project_name: project.project_name.trim(),
         starting_on: new Date(project.starting_on),
         estimated_time_duration: +project.estimated_time_duration,
         estimated_time_duration_metric: project.estimated_time_duration_metric,
         full_name: user.firstName + ' ' + user.lastName,
-        description: project.description,
+        description: project.description.trim(),
         difficulty: project.difficulty,
         type: project.type,
         number_of_participants: project.number_of_participants,

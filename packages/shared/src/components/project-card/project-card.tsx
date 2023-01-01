@@ -139,7 +139,9 @@ const ProjectCard = (props: ProjectCardInterface) => {
           <HiOutlineExclamationCircle fontSize={"25px"} className="mr-3 text-blue-dimmed" />
           Currently missing:&nbsp;
           <Badge color="green" customClassName="font-medium px-2 py-0.5">
-            {props.project.number_of_participants.toString()}
+            {/* Get the participants number based on the job_titles_filled variable */}
+
+            {props.project.number_of_participants - props.project.job_titles_filled.length}
           </Badge>
           &nbsp;people
         </div>

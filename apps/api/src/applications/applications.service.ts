@@ -42,9 +42,10 @@ export class ApplicationService {
   async getSentApplications(
     user: JwtDecodeDto,
   ): Promise<UserSentApplicationsResponse[]> {
-    const applicationsSent = await this.prisma.application.findMany({
-      where: { user_id: user.id },
-    });
+    const applicationsSent: ApplicationTypes[] =
+      await this.prisma.application.findMany({
+        where: { user_id: user.id },
+      });
 
     if (!applicationsSent.length) {
       return [];
@@ -244,23 +245,50 @@ export class ApplicationService {
     application: UpdateApplicationDto,
     user: JwtDecodeDto,
   ) {
-    // Check if the application exists, and get it
+    // Checks if the application exists, and get it
     const applicationToUpdate = await this.prisma.application.findUniqueOrThrow(
       {
         where: { id: application.id },
       },
     );
 
-    // Take the project id, check if the project still exists, and get the project
+    // Take the project id, checks if the project still exists, and get the project
     const project = await this.prisma.project.findUniqueOrThrow({
       where: { id: applicationToUpdate.project_id },
     });
 
-    // Check if the id in the token matches the project owner id
+    // Checks if the id in the token matches the project owner id
     if (project.user_id !== user.id) {
       throw new ForbiddenException(
         'You are not allowed to update this application.',
       );
+    }
+
+    // Checks if the application status is already accepted or rejected
+    if (applicationToUpdate.status !== 'Pending') {
+      throw new ForbiddenException(
+        'This application has already been accepted or rejected.',
+      );
+    }
+
+    // Checks if the job title id has already been taken by another applicant if status is accepted
+    if (
+      application.status === 'Accepted' &&
+      project.job_titles_filled.includes(applicationToUpdate.job_title_id)
+    ) {
+      throw new ForbiddenException('This role has already been taken.');
+    }
+
+    // Updates the job_titles_filled array if status is accepted
+    if (application.status === 'Accepted') {
+      await this.prisma.project.update({
+        where: { id: project.id },
+        data: {
+          job_titles_filled: {
+            push: applicationToUpdate.job_title_id,
+          },
+        },
+      });
     }
 
     // if so, update the application status

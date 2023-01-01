@@ -5,7 +5,7 @@ import { ErrorMessage } from "@shared-components/error-message";
 import { Table } from "@shared-components/tables";
 import { Badge, Loader } from "@shared-components/status";
 import { Box } from "@shared-components/box";
-import { Paragraph, DateTag } from "@shared-components/typography";
+import { Paragraph, Italic } from "@shared-components/typography";
 import { Button } from "@shared-components/buttons";
 import { ShowProjectModal } from "@shared-components/modals";
 // types
@@ -132,6 +132,7 @@ const Requests = (props: { pathname: string }) => {
             project: "Project name",
             created_at: "Sent at",
             status: "Status",
+            role: "Role",
             // Element added to the end of the table row, not part of applications data
             action: "Action",
           }}
@@ -155,6 +156,11 @@ const Requests = (props: { pathname: string }) => {
               <Badge customClassName="capitalize w-min" color={value === "Pending" ? "yellow" : value === "Accepted" ? "green" : "red"}>
                 {value}
               </Badge>
+            ),
+            role: (item: UserSentApplicationsResponse) => (
+              <Italic customClassName="text-sm capitalize w-min">
+                {jobTitles.find((jobTitle) => jobTitle.id === item.job_title_id)?.name ?? ""}
+              </Italic>
             ),
             action: (application: UserSentApplicationsResponse): ReactElement | string => {
               if (application.status === "Pending") {

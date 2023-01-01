@@ -5,7 +5,7 @@ import { ErrorMessage } from "@shared-components/error-message";
 import { Table } from "@shared-components/tables";
 import { Badge, Loader } from "@shared-components/status";
 import { Box } from "@shared-components/box";
-import { Paragraph } from "@shared-components/typography";
+import { Paragraph, Italic } from "@shared-components/typography";
 import { ApplicationTableButtons } from "shared/src/components/buttons";
 import { ShowProjectModal, ShowUserModal } from "@shared-components/modals";
 // types
@@ -146,6 +146,7 @@ const ApplicationsReceived = (props: { pathname: string }) => {
             user: "Applicant name",
             project: "Project name",
             created_at: "Sent at",
+            role: "Role",
             status: "Status",
             // Element added to the end of the table row, not part of applications data
             action: "Action",
@@ -176,6 +177,11 @@ const ApplicationsReceived = (props: { pathname: string }) => {
               </>
             ),
             created_at: (value) => new Date(value).toLocaleString(),
+            role: (item: GetUserReceivedApplicationsResponse) => (
+              <Italic customClassName="text-sm capitalize w-min">
+                {jobTitles.find((jobTitle) => jobTitle.id === item.job_title_id)?.name ?? ""}
+              </Italic>
+            ),
             status: (value) => (
               <Badge customClassName="capitalize w-min" color={value === "Pending" ? "yellow" : value === "Accepted" ? "green" : "red"}>
                 {value}

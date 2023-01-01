@@ -3,7 +3,7 @@ import { ReactElement } from "react";
 interface BadgeProps {
   color?: "green" | "red" | "yellow" | "blue" | "gray";
   customClassName?: string;
-  children: string | ReactElement;
+  children: string | number | ReactElement;
   rounded?: "sm" | "md" | "lg" | "xl" | "full";
   icon?: ReactElement;
 }

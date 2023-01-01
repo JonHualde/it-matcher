@@ -7,6 +7,7 @@ export default interface GetUserReceivedApplicationsResponse {
   status: "Accepted" | "Pending" | "Rejected";
   project_id: number;
   user_id: number;
+  job_title_id: number;
   project: ProjectTypes;
   user: User;
 }
