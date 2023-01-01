@@ -3,7 +3,7 @@ import { Loader } from "@shared-components/status";
 import { Button } from "shared/src/components/buttons";
 import { JobTitlesTypes, SearchBarFiltersTypes } from "@shared-types";
 import { Modal } from "@shared-components/modals";
-import { HiOutlineMagnifyingGlass } from "react-icons/hi2";
+import { SlMagnifier } from "react-icons/sl";
 import { Title } from "@shared-components/typography";
 interface SearchBarProps {
   jobTitles: JobTitlesTypes[];
@@ -23,7 +23,7 @@ const MobileSearch = (props: SearchBarProps) => {
         className=" flex h-16 w-16 cursor-pointer items-center justify-center rounded-full bg-blue-dimmed text-white"
         onClick={() => setIsModalOpen(true)}
       >
-        <HiOutlineMagnifyingGlass aria-hidden={true} className="text-3xl" />
+        <SlMagnifier className="text-3xl" />
       </div>
       {isModalOpen && (
         <Modal size="max-w-2xl" close={() => setIsModalOpen(false)}>
@@ -54,8 +54,8 @@ const MobileSearch = (props: SearchBarProps) => {
               {/* Job titles filter */}
               <select
                 onChange={props.updateFilters}
-                value={props.filters.jobTitle}
-                name="jobTitle"
+                value={props.filters.job_title_wanted}
+                name="job_title_wanted"
                 className="row-span-2 h-12 bg-transparent bg-white px-3 outline-none"
               >
                 <option value="default" disabled selected>
@@ -105,8 +105,8 @@ const MobileSearch = (props: SearchBarProps) => {
               {/* Is online */}
               <select
                 onChange={props.updateFilters}
-                name="isOnline"
-                value={props.filters.isOnline}
+                name="is_online"
+                value={props.filters.is_online}
                 className="row-span-2 h-12 bg-transparent bg-white px-4 outline-none"
               >
                 <option value="default" disabled selected>

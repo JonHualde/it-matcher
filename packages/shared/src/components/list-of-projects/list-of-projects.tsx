@@ -6,25 +6,18 @@ import { Box } from "@shared-components/box";
 import { Icon } from "@shared-components/icons";
 import { AiOutlineStar, AiFillStar } from "react-icons/ai";
 // types
-import { ProjectTypes, JobTitlesWantedTypes, FavouritesTypes } from "@shared-types";
+import { ProjectTypes, JobTitlesTypes, FavouritesTypes } from "@shared-types";
 
 interface ListOfProjectTypes {
   projects: ProjectTypes[];
-  job_titles_wanted: JobTitlesWantedTypes[];
+  jobTitles: JobTitlesTypes[];
   isUserLoggedIn: boolean;
   favourites: FavouritesTypes[];
   getProjectDetails: (project: ProjectTypes) => void;
   updateFavourites: (method: "POST" | "DELETE", project: ProjectTypes) => void;
 }
 
-const ListOfProjects = ({
-  updateFavourites,
-  favourites,
-  isUserLoggedIn,
-  projects,
-  getProjectDetails,
-  job_titles_wanted,
-}: ListOfProjectTypes) => {
+const ListOfProjects = ({ updateFavourites, favourites, isUserLoggedIn, projects, getProjectDetails, jobTitles }: ListOfProjectTypes) => {
   if (!projects.length) {
     return (
       <Box border="border-2 border-blue-ocean">
@@ -93,17 +86,22 @@ const ListOfProjects = ({
               <Title type="h6" customClassName="line-clamp-3 mb-1 mt-0">
                 Searching for:
               </Title>
-              {!job_titles_wanted.length && <Loader />}
-              {job_titles_wanted.map((job_titles_wanted: JobTitlesWantedTypes, index: number) => {
-                return project.job_titles_wanted.map((item) => {
-                  if (item === job_titles_wanted.id) {
+              {!jobTitles.length && <Loader />}
+              {jobTitles.map((job: JobTitlesTypes, index: number) => {
+                return project.job_titles_wanted.map((jobTitleWantedId) => {
+                  if (jobTitleWantedId === job.id) {
+                    // If the wanted job is in the list of job filled, we display a gray badge
+                    if (project.job_titles_filled.find((jobTitleFilledId) => jobTitleFilledId === job.id)) {
+                      return (
+                        <Badge key={job.name + "-" + index} color="gray" customClassName="inline-flex text-xs font-medium m-0.5">
+                          {job.name}
+                        </Badge>
+                      );
+                    }
+
                     return (
-                      <Badge
-                        key={job_titles_wanted.name + "-" + index}
-                        color="blue"
-                        customClassName="inline-flex text-xs font-medium m-0.5"
-                      >
-                        {job_titles_wanted.name}
+                      <Badge key={job.name + "-" + index} color="blue" customClassName="inline-flex text-xs font-medium m-0.5">
+                        {job.name}
                       </Badge>
                     );
                   }

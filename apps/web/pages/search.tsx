@@ -11,7 +11,7 @@ import { Icon } from "@shared-components/icons";
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 // types
-import { ProjectTypes, JobTitlesWantedTypes, SearchBarFiltersTypes, FavouritesTypes, UserSentApplicationsResponse } from "@shared-types";
+import { ProjectTypes, JobTitlesTypes, SearchBarFiltersTypes, FavouritesTypes, UserSentApplicationsResponse } from "@shared-types";
 // States
 import { useStoreState } from "easy-peasy";
 
@@ -25,7 +25,7 @@ const Search = ({ pathname }: any) => {
     is_online: "default",
   });
   const [projects, setProjects] = useState<ProjectTypes[]>([]);
-  const [jobTitles, setJobTitles] = useState<JobTitlesWantedTypes[]>([]);
+  const [jobTitles, setJobTitles] = useState<JobTitlesTypes[]>([]);
   const [favourites, setFavourites] = useState<FavouritesTypes[]>([]);
   const [applications, setApplications] = useState<UserSentApplicationsResponse[]>([]);
   const [selectedProject, setSelectedProject] = useState<ProjectTypes | null>(null);
@@ -83,7 +83,7 @@ const Search = ({ pathname }: any) => {
 
   const getJobTitles = async () => {
     await fetchJSON("job-titles", "GET")
-      .then((jobTitles: JobTitlesWantedTypes[]) => {
+      .then((jobTitles: JobTitlesTypes[]) => {
         setJobTitles(() => jobTitles);
       })
       .catch((err) => {
@@ -218,7 +218,7 @@ const Search = ({ pathname }: any) => {
           )}
           <ListOfProjects
             isUserLoggedIn={user.isLoggedIn}
-            job_titles_wanted={jobTitles}
+            jobTitles={jobTitles}
             projects={projects}
             favourites={favourites}
             getProjectDetails={getProjectDetails}
@@ -228,8 +228,9 @@ const Search = ({ pathname }: any) => {
             <ShowProjectModal
               setApplications={setApplications}
               applications={applications}
-              openLogInModal={() => setIsModalOpen(true)}
               selectedProject={selectedProject}
+              jobTitles={jobTitles}
+              openLogInModal={() => setIsModalOpen(true)}
               close={() => setSelectedProject(null)}
             />
           )}

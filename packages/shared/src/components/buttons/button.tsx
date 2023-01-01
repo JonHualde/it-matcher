@@ -13,6 +13,7 @@ interface ButtonProps {
   action?: () => void;
   type?: "submit" | "button";
   customClass?: string;
+  id?: string;
 }
 
 const Button = (props: ButtonProps) => {
@@ -20,7 +21,8 @@ const Button = (props: ButtonProps) => {
     <button
       type={props.type ?? "button"}
       className={` 
-         flex justify-center 
+         flex justify-center disabled:cursor-not-allowed disabled:border-0 disabled:bg-gray-200 disabled:text-neutral-700 disabled:opacity-50 disabled:hover:bg-gray-200 
+            ${props.id && props.id}
             ${props.customClass ? props.customClass : ""}
             ${props.margin ? props.margin : ""}
             ${props.color ? props.color : "bg-blue-400"} 
@@ -30,7 +32,6 @@ const Button = (props: ButtonProps) => {
             ${props.padding ? props.padding : "py-3 px-6"}
             ${props.font ? props.font : "font-medium"}
             ${props.border ? props.border : "border-2 border-gray-800"}
-            ${props.disabled ? "cursor-not-allowed border-0 bg-gray-200 hover:bg-gray-200" : null}
         `}
       onClick={props.action && props.action}
       disabled={props.disabled ? props.disabled : false}

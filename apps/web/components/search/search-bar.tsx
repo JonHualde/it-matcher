@@ -1,9 +1,9 @@
 import { Loader } from "@shared-components/status";
 import { Button } from "shared/src/components/buttons";
-import { JobTitlesWantedTypes, SearchBarFiltersTypes } from "@shared-types";
+import { JobTitlesTypes, SearchBarFiltersTypes } from "@shared-types";
 
 interface SearchBarProps {
-  jobTitles: JobTitlesWantedTypes[];
+  jobTitles: JobTitlesTypes[];
   disabled: boolean;
   filters: SearchBarFiltersTypes;
   updateFilters: (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;

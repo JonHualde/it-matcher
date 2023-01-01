@@ -9,23 +9,25 @@ import { Badge } from "@shared-components/status";
 // Store
 import { useStoreState } from "easy-peasy";
 // types
-import { ProjectTypes, UserSentApplicationsResponse } from "@shared-types";
+import { ProjectTypes, JobTitlesTypes, UserSentApplicationsResponse } from "@shared-types";
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 
 interface LogInModalProps {
   selectedProject: ProjectTypes;
-  close: () => void;
   applications?: UserSentApplicationsResponse[];
+  jobTitles: JobTitlesTypes[];
+  close: () => void;
   openLogInModal?: () => void;
   setApplications?: (applications: UserSentApplicationsResponse[]) => void;
 }
 
 const ShowProjectModal = (props: LogInModalProps) => {
+  const [jobSelected, setJobSelected] = useState<string>("default");
   let isLoggedIn = useStoreState((state: any) => state.user.isLoggedIn);
   const myToast = useRef<any>();
 
-  const sendApplication = async (shownProject: any) => {
+  const sendApplication = async (shownProject: ProjectTypes, jobSelected: number) => {
     if (!isLoggedIn && props.openLogInModal) {
       props.openLogInModal();
       return;
@@ -35,7 +37,8 @@ const ShowProjectModal = (props: LogInModalProps) => {
 
     // @TODO - Add job_title_id
     fetchJSON("application", "POST", {
-      projectId: shownProject.id,
+      project_id: shownProject.id,
+      job_title_id: jobSelected,
     })
       .then((res: UserSentApplicationsResponse) => {
         if (props.setApplications && props.applications) {
@@ -58,9 +61,16 @@ const ShowProjectModal = (props: LogInModalProps) => {
     return is_online ? <Badge color="green">Online</Badge> : <Badge color="red">Offline</Badge>;
   };
 
+  const isApplicationSent = () => {
+    if (props.applications) {
+      return props.applications.some((app) => app.project_id === props.selectedProject.id);
+    }
+    return false;
+  };
+
   return (
     <Modal size="max-w-4xl" close={() => props.close()}>
-      <div className="relative rounded-md" style={{ height: "calc(100vh - 150px)" }}>
+      <div className="rounded-md" style={{ height: "calc(100vh - 150px)" }}>
         <div className="mb-8 flex flex-col items-center">
           {/* Main Picture */}
           <div className="relative my-4 flex h-80 w-full items-center">
@@ -86,7 +96,7 @@ const ShowProjectModal = (props: LogInModalProps) => {
 
         <div className="absolute left-0 w-full border border-gray-200"></div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col pb-8">
           <div className="mb-2 flex flex-col items-center justify-between border-b-2 border-gray-200">
             <div className="flex w-full items-center justify-between ">
               <Paragraph customClassName="py-1.5 font-sm text-md">Creator</Paragraph>
@@ -114,26 +124,36 @@ const ShowProjectModal = (props: LogInModalProps) => {
         </div>
 
         {/* Apply / favourite */}
-        {props.setApplications && (
-          <div className="flex w-full items-center justify-center py-8">
+        {props.setApplications && props.applications && (
+          <div className="flex w-full flex-col items-center justify-center pb-8">
+            <select
+              value={jobSelected}
+              onChange={(e) => setJobSelected(e.target.value)}
+              name="job_wanted"
+              className={`mb-4 h-12 rounded-md border border-neutral-700 px-4 py-1 outline-none ${isApplicationSent() && "hidden"}`}
+            >
+              <option value="default">Job you want to apply for</option>
+              {props.jobTitles.map(
+                (job: JobTitlesTypes, index: number) =>
+                  // Only display jobs titles that have a matching id with the selected project job title wanted list, and that are not already filled
+                  props.selectedProject.job_titles_wanted.includes(job.id) &&
+                  !props.selectedProject.job_titles_filled.includes(job.id) && (
+                    <option key={index} value={job.id}>
+                      {job.name}
+                    </option>
+                  )
+              )}
+            </select>
             <Button
-              text={
-                props.applications && props.applications.some((application) => application.project_id === props.selectedProject.id)
-                  ? "Application Sent"
-                  : "Apply"
-              }
+              id="submitApplication"
+              text={props.applications && isApplicationSent() ? "Application Sent" : "Apply"}
               color="bg-blue-ocean"
               textColor="text-white"
-              hover="text-blue-800"
+              hover="hover:bg-blue-700"
               rounded="rounded-md"
-              padding="px-3 py-1"
               border="border border-blue-ocean"
-              disabled={
-                props.applications && props.applications.some((application) => application.project_id === props.selectedProject.id)
-                  ? true
-                  : false
-              }
-              action={() => sendApplication(props.selectedProject)}
+              disabled={(props.applications && isApplicationSent()) || jobSelected === "default" ? true : false}
+              action={() => sendApplication(props.selectedProject, Number(jobSelected))}
             />
             <div className="relative flex items-center pl-4">
               <img src="/images/heart.png" alt="" className="rounded-md" />
