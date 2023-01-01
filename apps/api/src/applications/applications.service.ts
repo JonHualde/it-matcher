@@ -1,5 +1,5 @@
 import {
-  BadRequestException,
+  NotFoundException,
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
@@ -176,6 +176,33 @@ export class ApplicationService {
       throw new ForbiddenException('You already applied to this project.');
     }
 
+    // Checks if the project exists, is still open for applications and if the project job titles wanted matches the job title id provided
+    const project: ProjectTypes = await this.projectService.getProjectById(
+      application.project_id,
+    );
+
+    if (!project.is_online) {
+      throw new ForbiddenException(
+        'This project is not open for applications.',
+      );
+    }
+
+    if (!project.job_titles_wanted.includes(application.job_title_id)) {
+      throw new ForbiddenException(
+        'This project is not looking for this job title.',
+      );
+    }
+
+    // Checks if the job title id has already been taken
+    if (project.job_titles_filled.includes(application.job_title_id)) {
+      throw new ForbiddenException('This job title has already been taken.');
+    }
+
+    // Checks if the user id is already part of participants_ids array
+    if (project.participants_ids.includes(user.id)) {
+      throw new ForbiddenException('You are already part of this project.');
+    }
+
     const newApplication: ApplicationTypes =
       await this.prisma.application.create({
         data: {
@@ -185,10 +212,6 @@ export class ApplicationService {
           job_title_id: application.job_title_id,
         },
       });
-
-    const project: ProjectTypes = await this.projectService.getProjectById(
-      newApplication.project_id,
-    );
 
     return {
       ...newApplication,

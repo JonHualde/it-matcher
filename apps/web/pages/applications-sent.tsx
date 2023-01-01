@@ -5,11 +5,11 @@ import { ErrorMessage } from "@shared-components/error-message";
 import { Table } from "@shared-components/tables";
 import { Badge, Loader } from "@shared-components/status";
 import { Box } from "@shared-components/box";
-import { Paragraph } from "@shared-components/typography";
+import { Paragraph, DateTag } from "@shared-components/typography";
 import { Button } from "@shared-components/buttons";
 import { ShowProjectModal } from "@shared-components/modals";
 // types
-import { UserSentApplicationsResponse, ApplicationsFiltersTypes, ProjectTypes, ApplicationTypes } from "@shared-types";
+import { UserSentApplicationsResponse, ApplicationsFiltersTypes, ProjectTypes, ApplicationTypes, JobTitlesTypes } from "@shared-types";
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 
@@ -26,6 +26,7 @@ const Requests = (props: { pathname: string }) => {
   const [isFiltering, setIsFiltering] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectTypes | null>(null);
   const [applications, setApplications] = useState<UserSentApplicationsResponse[]>([]);
+  const [jobTitles, setJobTitles] = useState<JobTitlesTypes[]>([]);
   const [filteredApplications, setFilteredApplications] = useState<UserSentApplicationsResponse[]>([]);
 
   const applicationsFilter = () => {
@@ -92,8 +93,19 @@ const Requests = (props: { pathname: string }) => {
       });
   };
 
+  const getJobTitles = async () => {
+    await fetchJSON("job-titles", "GET")
+      .then((jobTitles: JobTitlesTypes[]) => {
+        setJobTitles(() => jobTitles);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   useEffect(() => {
     getApplications();
+    getJobTitles();
   }, []);
 
   return (
@@ -118,7 +130,7 @@ const Requests = (props: { pathname: string }) => {
         <Table
           tableHeaders={{
             project: "Project name",
-            createdAt: "Sent at",
+            created_at: "Sent at",
             status: "Status",
             // Element added to the end of the table row, not part of applications data
             action: "Action",
@@ -126,7 +138,9 @@ const Requests = (props: { pathname: string }) => {
           tableBody={{
             project: (project: ProjectTypes) => (
               <>
-                {selectedProject && <ShowProjectModal selectedProject={selectedProject} close={() => setSelectedProject(null)} />}
+                {selectedProject && (
+                  <ShowProjectModal jobTitles={jobTitles} selectedProject={selectedProject} close={() => setSelectedProject(null)} />
+                )}
                 <Paragraph
                   click={() => setSelectedProject(project)}
                   customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
@@ -136,7 +150,7 @@ const Requests = (props: { pathname: string }) => {
               </>
             ),
 
-            createdAt: (value) => new Date(value).toLocaleString(),
+            created_at: (value) => new Date(value).toLocaleString(),
             status: (value) => (
               <Badge customClassName="capitalize w-min" color={value === "Pending" ? "yellow" : value === "Accepted" ? "green" : "red"}>
                 {value}

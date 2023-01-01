@@ -104,7 +104,7 @@ const Search = ({ pathname }: any) => {
         if (!user.isLoggedIn) {
           setProjects(() => projects);
         } else {
-          setProjects(() => projects.filter((item: ProjectTypes) => item.user_id !== user.id));
+          setProjects(() => projects.filter((project: ProjectTypes) => project.user_id !== user.id));
         }
 
         if (query) {

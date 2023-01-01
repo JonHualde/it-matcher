@@ -9,7 +9,7 @@ import { Paragraph } from "@shared-components/typography";
 import { ApplicationTableButtons } from "shared/src/components/buttons";
 import { ShowProjectModal, ShowUserModal } from "@shared-components/modals";
 // types
-import { User, GetUserReceivedApplicationsResponse, ApplicationsFiltersTypes, ProjectTypes } from "@shared-types";
+import { User, GetUserReceivedApplicationsResponse, ApplicationsFiltersTypes, ProjectTypes, JobTitlesTypes } from "@shared-types";
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 
@@ -26,6 +26,7 @@ const ApplicationsReceived = (props: { pathname: string }) => {
   const [isFiltering, setIsFiltering] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [selectedProject, setSelectedProject] = useState<ProjectTypes | null>(null);
+  const [jobTitles, setJobTitles] = useState<JobTitlesTypes[]>([]);
   const [applications, setApplications] = useState<GetUserReceivedApplicationsResponse[]>([]);
   const [filteredApplications, setFilteredApplications] = useState<GetUserReceivedApplicationsResponse[]>([]);
 
@@ -106,8 +107,19 @@ const ApplicationsReceived = (props: { pathname: string }) => {
       });
   };
 
+  const getJobTitles = async () => {
+    await fetchJSON("job-titles", "GET")
+      .then((jobTitles: JobTitlesTypes[]) => {
+        setJobTitles(() => jobTitles);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
   useEffect(() => {
     getApplications();
+    getJobTitles();
   }, []);
 
   return (
@@ -133,7 +145,7 @@ const ApplicationsReceived = (props: { pathname: string }) => {
           tableHeaders={{
             user: "Applicant name",
             project: "Project name",
-            createdAt: "Sent at",
+            created_at: "Sent at",
             status: "Status",
             // Element added to the end of the table row, not part of applications data
             action: "Action",
@@ -152,7 +164,9 @@ const ApplicationsReceived = (props: { pathname: string }) => {
             ),
             project: (project: ProjectTypes) => (
               <>
-                {selectedProject && <ShowProjectModal selectedProject={selectedProject} close={() => setSelectedProject(null)} />}
+                {selectedProject && (
+                  <ShowProjectModal jobTitles={jobTitles} selectedProject={selectedProject} close={() => setSelectedProject(null)} />
+                )}
                 <Paragraph
                   click={() => setSelectedProject(project)}
                   customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
@@ -161,7 +175,7 @@ const ApplicationsReceived = (props: { pathname: string }) => {
                 </Paragraph>
               </>
             ),
-            createdAt: (value) => new Date(value).toLocaleString(),
+            created_at: (value) => new Date(value).toLocaleString(),
             status: (value) => (
               <Badge customClassName="capitalize w-min" color={value === "Pending" ? "yellow" : value === "Accepted" ? "green" : "red"}>
                 {value}
