@@ -13,7 +13,11 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { ProjectIdDto, ProjectDto, FilterProjectDto } from './dtos/project.dto';
+import {
+  project_idDto,
+  ProjectDto,
+  FilterProjectDto,
+} from './dtos/project.dto';
 import { ProjectService } from './projects.service';
 // Multer config
 import { multerOptions } from 'src/config/multer.config';
@@ -38,7 +42,7 @@ export class ProjectController {
   @UseInterceptors(
     FileFieldsInterceptor(
       [
-        { name: 'projectPicture', maxCount: 1 },
+        { name: 'project_main_picture', maxCount: 1 },
         { name: 'attachments', maxCount: 5 },
       ],
       multerOptions(),
@@ -48,7 +52,7 @@ export class ProjectController {
     @Body() project: ProjectDto,
     @UploadedFiles()
     files: {
-      projectPicture: Express.Multer.File[];
+      project_main_picture: Express.Multer.File[];
       attachments: Express.Multer.File[];
     },
     @Request() req,
@@ -58,8 +62,8 @@ export class ProjectController {
 
   @Delete('delete')
   @UseGuards(JwtAuthGuard)
-  async delete(@Body() body: ProjectIdDto, @Request() req) {
-    return this.projectService.delete(body.projectId, req.user);
+  async delete(@Body() body: project_idDto, @Request() req) {
+    return this.projectService.delete(body.project_id, req.user);
   }
 
   @Patch()

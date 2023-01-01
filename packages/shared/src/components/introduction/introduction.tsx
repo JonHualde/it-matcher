@@ -23,7 +23,7 @@ const Introduction = () => {
             color="bg-blue-ocean"
             hover="bg-blue-800"
             textColor="text-white"
-            borderColor="border-blue-ocean"
+            border="border border-blue-ocean"
             action={() => router.push("/signup")}
           />
           <Button
@@ -31,7 +31,7 @@ const Introduction = () => {
             color="bg-transparent"
             hover="bg-transparent"
             textColor="text-blue-dimmed"
-            borderColor="border-none"
+            border="border border-none"
             action={() => router.push("/login")}
           />
         </div>

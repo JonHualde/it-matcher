@@ -1,133 +1,102 @@
-import React, { useState } from "react";
+import Image from "next/image";
+// Components
 import {
   HiOutlineChartBar,
   HiOutlineDotsHorizontal,
-  HiOutlineClock,
   HiOutlineUsers,
   HiOutlineCalendar,
   HiOutlineExclamationCircle,
   HiOutlineFolderOpen,
 } from "react-icons/hi";
-
-import { IoRocketOutline } from "react-icons/io5";
-import PopoverElement from "../popover/popover";
+import { Popover } from "@shared-components/popover";
+import { Badge } from "@shared-components/status";
+import { Title, Paragraph, Italic, DateTag } from "@shared-components/typography";
+// types
+import { ProjectTypes } from "@shared-types";
 
 interface ProjectCardInterface {
-  project: {
-    attachments: any;
-    createdAt: Date;
-    description: string;
-    difficulty: string;
-    estimatedTimeDuration: number;
-    estimatedTimeDurationMetric: string;
-    id: number;
-    initialInvestment: true;
-    initialInvestmentCost: number;
-    mainPicture: string;
-    numberOfParticipant: number;
-    projectName: string;
-    putOnline: boolean;
-    searchingFor: Array<string>;
-    startingOn: Date;
-    toolsAndTechnologies: Array<string>;
-    type: string;
-    updatedAt: Date;
-    userId: number;
-  };
-  openDeleteProjectModal: (v: number) => void;
-  openEditProjectModal: (v: number) => void;
+  project: ProjectTypes;
+  openDeleteProjectModal: () => void;
+  openEditProjectModal: () => void;
 }
 
 const ProjectCard = (props: ProjectCardInterface) => {
-  const openEditProjectModal = () => {
-    props.openEditProjectModal(props.project.id)
-  };
-
-  const openDeleteProjectModal = () => {
-    props.openDeleteProjectModal(props.project.id);
-  };
-
   return (
-    <div className="w-full rounded-md border border-gray-200 shadow-xl px-6 py-6 hover:scale-105 transition-all">
-      <div className="flex justify-betwwen items-start w-full">
-        <img
-          className="rounded-full object-cover"
-          src="/images/placeholder.png"
-          alt="placeholderImage"
-          style={{
-            width: "90px",
-            height: "90px",
-          }}
-        />
-        <div className="flex items-center w-full justify-end">
-          {new Date(props.project.startingOn).getDay() > new Date().getDay() ? (
-            <HiOutlineClock fontSize={"25px"} color="#4973F2" />
+    <div className="w-full rounded-md border border-gray-200 px-6 py-6 shadow-xl transition-all hover:scale-105">
+      {/* Project's card header */}
+      <div className="flex w-full items-start justify-between ">
+        {/* Project's main picture */}
+        <div className="relative h-14 w-16">
+          <Image
+            loading="lazy"
+            layout="fill"
+            src={`${process.env.NEXT_PUBLIC_AWS_S3_LINK}${
+              props.project.project_main_picture ? "/" + props.project.project_main_picture : "/pictures/Generic-Profile-1600x1600.png"
+            } `}
+            alt="project_main_picture"
+            objectFit="cover"
+            className="rounded-full"
+          />
+        </div>
+
+        <div className="flex w-full items-center justify-end">
+          {/* has the project started? */}
+          {new Date(props.project.starting_on).getTime() > new Date().getTime() ? (
+            <Badge color="yellow">Not started</Badge>
           ) : (
-            <IoRocketOutline fontSize={"25px"} color="#4973F2" />
+            <Badge color="green">Started</Badge>
           )}
 
-          {props.project.putOnline ? (
-            <>
-              <span className="text-status-green mx-4">Online</span>
-              <span className="w-4 h-4 mr-2 rounded-full bg-status-green mr-4"></span>
-            </>
-          ) : (
-            <>
-              <span className="text-status-red mx-4">Offline</span>
-              <span className="w-4 h-4 mr-2 rounded-full bg-status-red mr-4"></span>
-            </>
-          )}
+          {/* Is project online? */}
+          <Badge color={props.project.is_online ? "green" : "red"} customClassName={`ml-4 mr-2`}>
+            <div className="flex items-center">
+              {props.project.is_online ? "Online" : "Offline"}
+              <span className={`ml-2 h-4 w-4 rounded-full ${props.project.is_online ? "bg-status-green" : "bg-status-red"}`}></span>
+            </div>
+          </Badge>
 
-          <PopoverElement
+          {/* Edit or delete project */}
+          <Popover
             elements={[
               {
                 content: "Edit project",
-                action: openEditProjectModal,
+                action: () => props.openEditProjectModal(),
               },
               {
                 content: "Delete project",
-                action: openDeleteProjectModal,
+                action: () => props.openDeleteProjectModal(),
               },
             ]}
-            icon={
-              <HiOutlineDotsHorizontal
-                fontSize={"40px"}
-                color="#4973F2"
-                className="cursor-pointer"
-              />
-            }
+            icon={<HiOutlineDotsHorizontal fontSize={"40px"} color="#4973F2" className="cursor-pointer" />}
           />
         </div>
       </div>
-      <div className="flex flex-col mb-3">
-        <h5 className="text-blue-dimmed font-medium mt-6 mb-1">
-          {props.project.projectName.toUpperCase()}
-        </h5>
-        <p>{props.project.description.slice(0, 100) + "..."}</p>
+      <div className="mb-3 flex flex-col">
+        <Title type="h4" customClassName="mt-6 mb-1 font-medium text-blue-dimmed">
+          {props.project.project_name.toUpperCase()}
+        </Title>
+        <Paragraph customClassName="line-clamp-3">{props.project.description}</Paragraph>
       </div>
       <div className="grid grid-cols-2 gap-y-6 gap-x-3 py-4">
-        <div className="flex items-center justify-start mx-0">
-          <HiOutlineChartBar fontSize={"25px"} className="mr-3" />
+        <div className="mx-0 flex items-center justify-start">
+          <HiOutlineChartBar fontSize={"25px"} className="mr-3 text-blue-dimmed" />
           Difficulty: {props.project.difficulty}
         </div>
-        <div className="flex items-center justify-start mx-0">
-          <HiOutlineCalendar fontSize={"25px"} className="mr-3" />
-          Starting date:{" "}
-          {new Date(props.project.startingOn).toLocaleDateString("en-UK", {
-            day: "2-digit",
-            year: "numeric",
-            month: "2-digit",
-          })}
+        <div className="mx-0 flex items-center justify-start">
+          <HiOutlineCalendar fontSize={"25px"} className="mr-3 text-blue-dimmed" />
+          Starting date: {new Date(props.project.starting_on).toLocaleDateString()}
         </div>
-        <div className="flex items-center justify-start mx-0">
-          <HiOutlineFolderOpen fontSize={"25px"} className="mr-3" />
+        <div className="mx-0 flex items-center justify-start">
+          <HiOutlineFolderOpen fontSize={"25px"} className="mr-3 text-blue-dimmed" />
           Project: {props.project.type}
         </div>
-        <div className="flex items-center justify-start mx-0 relative">
-          <HiOutlineUsers fontSize={"25px"} className="mr-3" />
-          <span className="text-blue-dimmed font-medium">4 members</span>&nbsp;
-          have joined
-          <div className="absolute top-8 flex items-center left-8">
+        <div className="relative mx-0 flex items-center justify-start">
+          <HiOutlineUsers fontSize={"25px"} className="mr-3 text-blue-dimmed" />
+          <Badge color="green" customClassName="font-medium px-2 py-0.5">
+            4
+          </Badge>
+          &nbsp; members have joined
+          <div className="absolute top-8 left-8 flex items-center">
             <img
               className="rounded-full object-cover"
               src="/images/placeholder.png"
@@ -138,7 +107,7 @@ const ProjectCard = (props: ProjectCardInterface) => {
               }}
             />
             <img
-              className="rounded-full object-cover -ml-1"
+              className="-ml-1 rounded-full object-cover"
               src="/images/placeholder.png"
               alt="placeholderImage"
               style={{
@@ -147,7 +116,7 @@ const ProjectCard = (props: ProjectCardInterface) => {
               }}
             />
             <img
-              className="rounded-full object-cover -ml-1"
+              className="-ml-1 rounded-full object-cover"
               src="/images/placeholder.png"
               alt="placeholderImage"
               style={{
@@ -156,7 +125,7 @@ const ProjectCard = (props: ProjectCardInterface) => {
               }}
             />
             <img
-              className="rounded-full object-cover -ml-1"
+              className="-ml-1 rounded-full object-cover"
               src="/images/placeholder.png"
               alt="placeholderImage"
               style={{
@@ -166,9 +135,13 @@ const ProjectCard = (props: ProjectCardInterface) => {
             />
           </div>
         </div>
-        <div className="flex items-center justify-start mx-0">
-          <HiOutlineExclamationCircle fontSize={"25px"} className="mr-3" />
-          Currently missing: {props.project.numberOfParticipant} people
+        <div className="mx-0 flex items-center justify-start">
+          <HiOutlineExclamationCircle fontSize={"25px"} className="mr-3 text-blue-dimmed" />
+          Currently missing:&nbsp;
+          <Badge color="green" customClassName="font-medium px-2 py-0.5">
+            {props.project.number_of_participants.toString()}
+          </Badge>
+          &nbsp;people
         </div>
       </div>
     </div>

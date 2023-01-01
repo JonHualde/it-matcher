@@ -30,7 +30,7 @@ const run = async () => {
           instagram_username: user.instagramUsername,
           website_url: user.websiteUrl,
           notion_page_url: user.notionPageUrl,
-          permission: user.Permission,
+          permission: user.permission,
           profile_picture_ref: user.profile_picture_ref,
         },
       });
@@ -43,23 +43,24 @@ const run = async () => {
       return await prisma.project.create({
         data: {
           user: {
-            connect: { id: project.userId },
+            connect: { id: project.user_id },
           },
-          projectName: project.projectName,
-          startingOn: project.startingOn,
-          estimatedTimeDuration: project.estimatedTimeDuration,
-          estimatedTimeDurationMetric: project.estimatedTimeDurationMetric,
+          project_name: project.project_name,
+          starting_on: project.starting_on,
+          estimated_time_duration: project.estimated_time_duration,
+          estimated_time_duration_metric:
+            project.estimated_time_duration_metric,
           full_name: project.full_name,
           description: project.description,
           difficulty: project.difficulty,
           type: project.type,
-          isOnline: project.isOnline,
-          numberOfParticipant: project.numberOfParticipant,
-          initialInvestment: project.initialInvestment,
-          initialInvestmentCost: project.initialInvestmentCost,
-          toolsAndTechnologies: project.toolsAndTechnologies,
-          jobTitle: project.jobTitle,
-          projectPicture: project.projectPicture,
+          is_online: project.is_online,
+          number_of_participants: project.number_of_participants,
+          initial_investment: project.initial_investment,
+          initial_investment_cost: project.initial_investment_cost,
+          tools_and_technologies: project.tools_and_technologies,
+          job_titles_wanted: project.job_titles_wanted,
+          project_main_picture: project.project_main_picture,
           attachments: project.attachments,
         },
       });
@@ -72,12 +73,13 @@ const run = async () => {
       return await prisma.application.create({
         data: {
           user: {
-            connect: { id: application.userId },
+            connect: { id: application.user_id },
           },
           project: {
-            connect: { id: application.projectId },
+            connect: { id: application.project_id },
           },
           status: application.status,
+          job_title_id: application.job_title_id,
         },
       });
     }),
@@ -87,17 +89,17 @@ const run = async () => {
   await Promise.all(
     favouritesData.map(async (favourite) => {
       const user = await prisma.favourite.findFirst({
-        where: { userId: favourite.userId },
+        where: { user_id: favourite.userId },
       });
 
       if (!user) {
         return await prisma.favourite.create({
           data: {
             user: {
-              connect: { id: favourite.userId },
+              connect: { id: favourite.user_id },
             },
             project: {
-              connect: { id: favourite.projectId },
+              connect: { id: favourite.project_id },
             },
           },
         });

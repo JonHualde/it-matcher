@@ -8,21 +8,21 @@ import Other from "./update-project/other";
 const UpdateProjectForm = () => {
   const [project, setProject] = useState({
     mainPicture: null,
-    projectName: "",
-    startingOn: null,
-    estimatedTimeDuration: null,
-    estimatedTimeDurationMetric: null,
+    project_name: "",
+    starting_on: null,
+    estimated_time_duration: null,
+    estimated_time_duration_metric: null,
     description: "",
     difficulty: "",
     type: "",
     searchingFor: [],
-    numberOfParticipant: null,
-    initialInvestment: "",
-    initialInvestmentCost: null,
-    toolsAndTechnologies: "",
+    number_of_participants: null,
+    initial_investment: "",
+    initial_investmentCost: null,
+    tools_and_technologies: "",
     attachments: null,
     putOnline: null,
-    userId: null,
+    user_id: null,
   });
 
   const updateProject = (key: string, value: any) => {

@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
 // Data
-import userData from "../userData";
+import userData from '../userData';
 
 // Prisma
 const prisma = new PrismaClient();
@@ -18,24 +18,24 @@ const run = async () => {
         update: {},
         create: {
           email: user.email,
-          password: bcrypt.hashSync("password", salt),
+          password: bcrypt.hashSync('password', salt),
           first_name: user.firstName,
           last_name: user.lastName,
           linkedIn_url: user.linkedInUrl,
           instagram_username: user.instagramUsername,
           website_url: user.websiteUrl,
           notion_page_url: user.notionPageUrl,
-          permission: user.Permission,
-          profile_picture_ref: "",
+          permission: user.permission,
+          profile_picture_ref: user.profile_picture_ref,
         },
       });
-    })
+    }),
   );
 };
 
 run()
   .catch((err) => {
-    console.log("err:", err);
+    console.log('err:', err);
     process.exit(1);
   })
   .finally(async () => {

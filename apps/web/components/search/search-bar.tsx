@@ -1,9 +1,9 @@
 import { Loader } from "@shared-components/status";
 import { Button } from "shared/src/components/buttons";
-import { JobTitlesTypes, SearchBarFiltersTypes } from "@shared-types";
+import { JobTitlesWantedTypes, SearchBarFiltersTypes } from "@shared-types";
 
 interface SearchBarProps {
-  jobTitles: JobTitlesTypes[];
+  jobTitles: JobTitlesWantedTypes[];
   disabled: boolean;
   filters: SearchBarFiltersTypes;
   updateFilters: (e: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>) => void;
@@ -25,8 +25,8 @@ const SearchBar = (props: SearchBarProps) => {
           {/* Search input: project name */}
           <input
             onChange={props.updateFilters}
-            value={props.filters.projectName}
-            name="projectName"
+            value={props.filters.project_name}
+            name="project_name"
             className="h-full w-full border-0 px-3 outline-none"
             type="text"
             placeholder="Project's name"
@@ -36,8 +36,8 @@ const SearchBar = (props: SearchBarProps) => {
         {/* Job titles filter */}
         <select
           onChange={props.updateFilters}
-          value={props.filters.jobTitle}
-          name="jobTitle"
+          value={props.filters.job_title_wanted}
+          name="job_title_wanted"
           className="col-span-2 h-12 bg-transparent bg-white px-3 outline-none"
         >
           <option value="default" disabled>
@@ -87,8 +87,8 @@ const SearchBar = (props: SearchBarProps) => {
         {/* Is online */}
         <select
           onChange={props.updateFilters}
-          name="isOnline"
-          value={props.filters.isOnline}
+          name="is_online"
+          value={props.filters.is_online}
           className="col-span-2 h-12 bg-transparent bg-white px-4 outline-none"
         >
           <option value="default" disabled>

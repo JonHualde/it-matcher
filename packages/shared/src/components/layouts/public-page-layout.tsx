@@ -17,7 +17,7 @@ interface PublicPageLayoutProps {
 }
 
 type VerifyTokenResponse = {
-  userId?: number;
+  user_id?: number;
   message: string;
 };
 
@@ -31,21 +31,21 @@ const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
   };
 
   const verifyToken = async () => {
-    const token: { isLoggedIn: boolean; userId: number | null } = await fetchJSON("auth/verify-token", "GET")
+    const token: { isLoggedIn: boolean; user_id: number | null } = await fetchJSON("auth/verify-token", "GET")
       .then((response: VerifyTokenResponse) => {
         return {
           isLoggedIn: true,
-          userId: response.userId || null,
+          user_id: response.user_id || null,
         };
       })
       .catch(() => {
         return {
           isLoggedIn: false,
-          userId: null,
+          user_id: null,
         };
       });
 
-    updateUserStatus(token.isLoggedIn, token.userId);
+    updateUserStatus(token.isLoggedIn, token.user_id);
   };
 
   useEffect(() => {

@@ -6,7 +6,7 @@ interface DateProps {
   customClassName?: string;
 }
 
-const Date = (props: DateProps) => {
+const DateTag = (props: DateProps) => {
   let customClassName: string = "text-sm md:text-base";
 
   const getColor = (): string => {
@@ -37,4 +37,4 @@ const Date = (props: DateProps) => {
   return <p className={generateClassName()}>{getDate(props.children)}</p>;
 };
 
-export default Date;
+export default DateTag;

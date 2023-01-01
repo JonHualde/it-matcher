@@ -43,8 +43,8 @@ const MobileSearch = (props: SearchBarProps) => {
                 {/* Search input: project name */}
                 <input
                   onChange={props.updateFilters}
-                  value={props.filters.projectName}
-                  name="projectName"
+                  value={props.filters.project_name}
+                  name="project_name"
                   className="h-full w-full border-0 px-3 outline-none"
                   type="text"
                   placeholder="Project's name"

@@ -23,7 +23,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
 
         <InputContainer
           type="text"
-          name="projectName"
+          name="project_name"
           placeholder="Project name"
           label="Project Name"
           onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
@@ -32,7 +32,7 @@ const GeneralInformation = (props: GeneralInformationProps) => {
         <div className="flex w-full flex-col lg:flex-row">
           <InputContainer
             type="text"
-            name="startingOn"
+            name="starting_on"
             placeholder="01/01/2023"
             label="Starting Date"
             onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
@@ -41,18 +41,18 @@ const GeneralInformation = (props: GeneralInformationProps) => {
           <div className="flex w-1/2">
             <InputContainer
               type="number"
-              name="estimatedTimeDuration"
+              name="estimated_time_duration"
               label="Estimated Duration (number)"
               placeholder="1"
               onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
               width="1/2 lg:mr-4"
             />
             <div className="mb-4 flex w-1/2 flex-col">
-              <label htmlFor="estimatedTimeDurationMetric"> Duration </label>
+              <label htmlFor="estimated_time_duration_metric"> Duration </label>
               <select
                 value={""}
-                name="estimatedTimeDurationMetric"
-                id="estimatedTimeDurationMetric"
+                name="estimated_time_duration_metric"
+                id="estimated_time_duration_metric"
                 onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
                 className="border-2 border-gray-200 py-4 px-3 focus:outline-none"
               >

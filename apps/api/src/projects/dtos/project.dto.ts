@@ -30,9 +30,9 @@ const difficultyDto: difficultyOptions[] = [
   'expert',
 ];
 
-export class ProjectIdDto {
+export class project_idDto {
   @IsNumber()
-  readonly projectId: number;
+  readonly project_id: number;
 }
 
 export class ProjectDto {
@@ -42,23 +42,23 @@ export class ProjectDto {
 
   @IsString()
   @Length(2, 255)
-  readonly projectName: string;
+  readonly project_name: string;
 
   @IsNotEmpty()
   @Transform(({ value }) => new Date(value))
   @IsDate()
   @MinDate(new Date())
-  readonly startingOn: Date;
+  readonly starting_on: Date;
 
   @IsNumber()
   @Transform(({ value }) => parseInt(value))
   @Min(1)
   @Max(52)
-  readonly estimatedTimeDuration: number;
+  readonly estimated_time_duration: number;
 
   @IsEnum(durationMetricsDto)
   @IsString()
-  readonly estimatedTimeDurationMetric: durationMetrics;
+  readonly estimated_time_duration_metric: durationMetrics;
 
   @IsString()
   @Length(2, 2000)
@@ -76,14 +76,14 @@ export class ProjectDto {
   @Transform(({ value }) => parseInt(value))
   @Min(1)
   @Max(10)
-  readonly numberOfParticipant: number;
+  readonly number_of_participants: number;
 
   @IsNumber()
   @Transform(({ value }) => parseInt(value))
   @IsOptional()
   @Min(1)
   @Max(1000000)
-  readonly initialInvestmentCost: number;
+  readonly initial_investment_cost: number;
 
   @IsBoolean()
   @Transform(({ value }) => {
@@ -92,7 +92,7 @@ export class ProjectDto {
 
     return value;
   })
-  readonly initialInvestment: boolean;
+  readonly initial_investment: boolean;
 
   @IsBoolean()
   @Transform(({ value }) => {
@@ -101,23 +101,23 @@ export class ProjectDto {
 
     return value;
   })
-  readonly isOnline: boolean;
+  readonly is_online: boolean;
 
   @IsArray()
   @Transform(({ value }) => JSON.parse(value))
   @IsInt({ each: true })
   @ArrayMinSize(1)
-  readonly jobTitle: number[];
+  readonly job_titles_wanted: number[];
 
   @Transform(({ value }) => JSON.parse(value))
   @IsArray()
   @IsInt({ each: true })
   @ArrayMinSize(1)
-  readonly toolsAndTechnologies: number[];
+  readonly tools_and_technologies: number[];
 
   @IsOptional()
   @IsNotEmpty()
-  readonly projectPicture: string;
+  readonly project_main_picture: string;
 
   @IsOptional()
   @IsNotEmpty()
@@ -138,7 +138,7 @@ export class FilterProjectDto {
   @IsOptional()
   @IsString()
   @Length(0, 255)
-  readonly projectName: string;
+  readonly project_name: string;
 
   @IsOptional()
   @IsEnum(difficultyDto)

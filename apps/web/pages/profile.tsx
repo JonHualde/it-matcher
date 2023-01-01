@@ -2,8 +2,11 @@ import { useState, useEffect, useRef, ChangeEvent } from "react";
 import AccountInformationForm from "shared/src/components/forms/account-information-form";
 import UpdatePasswordForm from "shared/src/components/forms/update-password";
 import UploadProfilePictureForm from "shared/src/components/forms/upload-image";
-import PrivatePageLayout from "shared/src/components/layouts/private-page-layout";
+import { PrivatePageLayout } from "@shared-components/layouts";
 import { ErrorMessage } from "@shared-components/error-message";
+import { Loader } from "@shared-components/status";
+import { Paragraph } from "@shared-components/typography";
+import { Box } from "@shared-components/box";
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 // Types
@@ -16,6 +19,7 @@ interface ProfileProps {
 
 const Profile = (props: ProfileProps) => {
   const myToast = useRef<any>();
+  const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -36,8 +40,6 @@ const Profile = (props: ProfileProps) => {
   const updateUserData = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
-    console.log("name", name, "value", value);
-
     setUserData((userData) => ({
       ...userData,
       [name]: value,
@@ -54,6 +56,9 @@ const Profile = (props: ProfileProps) => {
       .catch((err) => {
         console.log(err);
         updateToast({ myToast, toastId: 1, type: "ERROR", message: err.message });
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -105,9 +110,27 @@ const Profile = (props: ProfileProps) => {
   return (
     <PrivatePageLayout pathname={props.pathname} title={"Edit Information"}>
       {error && <ErrorMessage errorMessage={errorMessage} />}
-      <UploadProfilePictureForm setUserData={setUserData} profilePicture={userData.profile_picture_ref as string} />
-      <AccountInformationForm isSubmitting={isSubmitting} handleSubmit={handleSubmit} userData={userData} updateUserData={updateUserData} />
-      <UpdatePasswordForm />
+      {isLoading ? (
+        <Box>
+          <>
+            <Paragraph customClassName="flex items-center m-0 p-0 text-blue-dimmed italic text-xl font-semibold mb-4">
+              Loading your account details...
+            </Paragraph>
+            <Loader size={10} />
+          </>
+        </Box>
+      ) : (
+        <>
+          <UploadProfilePictureForm setUserData={setUserData} profilePicture={userData.profile_picture_ref as string} />
+          <AccountInformationForm
+            isSubmitting={isSubmitting}
+            handleSubmit={handleSubmit}
+            userData={userData}
+            updateUserData={updateUserData}
+          />
+          <UpdatePasswordForm />
+        </>
+      )}
     </PrivatePageLayout>
   );
 };

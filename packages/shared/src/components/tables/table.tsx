@@ -46,7 +46,7 @@ const Table = (props: TableProps) => {
 
       <tbody className="bg-stone-50">
         {props.tableData.map((item: any) => (
-          <tr>
+          <tr className="border-b border-gray-200">
             {Object.keys(props.tableHeaders).map((tableHeaderKey: string, index: number) => {
               if (item.hasOwnProperty(tableHeaderKey)) {
                 // Passing the value contained in the tableHeaderKey

@@ -9,7 +9,10 @@ export const ApplicationsStatus: statusOptions[] = [
 
 export class ApplicationDto {
   @IsNumber()
-  readonly projectId: number;
+  readonly project_id: number;
+
+  @IsNumber()
+  readonly job_title_id: number;
 }
 
 export class UpdateApplicationDto {

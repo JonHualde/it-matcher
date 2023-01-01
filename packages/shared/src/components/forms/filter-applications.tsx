@@ -22,7 +22,7 @@ const FilterApplications = (props: FilterApplicationsProps) => {
     } as ChangeEvent<HTMLInputElement>);
     props.updateFilters({
       target: {
-        name: "projectName",
+        name: "project_name",
         value: "",
       },
     } as ChangeEvent<HTMLInputElement>);
@@ -59,9 +59,9 @@ const FilterApplications = (props: FilterApplicationsProps) => {
           <InputContainer
             type="text"
             onChange={props.updateFilters}
-            value={props.filters.projectName}
+            value={props.filters.project_name}
             placeholder="Project's name"
-            name="projectName"
+            name="project_name"
             customClass="h-full h-12 w-full border-0 px-3 outline-none"
             margin="mb-0"
           />
@@ -120,8 +120,8 @@ export default FilterApplications;
 // let newArray = applications;
 // let filtered: any = applications;
 
-// if (projectName) {
-//   filtered = newArray.filter((element: any) => element.projectName.includes(projectName));
+// if (project_name) {
+//   filtered = newArray.filter((element: any) => element.project_name.includes(project_name));
 // }
 
 // if (status && status !== "all") {

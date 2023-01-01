@@ -41,7 +41,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
           },
         });
 
-        modifiedRequest.projectName = project?.projectName;
+        modifiedRequest.project_name = project?.project_name;
 
         requests = [...requests, modifiedRequest];
       }

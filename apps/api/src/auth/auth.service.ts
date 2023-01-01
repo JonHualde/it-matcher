@@ -147,7 +147,7 @@ export class AuthService {
 
     return res
       .status(200)
-      .json({ message: 'Token verified successfully', userId: tokenData.id });
+      .json({ message: 'Token verified successfully', user_id: tokenData.id });
   }
 
   async logout(res: Response) {

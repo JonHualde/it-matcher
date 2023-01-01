@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import FilterApplications from "shared/src/components/forms/filter-applications";
-import PrivatePageLayout from "shared/src/components/layouts/private-page-layout";
+import { PrivatePageLayout } from "@shared-components/layouts";
 import { ErrorMessage } from "@shared-components/error-message";
 import { Table } from "@shared-components/tables";
 import { Badge, Loader } from "@shared-components/status";
@@ -13,9 +13,9 @@ import { User, GetUserReceivedApplicationsResponse, ApplicationsFiltersTypes, Pr
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 
-const ApplicationsReceived = (props: any) => {
+const ApplicationsReceived = (props: { pathname: string }) => {
   const [filters, setFilters] = useState<ApplicationsFiltersTypes>({
-    projectName: "",
+    project_name: "",
     applicantName: "",
     status: "default",
   });
@@ -34,7 +34,7 @@ const ApplicationsReceived = (props: any) => {
     setFilteredApplications(() =>
       applications.filter((application: GetUserReceivedApplicationsResponse) => {
         if (
-          (filters.projectName === "" || application.project.projectName.toLowerCase().includes(filters.projectName.toLowerCase())) &&
+          (filters.project_name === "" || application.project.project_name.toLowerCase().includes(filters.project_name.toLowerCase())) &&
           (filters.applicantName === "" ||
             `${application.user.first_name} ${application.user.last_name}`.toLowerCase().includes(filters.applicantName.toLowerCase())) &&
           (filters.status === "default" || filters.status === "All" || application.status === filters.status)
@@ -132,7 +132,7 @@ const ApplicationsReceived = (props: any) => {
         <Table
           tableHeaders={{
             user: "Applicant name",
-            project: "Project Name",
+            project: "Project name",
             createdAt: "Sent at",
             status: "Status",
             // Element added to the end of the table row, not part of applications data
@@ -161,7 +161,7 @@ const ApplicationsReceived = (props: any) => {
                 </Paragraph>
               </>
             ),
-            createdAt: (value) => new Date(value).toLocaleDateString(),
+            createdAt: (value) => new Date(value).toLocaleString(),
             status: (value) => (
               <Badge customClassName="capitalize w-min" color={value === "Pending" ? "yellow" : value === "Accepted" ? "green" : "red"}>
                 {value}

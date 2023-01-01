@@ -1,5 +1,5 @@
 export default interface ApplicationFiltersTypes {
-  projectName: string;
+  project_name: string;
   applicantName: string;
   status: "default" | "Pending" | "Rejected" | "Accepted" | "All";
 }

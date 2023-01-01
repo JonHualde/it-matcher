@@ -11,21 +11,21 @@ import { Icon } from "@shared-components/icons";
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 // types
-import { ProjectTypes, JobTitlesTypes, SearchBarFiltersTypes, FavouritesTypes, UserSentApplicationsResponse } from "@shared-types";
+import { ProjectTypes, JobTitlesWantedTypes, SearchBarFiltersTypes, FavouritesTypes, UserSentApplicationsResponse } from "@shared-types";
 // States
 import { useStoreState } from "easy-peasy";
 
 const Search = ({ pathname }: any) => {
   const myToast = useRef<any>();
   const [filters, setFilters] = useState<SearchBarFiltersTypes>({
-    projectName: "",
-    jobTitle: "default",
+    project_name: "",
+    job_title_wanted: "default",
     orderBy: "default",
     difficulty: "default",
-    isOnline: "default",
+    is_online: "default",
   });
   const [projects, setProjects] = useState<ProjectTypes[]>([]);
-  const [jobTitles, setJobTitles] = useState<JobTitlesTypes[]>([]);
+  const [jobTitles, setJobTitles] = useState<JobTitlesWantedTypes[]>([]);
   const [favourites, setFavourites] = useState<FavouritesTypes[]>([]);
   const [applications, setApplications] = useState<UserSentApplicationsResponse[]>([]);
   const [selectedProject, setSelectedProject] = useState<ProjectTypes | null>(null);
@@ -45,10 +45,10 @@ const Search = ({ pathname }: any) => {
       .then((res) => {
         if (method === "POST") {
           setFavourites((prev) => [...prev, res]);
-          updateToast({ myToast, toastId: 1, type: "SUCCESS", message: `${project.projectName} added to favourites` });
+          updateToast({ myToast, toastId: 1, type: "SUCCESS", message: `${project.project_name} added to favourites` });
         } else {
-          setFavourites((prev) => prev.filter((item) => item.projectId !== project.id));
-          updateToast({ myToast, toastId: 1, type: "SUCCESS", message: `${project.projectName} removed from favourites` });
+          setFavourites((prev) => prev.filter((item) => item.project_id !== project.id));
+          updateToast({ myToast, toastId: 1, type: "SUCCESS", message: `${project.project_name} removed from favourites` });
         }
       })
       .catch((err) => {
@@ -83,7 +83,7 @@ const Search = ({ pathname }: any) => {
 
   const getJobTitles = async () => {
     await fetchJSON("job-titles", "GET")
-      .then((jobTitles: JobTitlesTypes[]) => {
+      .then((jobTitles: JobTitlesWantedTypes[]) => {
         setJobTitles(() => jobTitles);
       })
       .catch((err) => {
@@ -104,7 +104,7 @@ const Search = ({ pathname }: any) => {
         if (!user.isLoggedIn) {
           setProjects(() => projects);
         } else {
-          setProjects(() => projects.filter((item: ProjectTypes) => item.userId !== user.id));
+          setProjects(() => projects.filter((item: ProjectTypes) => item.user_id !== user.id));
         }
 
         if (query) {
@@ -139,12 +139,12 @@ const Search = ({ pathname }: any) => {
     // builder a query string from the filters object and return it
     let query = "?";
 
-    if (filters.jobTitle && filters.jobTitle !== "all" && filters.jobTitle !== "default") {
-      query += `jobTitle=${filters.jobTitle}&`;
+    if (filters.job_title_wanted && filters.job_title_wanted !== "all" && filters.job_title_wanted !== "default") {
+      query += `jobTitle=${filters.job_title_wanted}&`;
     }
 
-    if (filters.projectName && filters.projectName !== "") {
-      query += `projectName=${filters.projectName}&`;
+    if (filters.project_name && filters.project_name !== "") {
+      query += `project_name=${filters.project_name}&`;
     }
 
     if (filters.orderBy && filters.orderBy !== "default") {
@@ -155,8 +155,8 @@ const Search = ({ pathname }: any) => {
       query += `difficulty=${filters.difficulty}&`;
     }
 
-    if (filters.isOnline && filters.isOnline !== "all" && filters.isOnline !== "default") {
-      query += `isOnline=${filters.isOnline === "online" ? true : false}&`;
+    if (filters.is_online && filters.is_online !== "all" && filters.is_online !== "default") {
+      query += `isOnline=${filters.is_online === "online" ? true : false}&`;
     }
 
     notify({ myToast, toastId: 2, message: "Loading projects..." });
@@ -218,7 +218,7 @@ const Search = ({ pathname }: any) => {
           )}
           <ListOfProjects
             isUserLoggedIn={user.isLoggedIn}
-            jobTitles={jobTitles}
+            job_titles_wanted={jobTitles}
             projects={projects}
             favourites={favourites}
             getProjectDetails={getProjectDetails}

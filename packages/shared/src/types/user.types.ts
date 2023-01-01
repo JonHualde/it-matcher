@@ -1,7 +1,7 @@
 export default interface User {
   id?: number;
-  createdAt?: Date;
-  updatedAt?: Date;
+  created_at?: Date;
+  updated_at?: Date;
   permission?: number;
   password?: string;
   email: string;

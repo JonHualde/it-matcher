@@ -15,25 +15,26 @@ export class ProjectService {
 
   async getAllProjects(filterProjectDto?: FilterProjectDto) {
     const where = {
-      projectName: { contains: filterProjectDto?.projectName } ?? {},
-      isOnline: filterProjectDto?.isOnline ?? {},
+      project_name: { contains: filterProjectDto?.project_name } ?? {},
+      is_online: filterProjectDto?.isOnline ?? {},
       difficulty: { equals: filterProjectDto?.difficulty } ?? {},
     };
 
     if (filterProjectDto.jobTitle) {
-      where['jobTitle'] = { hasSome: filterProjectDto?.jobTitle } ?? {};
+      where['job_titles_wanted'] =
+        { hasSome: filterProjectDto?.jobTitle } ?? {};
     }
 
     return await this.prisma.project.findMany({
       take: 100,
       where,
-      orderBy: { createdAt: filterProjectDto.orderBy ?? 'desc' },
+      orderBy: { created_at: filterProjectDto.orderBy ?? 'desc' },
     });
   }
 
-  async getProjectByUserId(userId: number) {
+  async getProjectByuser_id(user_id: number) {
     return await this.prisma.project.findMany({
-      where: { userId },
+      where: { user_id },
     });
   }
 
@@ -45,22 +46,22 @@ export class ProjectService {
 
   async getUserProjects(user: JwtDecodeDto) {
     return await this.prisma.project.findMany({
-      where: { userId: user.id },
+      where: { user_id: user.id },
     });
   }
 
-  async delete(projectId: number, user: JwtDecodeDto) {
+  async delete(project_id: number, user: JwtDecodeDto) {
     const project = await this.prisma.project.findUniqueOrThrow({
-      where: { id: projectId },
+      where: { id: project_id },
     });
 
-    if (project.userId !== user.id) {
+    if (project.user_id !== user.id) {
       throw new ForbiddenException(
         'You are not allowed to delete this project.',
       );
     }
     await this.prisma.project.delete({
-      where: { id: projectId },
+      where: { id: project_id },
     });
 
     return project;
@@ -68,14 +69,14 @@ export class ProjectService {
 
   async createNewProject(files: any, project: ProjectDto, user: JwtDecodeDto) {
     const numberOfProject = await this.prisma.project.findMany({
-      where: { userId: user.id },
+      where: { user_id: user.id },
     });
 
-    const duplicateProjectName = await this.prisma.project.findUnique({
-      where: { projectName: project.projectName },
+    const duplicateproject_name = await this.prisma.project.findUnique({
+      where: { project_name: project.project_name },
     });
 
-    if (duplicateProjectName) {
+    if (duplicateproject_name) {
       throw new ForbiddenException(
         'This project name is already taken. Please choose another one.',
       );
@@ -87,9 +88,12 @@ export class ProjectService {
       );
     }
 
+    // Upload files to S3
     const projectPicture: S3UploadResponse[] =
-      await this.mediaService.uploadMedia(files.projectPicture, 'pictures');
-
+      await this.mediaService.uploadMedia(
+        files.project_main_picture,
+        'pictures',
+      );
     const attachments: S3UploadResponse[] = await this.mediaService.uploadMedia(
       files.attachments,
       'attachments',
@@ -101,22 +105,24 @@ export class ProjectService {
 
     return await this.prisma.project.create({
       data: {
-        userId: user.id,
-        projectName: project.projectName,
-        startingOn: new Date(project.startingOn),
-        estimatedTimeDuration: +project.estimatedTimeDuration,
-        estimatedTimeDurationMetric: project.estimatedTimeDurationMetric,
+        user_id: user.id,
+        project_name: project.project_name,
+        starting_on: new Date(project.starting_on),
+        estimated_time_duration: +project.estimated_time_duration,
+        estimated_time_duration_metric: project.estimated_time_duration_metric,
         full_name: user.firstName + ' ' + user.lastName,
         description: project.description,
         difficulty: project.difficulty,
         type: project.type,
-        numberOfParticipant: project.numberOfParticipant,
-        initialInvestment: project.initialInvestment,
-        initialInvestmentCost: project.initialInvestmentCost || null,
-        isOnline: project.isOnline,
-        toolsAndTechnologies: project.toolsAndTechnologies,
-        jobTitle: project.jobTitle,
-        projectPicture: projectPicture[0].key,
+        number_of_participants: project.number_of_participants,
+        initial_investment: project.initial_investment,
+        initial_investment_cost: project.initial_investment_cost || null,
+        is_online: project.is_online,
+        tools_and_technologies: project.tools_and_technologies,
+        participants_ids: [],
+        job_titles_filled: [],
+        job_titles_wanted: project.job_titles_wanted,
+        project_main_picture: projectPicture[0].key,
         attachments: attachmentsKeys,
       },
     });
@@ -129,7 +135,7 @@ export class ProjectService {
       where: { id: project.id },
     });
 
-    if (existingProject.userId !== user.id) {
+    if (existingProject.user_id !== user.id) {
       throw new ForbiddenException(
         'You are not allowed to update this project.',
       );
@@ -138,19 +144,19 @@ export class ProjectService {
     return await this.prisma.project.update({
       where: { id: project.id },
       data: {
-        projectName: project.projectName,
-        startingOn: project.startingOn,
-        estimatedTimeDuration: project.estimatedTimeDuration,
-        estimatedTimeDurationMetric: project.estimatedTimeDurationMetric,
+        project_name: project.project_name,
+        starting_on: project.starting_on,
+        estimated_time_duration: project.estimated_time_duration,
+        estimated_time_duration_metric: project.estimated_time_duration_metric,
         description: project.description,
         difficulty: project.difficulty,
         type: project.type,
-        numberOfParticipant: project.numberOfParticipant,
-        initialInvestment: project.initialInvestment,
-        initialInvestmentCost: project.initialInvestmentCost || null,
-        isOnline: project.isOnline,
-        toolsAndTechnologies: project.toolsAndTechnologies,
-        jobTitle: project.jobTitle,
+        number_of_participants: project.number_of_participants,
+        initial_investment: project.initial_investment,
+        initial_investment_cost: project.initial_investment_cost || null,
+        is_online: project.is_online,
+        tools_and_technologies: project.tools_and_technologies,
+        job_titles_wanted: project.job_titles_wanted,
         // projectPicture,
         // attachments,
       },

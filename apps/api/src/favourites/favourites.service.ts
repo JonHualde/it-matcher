@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtDecodeDto } from 'src/auth/dtos/jwt-decoded.dto';
 @Injectable()
@@ -24,7 +20,7 @@ export class FavouritesService {
   async getUserFavourites(user: JwtDecodeDto) {
     return this.prisma.favourite.findMany({
       where: {
-        userId: user.id,
+        user_id: user.id,
       },
     });
   }
@@ -33,8 +29,8 @@ export class FavouritesService {
     // Check if the user already has this project as a favourite
     const favourite = await this.prisma.favourite.findFirst({
       where: {
-        projectId: id,
-        userId: user.id,
+        project_id: id,
+        user_id: user.id,
       },
     });
 
@@ -46,8 +42,8 @@ export class FavouritesService {
 
     return this.prisma.favourite.create({
       data: {
-        projectId: id,
-        userId: user.id,
+        project_id: id,
+        user_id: user.id,
       },
     });
   }
@@ -55,8 +51,8 @@ export class FavouritesService {
   async removeProjectFromFavourites(id: number, user: JwtDecodeDto) {
     return this.prisma.favourite.deleteMany({
       where: {
-        projectId: id,
-        userId: user.id,
+        project_id: id,
+        user_id: user.id,
       },
     });
   }

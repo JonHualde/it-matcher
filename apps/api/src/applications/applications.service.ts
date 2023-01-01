@@ -43,7 +43,7 @@ export class ApplicationService {
     user: JwtDecodeDto,
   ): Promise<UserSentApplicationsResponse[]> {
     const applicationsSent = await this.prisma.application.findMany({
-      where: { userId: user.id },
+      where: { user_id: user.id },
     });
 
     if (!applicationsSent.length) {
@@ -53,7 +53,7 @@ export class ApplicationService {
     const projects: ProjectTypes[] = await Promise.all(
       applicationsSent.map(async (application) => {
         const project = await this.projectService.getProjectById(
-          application.projectId,
+          application.project_id,
         );
 
         return project;
@@ -64,7 +64,7 @@ export class ApplicationService {
     const result: UserSentApplicationsResponse[] = applicationsSent.map(
       (application) => {
         const project = projects.find(
-          (project) => project.id === application.projectId,
+          (project) => project.id === application.project_id,
         );
 
         return {
@@ -83,14 +83,14 @@ export class ApplicationService {
   ): Promise<GetUserReceivedApplicationsResponse[]> {
     // Get user's projects
     const userProjects: ProjectTypes[] = await this.prisma.project.findMany({
-      where: { userId: user.id },
+      where: { user_id: user.id },
     });
 
     // Get applications received by user's projects
     const applicationsReceived: ApplicationTypes[] =
       await this.prisma.application.findMany({
         where: {
-          projectId: {
+          project_id: {
             in: userProjects.map((project) => project.id),
           },
         },
@@ -104,7 +104,7 @@ export class ApplicationService {
     const users: User[] = await Promise.all(
       applicationsReceived.map(async (application) => {
         const user = await this.userService.findById(
-          application && application.userId,
+          application && application.user_id,
         );
 
         return user;
@@ -114,10 +114,10 @@ export class ApplicationService {
     // Add project and user details to each application in a new variable called result
     const result: GetUserReceivedApplicationsResponse[] =
       applicationsReceived.map((application) => {
-        const user = users.find((user) => user.id === application.userId);
+        const user = users.find((user) => user.id === application.user_id);
 
         const project = userProjects.find(
-          (project) => project.id === application.projectId,
+          (project) => project.id === application.project_id,
         );
 
         return {
@@ -147,16 +147,16 @@ export class ApplicationService {
     });
   }
 
-  async getApplicationsByProjectId(projectId: number, user: JwtDecodeDto) {
+  async getApplicationsByproject_id(project_id: number, user: JwtDecodeDto) {
     const applications = await this.prisma.application.findMany({
-      where: { projectId },
+      where: { project_id },
     });
 
     const project = await this.prisma.project.findUniqueOrThrow({
-      where: { id: projectId },
+      where: { id: project_id },
     });
 
-    if (project.userId !== user.id) {
+    if (project.user_id !== user.id) {
       throw new ForbiddenException('You are not allowed to get this data.');
     }
 
@@ -169,7 +169,7 @@ export class ApplicationService {
   ): Promise<UserSentApplicationsResponse> {
     const existingApplication: ApplicationTypes[] =
       await this.prisma.application.findMany({
-        where: { projectId: application.projectId, userId: user.id },
+        where: { project_id: application.project_id, user_id: user.id },
       });
 
     if (existingApplication.length) {
@@ -180,13 +180,14 @@ export class ApplicationService {
       await this.prisma.application.create({
         data: {
           status: 'Pending',
-          userId: user.id,
-          projectId: application.projectId,
+          user_id: user.id,
+          project_id: application.project_id,
+          job_title_id: application.job_title_id,
         },
       });
 
     const project: ProjectTypes = await this.projectService.getProjectById(
-      newApplication.projectId,
+      newApplication.project_id,
     );
 
     return {
@@ -205,7 +206,7 @@ export class ApplicationService {
         where: { id: applicationId },
       });
 
-    if (application.userId !== user.id) {
+    if (application.user_id !== user.id) {
       throw new ForbiddenException(
         'You are not allowed to delete this application.',
       );
@@ -229,11 +230,11 @@ export class ApplicationService {
 
     // Take the project id, check if the project still exists, and get the project
     const project = await this.prisma.project.findUniqueOrThrow({
-      where: { id: applicationToUpdate.projectId },
+      where: { id: applicationToUpdate.project_id },
     });
 
     // Check if the id in the token matches the project owner id
-    if (project.userId !== user.id) {
+    if (project.user_id !== user.id) {
       throw new ForbiddenException(
         'You are not allowed to update this application.',
       );

@@ -1,9 +1,9 @@
 const config = {
   firstUserId: 1,
-  lastUserId: 19,
-  loopIteration: 20,
+  lastUserId: 39,
+  loopIteration: 40,
   projectFirstId: 1,
-  projectLastId: 19,
+  projectLastId: 39,
 };
 
 export default config;

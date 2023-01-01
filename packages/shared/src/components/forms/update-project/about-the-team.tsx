@@ -41,18 +41,18 @@ const AboutTheTeam = (props: GeneralInformationProps) => {
               type="number"
               placeholder="1,2,3..."
               onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
-              name="numberOfParticipant"
+              name="number_of_participants"
               label="How many people will be working on this project?"
             />
           </div>
         </div>
         <div className="flex flex-col lg:flex-row">
           <div className="mb-4 mr-4 flex w-1/2 flex-col">
-            <label htmlFor="initialInvestment">Is there an initial investment? (Servers, Subscription...)</label>
+            <label htmlFor="initial_investment">Is there an initial investment? (Servers, Subscription...)</label>
             <select
               value={""}
-              name="initialInvestment"
-              id="initialInvestment"
+              name="initial_investment"
+              id="initial_investment"
               className="border-2 border-gray-200 py-4 px-3 focus:outline-none"
               onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
             >
@@ -66,7 +66,7 @@ const AboutTheTeam = (props: GeneralInformationProps) => {
           <div className="mb-4 flex w-1/2 flex-col">
             <InputContainer
               type="number"
-              name="initialInvestmentCost"
+              name="initial_investmentCost"
               placeholder="15"
               onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
               label="If yes, how much would that cost to every member? (approx. in $)"
@@ -76,7 +76,7 @@ const AboutTheTeam = (props: GeneralInformationProps) => {
 
         <TextArea
           rows={5}
-          name="toolsAndTechnologies"
+          name="tools_and_technologies"
           placeholder="React, Figma, Jira..."
           onChange={(e: any) => props.updateProject(e.target.name, e.target.value)}
           label="Tech stack (Brief overview of the tech stack you want to use on this project)"

@@ -1,12 +1,12 @@
-import ProjectTypes from "./project";
-import User from "./user";
+import ProjectTypes from "./project.types";
+import User from "./user.types";
 export default interface GetUserReceivedApplicationsResponse {
   id: number;
-  createdAt: string | Date;
-  updatedAt: string | Date;
+  created_at: string | Date;
+  updated_at: string | Date;
   status: "Accepted" | "Pending" | "Rejected";
-  projectId: number;
-  userId: number;
+  project_id: number;
+  user_id: number;
   project: ProjectTypes;
   user: User;
 }

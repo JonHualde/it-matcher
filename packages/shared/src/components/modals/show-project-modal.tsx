@@ -4,7 +4,7 @@ import { toast, Zoom } from "react-toastify";
 import { Modal } from "@shared-components/modals";
 import { Button } from "@shared-components/buttons";
 import Toast from "../toast/toast";
-import { Date, Title, Paragraph } from "@shared-components/typography";
+import { DateTag, Title, Paragraph } from "@shared-components/typography";
 import { Badge } from "@shared-components/status";
 // Store
 import { useStoreState } from "easy-peasy";
@@ -33,6 +33,7 @@ const ShowProjectModal = (props: LogInModalProps) => {
 
     notify({ myToast, toastId: 3, message: "Processing your application request..." });
 
+    // @TODO - Add job_title_id
     fetchJSON("application", "POST", {
       projectId: shownProject.id,
     })
@@ -44,7 +45,7 @@ const ShowProjectModal = (props: LogInModalProps) => {
           myToast,
           toastId: 3,
           type: "SUCCESS",
-          message: `Your application for ${props.selectedProject.projectName} has been sent correctly.`,
+          message: `Your application for ${props.selectedProject.project_name} has been sent correctly.`,
         });
       })
       .catch((err) => {
@@ -53,8 +54,8 @@ const ShowProjectModal = (props: LogInModalProps) => {
       });
   };
 
-  const getStatus = (isOnline: boolean) => {
-    return isOnline ? <Badge color="green">Online</Badge> : <Badge color="red">Offline</Badge>;
+  const getStatus = (is_online: boolean) => {
+    return is_online ? <Badge color="green">Online</Badge> : <Badge color="red">Offline</Badge>;
   };
 
   return (
@@ -65,8 +66,8 @@ const ShowProjectModal = (props: LogInModalProps) => {
           <div className="relative my-4 flex h-80 w-full items-center">
             <img
               src={`${process.env.NEXT_PUBLIC_AWS_S3_LINK}${
-                props.selectedProject.projectPicture
-                  ? "/" + props.selectedProject.projectPicture
+                props.selectedProject.project_main_picture
+                  ? "/" + props.selectedProject.project_main_picture
                   : "/pictures/Generic-Profile-1600x1600.png"
               } `}
               alt="project_main_picture"
@@ -77,9 +78,9 @@ const ShowProjectModal = (props: LogInModalProps) => {
           {/* Title and general info */}
           <div className="flex flex-col items-center pl-5">
             <Title type="h3" customClassName="my-0 capitalize">
-              {props.selectedProject.projectName}
+              {props.selectedProject.project_name}
             </Title>
-            <div className="mt-4 capitalize">{getStatus(props.selectedProject.isOnline)}</div>
+            <div className="mt-4 capitalize">{getStatus(props.selectedProject.is_online)}</div>
           </div>
         </div>
 
@@ -93,7 +94,7 @@ const ShowProjectModal = (props: LogInModalProps) => {
             </div>
             <div className="my-0 flex w-full items-center justify-between py-0">
               <Paragraph customClassName="py-1.5 font-sm text-md">Posted</Paragraph>
-              <Date customClassName="font-semibold text-lg">{props.selectedProject.createdAt}</Date>
+              <DateTag customClassName="font-semibold text-lg">{props.selectedProject.created_at}</DateTag>
             </div>
             <div className="flex w-full items-center justify-between ">
               <Paragraph customClassName="py-1.5 font-sm text-md">Type</Paragraph>
@@ -117,7 +118,7 @@ const ShowProjectModal = (props: LogInModalProps) => {
           <div className="flex w-full items-center justify-center py-8">
             <Button
               text={
-                props.applications && props.applications.some((application) => application.projectId === props.selectedProject.id)
+                props.applications && props.applications.some((application) => application.project_id === props.selectedProject.id)
                   ? "Application Sent"
                   : "Apply"
               }
@@ -128,7 +129,7 @@ const ShowProjectModal = (props: LogInModalProps) => {
               padding="px-3 py-1"
               border="border border-blue-ocean"
               disabled={
-                props.applications && props.applications.some((application) => application.projectId === props.selectedProject.id)
+                props.applications && props.applications.some((application) => application.project_id === props.selectedProject.id)
                   ? true
                   : false
               }

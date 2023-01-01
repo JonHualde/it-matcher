@@ -10,22 +10,14 @@ const {
 } = config;
 
 const data = () => ({
-  projectId:
+  project_id:
     Math.floor(Math.random() * (projectLastId - projectFirstId + 1)) +
     projectFirstId,
-  userId:
+  user_id:
     Math.floor(Math.random() * (lastUserId - firstUserId + 1)) + firstUserId,
 });
 
-const favouritesData: Array<any> = [
-  {
-    projectId:
-      Math.floor(Math.random() * (projectLastId - projectFirstId + 1)) +
-      projectFirstId,
-    userId:
-      Math.floor(Math.random() * (firstUserId - lastUserId + 1)) + lastUserId,
-  },
-];
+const favouritesData: Array<any> = [];
 
 for (let i = 0; i < loopIteration; i++) {
   favouritesData.push(data());

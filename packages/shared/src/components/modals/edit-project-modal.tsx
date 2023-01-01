@@ -2,17 +2,15 @@
 import Cross from "@shared-components/icons/cross";
 import Button from "../buttons/button";
 // type
-import { ProjectTypes } from "@types";
+import { ProjectTypes } from "@shared-types";
 import UpdateProjectForm from "@shared-components/forms/update-project-form";
 
 interface ModalProps {
   close: () => void;
-  save: (projectData: ProjectTypes) => void;
+  save: (project: ProjectTypes) => void;
   linkText?: string;
   link?: string;
-  projectId: number;
-  setProjects: any;
-  projects: Array<object>;
+  project: ProjectTypes;
 }
 
 const EditProjectModal = (props: ModalProps) => {
@@ -46,7 +44,7 @@ const EditProjectModal = (props: ModalProps) => {
                     color="bg-transparent"
                     textColor="text-blue-ocean"
                     hover="text-blue-800"
-                    borderColor="border-blue-ocean"
+                    border="border border-blue-ocean"
                     action={() => props.close()}
                   />
                   <Button
@@ -55,8 +53,8 @@ const EditProjectModal = (props: ModalProps) => {
                     hover="bg-blue-800"
                     textColor="text-white"
                     margin="ml-4 "
-                    borderColor="border-blue-ocean"
-                    action={() => props.save()}
+                    border="border border-blue-ocean"
+                    action={() => props.save(props.project)}
                   />
                 </div>
               </div>

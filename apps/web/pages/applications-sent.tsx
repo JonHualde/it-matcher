@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, ReactElement } from "react";
 import FilterApplications from "shared/src/components/forms/filter-applications";
-import PrivatePageLayout from "shared/src/components/layouts/private-page-layout";
+import { PrivatePageLayout } from "@shared-components/layouts";
 import { ErrorMessage } from "@shared-components/error-message";
 import { Table } from "@shared-components/tables";
 import { Badge, Loader } from "@shared-components/status";
@@ -13,9 +13,9 @@ import { UserSentApplicationsResponse, ApplicationsFiltersTypes, ProjectTypes, A
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 
-const Requests = (props: any) => {
+const Requests = (props: { pathname: string }) => {
   const [filters, setFilters] = useState<ApplicationsFiltersTypes>({
-    projectName: "",
+    project_name: "",
     applicantName: "",
     status: "default",
   });
@@ -33,7 +33,7 @@ const Requests = (props: any) => {
     setFilteredApplications(() =>
       applications.filter((application: UserSentApplicationsResponse) => {
         if (
-          (filters.projectName === "" || application.project.projectName.toLowerCase().includes(filters.projectName.toLowerCase())) &&
+          (filters.project_name === "" || application.project.project_name.toLowerCase().includes(filters.project_name.toLowerCase())) &&
           (filters.status === "default" || filters.status === "All" || application.status === filters.status)
         ) {
           return application;
@@ -117,7 +117,7 @@ const Requests = (props: any) => {
       ) : (
         <Table
           tableHeaders={{
-            project: "Project Name",
+            project: "Project name",
             createdAt: "Sent at",
             status: "Status",
             // Element added to the end of the table row, not part of applications data
@@ -135,7 +135,8 @@ const Requests = (props: any) => {
                 </Paragraph>
               </>
             ),
-            createdAt: (value) => new Date(value).toLocaleDateString(),
+
+            createdAt: (value) => new Date(value).toLocaleString(),
             status: (value) => (
               <Badge customClassName="capitalize w-min" color={value === "Pending" ? "yellow" : value === "Accepted" ? "green" : "red"}>
                 {value}

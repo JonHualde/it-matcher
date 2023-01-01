@@ -4,9 +4,9 @@ import { ErrorMessage } from "../error-message";
 import { Loader } from "@shared-components/status";
 import { Title } from "@shared-components/typography";
 // utils
-import { fetchFormData, notify, updateToast } from "../../utils";
+import { fetchFormData, notify, updateToast } from "@shared-utils";
 // Types
-import { User } from "../../types";
+import { User } from "@shared-types";
 
 interface ProfilePictureFormProps {
   profilePicture: string | null;

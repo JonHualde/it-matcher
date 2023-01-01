@@ -1,8 +1,8 @@
 export default interface UserResponse {
   id: number;
   email: string;
-  createdAt: Date;
-  updatedAt: Date;
+  created_at: Date;
+  updated_at: Date;
   first_name: string;
   last_name: string;
   permission: number;

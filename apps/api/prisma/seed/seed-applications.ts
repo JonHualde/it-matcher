@@ -13,12 +13,13 @@ const run = async () => {
       return prisma.application.create({
         data: {
           user: {
-            connect: { id: application.id },
+            connect: { id: application.user_id },
           },
           project: {
-            connect: { id: application.projectId },
+            connect: { id: application.project_id },
           },
           status: application.status,
+          job_title_id: application.job_title_id,
         },
       });
     }),

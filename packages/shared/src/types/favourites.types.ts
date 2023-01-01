@@ -1,7 +1,7 @@
 export default interface FavouritesTypes {
   id: number;
-  createdAt: string | Date;
-  updatedAt: string | Date;
-  projectId: number;
-  userId: number;
+  created_at: string | Date;
+  updated_at: string | Date;
+  project_id: number;
+  user_id: number;
 }

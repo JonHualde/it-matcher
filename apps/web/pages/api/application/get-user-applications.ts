@@ -39,7 +39,7 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       if (applications.length) {
         for (const application of applications) {
           let modifiedApplication: any = application;
-          modifiedApplication.projectName = project.projectName;
+          modifiedApplication.project_name = project.project_name;
 
           const applicant = await prisma.user.findUnique({
             where: { id: modifiedApplication.applicantId },

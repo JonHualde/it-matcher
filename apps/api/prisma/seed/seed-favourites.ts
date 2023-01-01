@@ -14,17 +14,17 @@ const run = async () => {
   await Promise.all(
     favouritesData.map(async (favourite) => {
       const user = await prisma.favourite.findFirst({
-        where: { userId: favourite.userId },
+        where: { user_id: favourite.user_id },
       });
 
       if (!user) {
         return prisma.favourite.create({
           data: {
             user: {
-              connect: { id: favourite.userId },
+              connect: { id: favourite.user_id },
             },
             project: {
-              connect: { id: favourite.projectId },
+              connect: { id: favourite.project_id },
             },
           },
         });

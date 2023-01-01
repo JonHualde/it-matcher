@@ -46,13 +46,13 @@ export class ApplicationController {
     return this.applicationService.getApplicationById(applicationId);
   }
 
-  @Get('project/:projectId')
-  async getApplicationsByProjectId(
-    @Param('projectId', ParseIntPipe) projectId: number,
+  @Get('project/:project_id')
+  async getApplicationsByproject_id(
+    @Param('project_id', ParseIntPipe) project_id: number,
     @Request() req,
   ) {
-    return this.applicationService.getApplicationsByProjectId(
-      projectId,
+    return this.applicationService.getApplicationsByproject_id(
+      project_id,
       req.user,
     );
   }

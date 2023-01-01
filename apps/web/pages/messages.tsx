@@ -1,4 +1,4 @@
-import PrivatePageLayout from "shared/src/components/layouts/private-page-layout";
+import { PrivatePageLayout } from "@shared-components/layouts";
 
 const Messages = (props: any) => {
   return (
