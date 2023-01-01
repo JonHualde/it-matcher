@@ -111,6 +111,9 @@ const Requests = (props: { pathname: string }) => {
   return (
     <PrivatePageLayout title="Applications Sent" pathname={props.pathname}>
       {error && <ErrorMessage errorMessage={errorMessage} />}
+      {selectedProject && (
+        <ShowProjectModal jobTitles={jobTitles} selectedProject={selectedProject} close={() => setSelectedProject(null)} />
+      )}
       <FilterApplications
         isFiltering={isFiltering}
         filters={filters}
@@ -138,17 +141,12 @@ const Requests = (props: { pathname: string }) => {
           }}
           tableBody={{
             project: (project: ProjectTypes) => (
-              <>
-                {selectedProject && (
-                  <ShowProjectModal jobTitles={jobTitles} selectedProject={selectedProject} close={() => setSelectedProject(null)} />
-                )}
-                <Paragraph
-                  click={() => setSelectedProject(project)}
-                  customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
-                >
-                  {project.full_name}
-                </Paragraph>
-              </>
+              <Paragraph
+                click={() => setSelectedProject(project)}
+                customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
+              >
+                {project.full_name}
+              </Paragraph>
             ),
 
             created_at: (value) => new Date(value).toLocaleString(),
@@ -186,7 +184,7 @@ const Requests = (props: { pathname: string }) => {
             },
           }}
           tableData={filteredApplications.length > 0 ? filteredApplications : applications}
-          emptyData="There is no applications to show"
+          emptyData="There is no applications to show."
         />
       )}{" "}
     </PrivatePageLayout>

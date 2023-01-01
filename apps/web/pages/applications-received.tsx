@@ -131,6 +131,10 @@ const ApplicationsReceived = (props: { pathname: string }) => {
   return (
     <PrivatePageLayout title="Applications Received" pathname={props.pathname}>
       {error && <ErrorMessage errorMessage={errorMessage} />}
+      {selectedUser && <ShowUserModal user={selectedUser} close={() => setSelectedUser(null)} />}
+      {selectedProject && (
+        <ShowProjectModal jobTitles={jobTitles} selectedProject={selectedProject} close={() => setSelectedProject(null)} />
+      )}
       <FilterApplications
         isFiltering={isFiltering}
         filters={filters}
@@ -159,28 +163,20 @@ const ApplicationsReceived = (props: { pathname: string }) => {
           }}
           tableBody={{
             user: (user: BasicUserDetails) => (
-              <>
-                {selectedUser && <ShowUserModal user={selectedUser} close={() => setSelectedUser(null)} />}
-                <Paragraph
-                  click={() => setSelectedUser(user)}
-                  customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
-                >
-                  {user.first_name + " " + user.last_name}
-                </Paragraph>
-              </>
+              <Paragraph
+                click={() => setSelectedUser(user)}
+                customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
+              >
+                {user.first_name + " " + user.last_name}
+              </Paragraph>
             ),
             project: (project: ProjectTypes) => (
-              <>
-                {selectedProject && (
-                  <ShowProjectModal jobTitles={jobTitles} selectedProject={selectedProject} close={() => setSelectedProject(null)} />
-                )}
-                <Paragraph
-                  click={() => setSelectedProject(project)}
-                  customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
-                >
-                  {project.full_name}
-                </Paragraph>
-              </>
+              <Paragraph
+                click={() => setSelectedProject(project)}
+                customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
+              >
+                {project.full_name}
+              </Paragraph>
             ),
             created_at: (value) => new Date(value).toLocaleString(),
             role: (item: GetUserReceivedApplicationsResponse) => (

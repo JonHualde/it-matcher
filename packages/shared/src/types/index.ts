@@ -10,3 +10,4 @@ export type { default as GetUserReceivedApplicationsResponse } from "./received-
 export type { default as UserSentApplicationsResponse } from "./sent-applications.types";
 export type { default as ApplicationsFiltersTypes } from "./application-filter.types";
 export type { default as ApplicationTypes } from "./create-new-application.types";
+export * from "./styles.types";

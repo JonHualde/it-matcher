@@ -12,6 +12,7 @@ import {
 import { Popover } from "@shared-components/popover";
 import { Badge } from "@shared-components/status";
 import { Title, Paragraph } from "@shared-components/typography";
+import { Loader } from "@shared-components/status";
 // types
 import { ProjectTypes, BasicUserDetails } from "@shared-types";
 // utils
@@ -25,6 +26,7 @@ interface ProjectCardInterface {
 }
 
 const ProjectCard = (props: ProjectCardInterface) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [usersDetails, setUsersDetails] = useState<BasicUserDetails[]>([]);
 
   const getParticipantsDetails = async () => {
@@ -38,6 +40,9 @@ const ProjectCard = (props: ProjectCardInterface) => {
         })
         .catch((err) => {
           console.error(err);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     });
   };
@@ -122,25 +127,27 @@ const ProjectCard = (props: ProjectCardInterface) => {
           </Badge>
           &nbsp; members have joined
           <div className="absolute top-8 left-8 flex items-center">
-            {usersDetails.map((user: BasicUserDetails, index: number) => (
-              <div
-                onClick={() => props.setSelectedUser(user)}
-                key={index}
-                className={`${index === 0 ? "" : "-ml-1"} relative h-8 w-8 cursor-pointer transition-all
+            {isLoading && <Loader />}
+            {!isLoading &&
+              usersDetails.map((user: BasicUserDetails, index: number) => (
+                <div
+                  onClick={() => props.setSelectedUser(user)}
+                  key={index}
+                  className={`${index === 0 ? "" : "-ml-1"} relative h-8 w-8 cursor-pointer transition-all
               duration-200 ease-in-out hover:scale-125
               `}
-              >
-                <Image
-                  src={`${process.env.NEXT_PUBLIC_AWS_S3_LINK}${
-                    user.profile_picture_ref ? "/" + user.profile_picture_ref : "/pictures/Generic-Profile-1600x1600.png"
-                  } `}
-                  className="rounded-full"
-                  objectFit="cover"
-                  alt="profile_picture"
-                  layout="fill"
-                />
-              </div>
-            ))}
+                >
+                  <Image
+                    src={`${process.env.NEXT_PUBLIC_AWS_S3_LINK}${
+                      user.profile_picture_ref ? "/" + user.profile_picture_ref : "/pictures/Generic-Profile-1600x1600.png"
+                    } `}
+                    className="rounded-full"
+                    objectFit="cover"
+                    alt="profile_picture"
+                    layout="fill"
+                  />
+                </div>
+              ))}
           </div>
         </div>
         <div className="mx-0 flex items-center justify-start">

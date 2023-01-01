@@ -1,15 +1,13 @@
 import { useState, useRef } from "react";
-import { toast, Zoom } from "react-toastify";
 // Components
 import { Modal } from "@shared-components/modals";
 import { Button } from "@shared-components/buttons";
-import Toast from "../toast/toast";
 import { DateTag, Title, Paragraph } from "@shared-components/typography";
 import { Badge } from "@shared-components/status";
 // Store
 import { useStoreState } from "easy-peasy";
 // types
-import { ProjectTypes, JobTitlesTypes, UserSentApplicationsResponse } from "@shared-types";
+import { ProjectTypes, JobTitlesTypes, UserSentApplicationsResponse, bgOpacity } from "@shared-types";
 // Utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 
@@ -69,7 +67,7 @@ const ShowProjectModal = (props: LogInModalProps) => {
   };
 
   return (
-    <Modal size="max-w-4xl" close={() => props.close()}>
+    <Modal size="max-w-4xl" zIndex="z-20" close={() => props.close()}>
       <div className="rounded-md" style={{ height: "calc(100vh - 150px)" }}>
         <div className="mb-8 flex flex-col items-center">
           {/* Main Picture */}
