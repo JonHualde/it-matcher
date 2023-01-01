@@ -1,6 +1,6 @@
 import { ChangeEvent } from "react";
 // Components
-import { InputContainer } from "@shared-components/input-container";
+import { InputContainer } from "@shared-components/containers";
 import { Loader } from "@shared-components/status";
 import { Button } from "@shared-components/buttons";
 // types

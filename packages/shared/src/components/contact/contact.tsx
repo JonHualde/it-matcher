@@ -4,7 +4,7 @@ import * as Yup from "yup";
 
 // components
 import { ErrorMessage } from "../error-message";
-import { InputContainer } from "@shared-components/input-container";
+import { InputContainer } from "@shared-components/containers";
 
 const ContactForm = () => {
   const [error, setError] = useState<boolean>(false);

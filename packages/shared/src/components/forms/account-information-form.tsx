@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 // Components
-import { InputContainer } from "@shared-components/input-container";
+import { InputContainer } from "@shared-components/containers";
 import { Title } from "@shared-components/typography";
 import { Loader } from "@shared-components/status";
 // Types

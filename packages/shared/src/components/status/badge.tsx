@@ -6,6 +6,8 @@ interface BadgeProps {
   children: string | number | ReactElement;
   rounded?: "sm" | "md" | "lg" | "xl" | "full";
   icon?: ReactElement;
+  id?: string;
+  click?: () => void;
 }
 
 const Badge = (props: BadgeProps) => {
@@ -41,7 +43,7 @@ const Badge = (props: BadgeProps) => {
   };
 
   return (
-    <div className={generateClassName()}>
+    <div onClick={props.click} id={props.id && props.id} className={generateClassName()}>
       {props.children}
       {props.icon && props.icon}
     </div>

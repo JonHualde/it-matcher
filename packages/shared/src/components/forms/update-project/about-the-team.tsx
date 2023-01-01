@@ -1,4 +1,4 @@
-import { InputContainer } from "@shared-components/input-container";
+import { InputContainer } from "@shared-components/containers";
 import { TextArea } from "@shared-components/text-area";
 
 interface GeneralInformationProps {

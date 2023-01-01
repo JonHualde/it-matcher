@@ -11,7 +11,7 @@ interface inputContainerProps {
   type: string;
   margin?: string;
   label?: string;
-  value?: string;
+  value?: string | number;
   errors?: any;
   customClass?: string;
   disabled?: boolean;

@@ -5,10 +5,10 @@ import ProjectCard from "shared/src/components/project-card/project-card";
 import { Loader } from "@shared-components/status";
 import { Box } from "@shared-components/box";
 import { Paragraph } from "@shared-components/typography";
-import { EditProjectModal, ShowUserModal, DeleteProjectModal } from "@shared-components/modals";
-
+import { EditProjectModal, ShowUserModal, DeleteProjectModal, CreateProjectModal } from "@shared-components/modals";
+import { Button } from "@shared-components/buttons";
 // type
-import { ProjectTypes, BasicUserDetails } from "@shared-types";
+import { ProjectTypes, BasicUserDetails, JobTitlesTypes, ToolsAndTechnologiesTypes } from "@shared-types";
 // utils
 import { fetchJSON, notify, updateToast } from "@shared-utils";
 
@@ -17,13 +17,34 @@ const Projects = (props: any) => {
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [isFiltering, setIsFiltering] = useState(false);
+  const [openCreateProjectModal, setOpenCreateProjectModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState<BasicUserDetails | null>(null);
   const [selectedProject, setSelectedProject] = useState<ProjectTypes | null>(null);
   const [projects, setProjects] = useState<ProjectTypes[]>([]);
-  const [filteredProjects, setFilteredProjects] = useState<ProjectTypes[]>([]);
+  const [jobTitles, setJobTitles] = useState<JobTitlesTypes[]>([]);
+  const [toolsAndTechnologies, setToolsAndTechnologies] = useState<ToolsAndTechnologiesTypes[]>([]);
   const [showDeleteProjectModal, setShowDeleteProjectModal] = useState(false);
   const [showEditProjectModal, setShowEditProjectModal] = useState(false);
+
+  const getJobTitles = async () => {
+    fetchJSON("job-titles", "GET")
+      .then((jobTitles: JobTitlesTypes[]) => {
+        setJobTitles(jobTitles);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
+
+  const getToolsAndTechnologies = async () => {
+    fetchJSON("tools-and-technologies", "GET")
+      .then((toolsAndTechnologies: ToolsAndTechnologiesTypes[]) => {
+        setToolsAndTechnologies(toolsAndTechnologies);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  };
 
   const openDeleteProjectModal = () => {
     setShowDeleteProjectModal(true);
@@ -38,6 +59,10 @@ const Projects = (props: any) => {
   };
 
   const updateProject = async (project: ProjectTypes) => {
+    return "hey";
+  };
+
+  const createProject = async () => {
     return "hey";
   };
 
@@ -57,10 +82,29 @@ const Projects = (props: any) => {
 
   useEffect(() => {
     getProjects();
+    getJobTitles();
+    getToolsAndTechnologies();
   }, []);
 
+  const cta = () => (
+    <Button
+      border="border border-blue-ocean"
+      text="Create a new project"
+      customClass="py-2 px-4 rounded"
+      action={() => setOpenCreateProjectModal(true)}
+      color="bg-blue-ocean"
+    />
+  );
+
   return (
-    <PrivatePageLayout title="My projects" pathname={props.pathname}>
+    <PrivatePageLayout title="My projects" pathname={props.pathname} cta={cta()}>
+      {openCreateProjectModal && (
+        <CreateProjectModal
+          toolsAndTechnologies={toolsAndTechnologies}
+          jobTitles={jobTitles}
+          close={() => setOpenCreateProjectModal(false)}
+        />
+      )}
       {selectedUser && <ShowUserModal user={selectedUser} close={() => setSelectedUser(null)} />}
       {isLoading ? (
         <Box border="border border-blue-ocean">

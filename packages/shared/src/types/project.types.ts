@@ -1,5 +1,5 @@
 export default interface ProjectTypes {
-  id: number;
+  id?: number;
   user_id: number;
   created_at: Date | string;
   updated_at: Date | string;

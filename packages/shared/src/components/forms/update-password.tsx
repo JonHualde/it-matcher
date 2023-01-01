@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 // Components
-import { InputContainer } from "@shared-components/input-container";
+import { InputContainer } from "@shared-components/containers";
 import { ErrorMessage } from "../error-message";
 import { Loader } from "@shared-components/status";
 // Utils

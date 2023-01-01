@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { toast } from "react-toastify";
 // Components
-import { InputContainer } from "@shared-components/input-container";
+import { InputContainer } from "@shared-components/containers";
 import { ErrorMessage } from "../error-message";
 import { Modal } from "@shared-components/modals";
 // Store
