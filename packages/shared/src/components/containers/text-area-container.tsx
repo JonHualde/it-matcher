@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { BsEye, BsEyeSlash, BsArrowCounterclockwise, BsCheck2 } from "react-icons/bs";
+import { Badge } from "@shared-components/status";
 
 interface TextareaContainerProps {
   width?: string;
@@ -10,9 +10,10 @@ interface TextareaContainerProps {
   label?: string;
   value: string;
   rows: number;
-  errors?: any;
+  error: string;
   customClass?: string;
   disabled?: boolean;
+  counterLimit?: number;
 }
 const TextAreaContainer = (props: TextareaContainerProps) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -22,7 +23,7 @@ const TextAreaContainer = (props: TextareaContainerProps) => {
       {props.label && (
         <label
           htmlFor={props.name}
-          className={` ${props.errors && "text-red"}
+          className={` ${props.error && "text-red-500"}
         font-base text-lg capitalize
         `}
         >
@@ -36,7 +37,7 @@ const TextAreaContainer = (props: TextareaContainerProps) => {
         placeholder={props.placeholder ? props.placeholder : ""}
         onChange={props.onChange}
         className={`focus:outline-none 
-          ${props.errors ? "border-red " : ""}
+          ${props.error ? " border border-red-500 " : " "}
           ${props.customClass && props.customClass}
           text-md rounded-md border border-gray-300 px-3 py-2 text-gray-700
           ${props.disabled && "cursor-not-allowed bg-gray-100"}
@@ -45,7 +46,17 @@ const TextAreaContainer = (props: TextareaContainerProps) => {
         disabled={props.disabled ?? false}
       />
 
-      {props.errors && <span className="help-block text-red ml-1 text-left">{props.errors}</span>}
+      <div className="relative mt-2 flex justify-end">
+        {props.error && <span className="absolute left-0 text-left text-sm text-red-500">{props.error}</span>}
+        {/* Write a piece of code that checks the number of characters typed in the description field */}
+        {props.counterLimit && (
+          <Badge color={props.value.length < props.counterLimit ? "blue" : "red"} customClassName="text-xs">
+            <>
+              {props.value.length} / {props.counterLimit}
+            </>
+          </Badge>
+        )}
+      </div>
     </div>
   );
 };

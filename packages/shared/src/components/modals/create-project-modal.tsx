@@ -1,9 +1,10 @@
 import Modal from "./modal";
 import { useState } from "react";
+import Select from "react-select";
 // Components
 import { Title } from "@shared-components/typography";
 import { InputContainer, SelectContainer, CheckboxContainer, TextAreaContainer } from "@shared-components/containers";
-import { Badge } from "@shared-components/status";
+import { ImageUpload } from "@shared-components/media";
 // Types
 import { ProjectTypes, JobTitlesTypes, ToolsAndTechnologiesTypes } from "@shared-types";
 
@@ -50,13 +51,8 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
     setProject({ ...project, [e.target.name]: e.target.checked });
   };
 
-  const addElementToArray = (item: JobTitlesTypes | ToolsAndTechnologiesTypes, name: "job_titles_wanted" | "tools_and_technologies") => {
-    if ((project as ProjectTypes)[name].includes(item.id)) {
-      const filteredArray = project[name].filter((element) => element !== item.id);
-      setProject({ ...project, [name]: filteredArray });
-    } else {
-      setProject({ ...project, [name]: [...project[name], item.id] });
-    }
+  const updateArray = (array: unknown, name: "job_titles_wanted" | "tools_and_technologies") => {
+    setProject({ ...project, [name]: array });
   };
 
   return (
@@ -77,7 +73,7 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
               onChange={updateValue}
             />
             <InputContainer
-              label="Estimated time duration"
+              label="Duration estimation"
               type="number"
               name="estimated_time_duration"
               placeholder="Estimated time duration"
@@ -85,7 +81,7 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
               onChange={updateValue}
             />
             <SelectContainer
-              label="Estimated time duration metric"
+              label="Duration estimation metric"
               name="estimated_time_duration_metric"
               value={project.estimated_time_duration_metric}
               onChange={updateValue}
@@ -102,15 +98,18 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
               optionsList={difficulty}
             />
             <SelectContainer label="Project type" name="type" value={project.type} onChange={updateValue} optionsList={type} />
+            <SelectContainer
+              label="Status"
+              name="is_online"
+              placeholder="Is online?"
+              value={project.is_online ? "Online" : "Offline"}
+              onChange={(e) => {
+                setProject({ ...project, is_online: e.target.value === "Online" });
+              }}
+              optionsList={["Online", "Offline"]}
+            />
           </div>
-          <CheckboxContainer
-            label="Is online?"
-            type="checkbox"
-            name="is_online"
-            placeholder="Is online?"
-            value={project.is_online}
-            onChange={updateValueWithCheckbox}
-          />
+
           <CheckboxContainer
             label="Initial investment"
             type="checkbox"
@@ -139,40 +138,42 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
             placeholder="Project description"
             value={project.description}
             onChange={updateValue}
+            counterLimit={2000}
+            error={project.description.length < 2000 ? "" : "You have exceeded the 2000 character limit. Please shorten your input."}
           />
 
           <div className="mt-2">
-            <label className="font-base text-lg capitalize">Select the tools and technologies you want to use</label>
-            <div className="flex flex-wrap gap-2">
-              {props.toolsAndTechnologies.map((tool: ToolsAndTechnologiesTypes) => (
-                <Badge
-                  click={() => addElementToArray(tool, "tools_and_technologies")}
-                  key={tool.id}
-                  customClassName="cursor-pointer transform hover:scale-110 transition duration-150 ease-in-out"
-                  color={project.tools_and_technologies.includes(tool.id) ? "blue" : "gray"}
-                >
-                  {tool.name}
-                </Badge>
-              ))}
-            </div>
+            <label htmlFor="tools_and_technologies" className="font-base text-lg capitalize">
+              Tools and technologies
+            </label>
+            <Select
+              onChange={(array) => updateArray(array, "tools_and_technologies")}
+              name="tools_and_technologies"
+              isMulti
+              isSearchable={true}
+              options={props.toolsAndTechnologies.map((tool) => ({ value: tool.id, label: tool.name }))}
+              className="basic-multi-select"
+              classNamePrefix="select"
+            />
           </div>
 
           <div className="mt-6">
-            <label className="font-base text-lg capitalize">Select the roles you want to fill</label>
-            <div className="flex flex-wrap gap-2">
-              {props.jobTitles.map((role: JobTitlesTypes) => (
-                <Badge
-                  click={() => addElementToArray(role, "tools_and_technologies")}
-                  key={role.id}
-                  customClassName="cursor-pointer transform hover:scale-110 transition duration-150 ease-in-out"
-                  color={project.tools_and_technologies.includes(role.id) ? "blue" : "gray"}
-                >
-                  {role.name}
-                </Badge>
-              ))}
-            </div>
+            <label htmlFor="job_titles_wanted" className="font-base text-lg capitalize">
+              Roles
+            </label>
+            <Select
+              onChange={(array) => updateArray(array, "job_titles_wanted")}
+              name="job_titles_wanted"
+              isMulti
+              isSearchable={true}
+              options={props.jobTitles.map((tool) => ({ value: tool.id, label: tool.name }))}
+              className="basic-multi-select"
+              classNamePrefix="select"
+            />
           </div>
 
+          <ImageUpload label="Project main picture" name="project_main_picture" multiple={true} maxFiles={2} />
+          {/* 
           <InputContainer
             label="Project main picture"
             type="text"
@@ -180,7 +181,7 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
             placeholder="Project main picture"
             value={project.project_main_picture}
             onChange={updateValue}
-          />
+          /> */}
         </div>
       </form>
     </Modal>

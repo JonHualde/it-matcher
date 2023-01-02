@@ -42,7 +42,7 @@ const DeleteProjectModal = (props: ModalProps) => {
             strokeWidth="2"
             onClick={props.close}
           >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            <path strokeLinecap="round" strokeLinecap="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
           <div className="w-full bg-white px-8">
             <div className="flex w-full flex-col">
