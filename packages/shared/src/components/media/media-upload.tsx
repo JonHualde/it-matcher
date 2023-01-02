@@ -31,6 +31,8 @@ const MediaUpload = (props: MediaUploadProps) => {
       })
     );
 
+    console.log("newFiles", newFiles);
+
     // If multiple files are not allowed, reset the files array with the new file
     if (!props.multiple) {
       setFiles(newFiles);

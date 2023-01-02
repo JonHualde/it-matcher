@@ -7,6 +7,7 @@ import { Box } from "@shared-components/box";
 import { Paragraph } from "@shared-components/typography";
 import { EditProjectModal, ShowUserModal, DeleteProjectModal, CreateProjectModal } from "@shared-components/modals";
 import { Button } from "@shared-components/buttons";
+import { ErrorMessage } from "@shared-components/error-message";
 // type
 import { ProjectTypes, BasicUserDetails, JobTitlesTypes, ToolsAndTechnologiesTypes } from "@shared-types";
 // utils
@@ -33,6 +34,8 @@ const Projects = (props: any) => {
       })
       .catch((err) => {
         console.error(err);
+        setError(true);
+        setErrorMessage(err.message);
       });
   };
 
@@ -43,6 +46,8 @@ const Projects = (props: any) => {
       })
       .catch((err) => {
         console.error(err);
+        setError(true);
+        setErrorMessage(err.message);
       });
   };
 
@@ -62,8 +67,8 @@ const Projects = (props: any) => {
     return "hey";
   };
 
-  const createProject = async () => {
-    return "hey";
+  const addCreatedProjectToList = (project: ProjectTypes) => {
+    setProjects((prevProjects) => [...prevProjects, project]);
   };
 
   const getProjects = async () => {
@@ -98,11 +103,13 @@ const Projects = (props: any) => {
 
   return (
     <PrivatePageLayout title="My projects" pathname={props.pathname} cta={cta()}>
+      {error && <ErrorMessage errorMessage={errorMessage} />}
       {openCreateProjectModal && (
         <CreateProjectModal
           toolsAndTechnologies={toolsAndTechnologies}
           jobTitles={jobTitles}
           close={() => setOpenCreateProjectModal(false)}
+          addCreatedProjectToList={addCreatedProjectToList}
         />
       )}
       {selectedUser && <ShowUserModal user={selectedUser} close={() => setSelectedUser(null)} />}

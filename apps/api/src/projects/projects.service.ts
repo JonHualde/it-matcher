@@ -5,6 +5,7 @@ import { MediaService } from 'src/media/media.service';
 import { FilterProjectDto, ProjectDto } from './dtos/project.dto';
 // Types
 import { S3UploadResponse } from '@types';
+import { ProjectTypes } from '@shared-types';
 
 @Injectable()
 export class ProjectService {
@@ -114,7 +115,7 @@ export class ProjectService {
         description: project.description.trim(),
         difficulty: project.difficulty,
         type: project.type,
-        number_of_participants: project.number_of_participants,
+        number_of_participants: project.job_titles_wanted.length,
         initial_investment: project.initial_investment,
         initial_investment_cost: project.initial_investment_cost || null,
         is_online: project.is_online,
@@ -129,37 +130,36 @@ export class ProjectService {
   }
 
   async updateProject(files: any, project: ProjectDto, user: JwtDecodeDto) {
+    return 'hey';
     // @TODO
     // Check if a file exists
-    const existingProject = await this.prisma.project.findUniqueOrThrow({
-      where: { id: project.id },
-    });
-
-    if (existingProject.user_id !== user.id) {
-      throw new ForbiddenException(
-        'You are not allowed to update this project.',
-      );
-    }
-
-    return await this.prisma.project.update({
-      where: { id: project.id },
-      data: {
-        project_name: project.project_name,
-        starting_on: project.starting_on,
-        estimated_time_duration: project.estimated_time_duration,
-        estimated_time_duration_metric: project.estimated_time_duration_metric,
-        description: project.description,
-        difficulty: project.difficulty,
-        type: project.type,
-        number_of_participants: project.number_of_participants,
-        initial_investment: project.initial_investment,
-        initial_investment_cost: project.initial_investment_cost || null,
-        is_online: project.is_online,
-        tools_and_technologies: project.tools_and_technologies,
-        job_titles_wanted: project.job_titles_wanted,
-        // projectPicture,
-        // attachments,
-      },
-    });
+    // const existingProject = await this.prisma.project.findUniqueOrThrow({
+    //   where: { id: project.id },
+    // });
+    // if (existingProject.user_id !== user.id) {
+    //   throw new ForbiddenException(
+    //     'You are not allowed to update this project.',
+    //   );
+    // }
+    // return await this.prisma.project.update({
+    //   where: { id: project.id },
+    //   data: {
+    //     project_name: project.project_name,
+    //     starting_on: project.starting_on,
+    //     estimated_time_duration: project.estimated_time_duration,
+    //     estimated_time_duration_metric: project.estimated_time_duration_metric,
+    //     description: project.description,
+    //     difficulty: project.difficulty,
+    //     type: project.type,
+    //     number_of_participants: project.number_of_participants,
+    //     initial_investment: project.initial_investment,
+    //     initial_investment_cost: project.initial_investment_cost || null,
+    //     is_online: project.is_online,
+    //     tools_and_technologies: project.tools_and_technologies,
+    //     job_titles_wanted: project.job_titles_wanted,
+    //     // projectPicture,
+    //     // attachments,
+    //   },
+    // });
   }
 }

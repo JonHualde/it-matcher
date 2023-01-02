@@ -30,6 +30,11 @@ const ProjectCard = (props: ProjectCardInterface) => {
   const [usersDetails, setUsersDetails] = useState<BasicUserDetails[]>([]);
 
   const getParticipantsDetails = async () => {
+    if (!props.project.participants_ids.length) {
+      setIsLoading(false);
+      return;
+    }
+
     props.project.participants_ids.map(async (participant_id: number) => {
       await fetchJSON("user/basic-details", "POST", {
         user_id: participant_id,

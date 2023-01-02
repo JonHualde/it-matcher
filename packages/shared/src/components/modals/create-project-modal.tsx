@@ -1,17 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Select from "react-select";
 // Components
 import Modal from "./modal";
 import { Title } from "@shared-components/typography";
-import { InputContainer, SelectContainer, CheckboxContainer, TextAreaContainer } from "@shared-components/containers";
+import { DateContainer, InputContainer, SelectContainer, CheckboxContainer, TextAreaContainer } from "@shared-components/containers";
 import { MediaUpload } from "@shared-components/media";
+import { ErrorMessage } from "@shared-components/error-message";
+import { Button } from "@shared-components/buttons";
+import { Loader } from "@shared-components/status";
 // Types
-import { ProjectTypes, JobTitlesTypes, ToolsAndTechnologiesTypes } from "@shared-types";
+import { ProjectTypes, SubmitProjectTypes, JobTitlesTypes, ToolsAndTechnologiesTypes } from "@shared-types";
+// utils
+import { fetchFormData, updateToast, notify } from "@shared-utils";
 
 interface CreateProjectModalProps {
   jobTitles: JobTitlesTypes[];
   toolsAndTechnologies: ToolsAndTechnologiesTypes[];
   close: () => void;
+  addCreatedProjectToList: (project: ProjectTypes) => void;
 }
 
 const durationMetric = ["day", "week", "month"];
@@ -19,29 +25,66 @@ const difficulty = ["beginner", "intermediate", "advanced", "expert"];
 const type = ["profitable", "non-profitable", "training project"];
 
 const CreateProjectModal = (props: CreateProjectModalProps) => {
-  const [project, setProject] = useState<ProjectTypes>({
-    user_id: 0,
-    created_at: "",
-    updated_at: "",
+  const myToast = useRef<any>();
+  const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [project, setProject] = useState<SubmitProjectTypes>({
     is_online: false,
     project_name: "",
-    starting_on: "",
-    full_name: "",
+    starting_on: new Date(),
     estimated_time_duration: 0,
     estimated_time_duration_metric: "",
     description: "",
     difficulty: "",
     type: "",
-    number_of_participants: 0,
     initial_investment: false,
     initial_investment_cost: 0,
     tools_and_technologies: [],
-    participants_ids: [],
-    job_titles_filled: [],
     job_titles_wanted: [],
     project_main_picture: "",
     attachments: [""],
   });
+
+  const createProject = async () => {
+    setIsSubmitting(true);
+    setError(false);
+    notify({ myToast, toastId: 2, message: "Creating project..." });
+
+    // Generate a form data object with the project data
+    const formData = new FormData();
+    formData.append("is_online", project.is_online.toString());
+    formData.append("project_name", project.project_name);
+    formData.append("starting_on", project.starting_on.toString());
+    formData.append("estimated_time_duration", project.estimated_time_duration.toString());
+    formData.append("estimated_time_duration_metric", project.estimated_time_duration_metric);
+    formData.append("description", project.description);
+    formData.append("difficulty", project.difficulty);
+    formData.append("type", project.type);
+    formData.append("initial_investment", project.initial_investment.toString());
+    formData.append("initial_investment_cost", project.initial_investment_cost.toString());
+    formData.append("tools_and_technologies", JSON.stringify(project.tools_and_technologies));
+    formData.append("job_titles_wanted", JSON.stringify(project.job_titles_wanted));
+    formData.append("project_main_picture", project.project_main_picture);
+
+    project.attachments.forEach((attachment) => {
+      formData.append("attachments", attachment);
+    });
+
+    await fetchFormData("project", "POST", formData)
+      .then((project: ProjectTypes) => {
+        props.addCreatedProjectToList(project);
+        updateToast({ myToast, toastId: 2, message: "Project created successfully", type: "SUCCESS" });
+      })
+      .catch((err) => {
+        setError(true);
+        setErrorMessage(err.message);
+        updateToast({ myToast, toastId: 2, message: err.message, type: "ERROR" });
+      })
+      .finally(() => {
+        setIsSubmitting(false);
+      });
+  };
 
   const updateValue = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setProject({ ...project, [e.target.name]: e.target.value });
@@ -51,30 +94,38 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
     setProject({ ...project, [e.target.name]: e.target.checked });
   };
 
-  const updateArray = (array: unknown, name: "job_titles_wanted" | "tools_and_technologies") => {
-    setProject({ ...project, [name]: array });
+  const updateArray = (array: any, name: "job_titles_wanted" | "tools_and_technologies") => {
+    const newArray = array.map((item: { value: number; label: string }) => item.value);
+    setProject({ ...project, [name]: newArray });
   };
 
   const updateFiles = (files: File[], name: "project_main_picture" | "attachments" | string) => {
+    console.log("files", files);
     if (name === "project_main_picture") {
-      setProject({ ...project, [name]: files[0] });
+      setProject({ ...project, [name as "project_main_picture"]: files.length ? files[0] : "" });
     }
 
     if (name === "attachments") {
-      setProject({ ...project, [name]: files });
+      setProject({ ...project, [name as "attachments"]: files });
     }
   };
 
   useEffect(() => {
     console.log(project);
-  }, [project.job_titles_wanted, project.tools_and_technologies]);
+  }, [project]);
 
   return (
     <Modal size="max-w-5xl" close={() => props.close()}>
       <Title type="h2" customClassName="text-blue-dimmed mt-6 mb-8">
         Create a new project
       </Title>
-      <form>
+      {error && <ErrorMessage errorMessage={errorMessage} />}
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          createProject();
+        }}
+      >
         <div className="flex flex-col">
           {/* Project name and description */}
           <div className="grid grid-cols-3 gap-x-4">
@@ -124,6 +175,10 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
             />
           </div>
 
+          <div className="grid grid-cols-2">
+            <DateContainer label="Starting on" name="starting_on" onChange={updateValue} value={project.starting_on.toString()} />
+          </div>
+
           <CheckboxContainer
             label="Initial investment"
             type="checkbox"
@@ -141,7 +196,7 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
               name="initial_investment_cost"
               placeholder="Initial investment cost"
               value={project.initial_investment_cost}
-              onChange={updateValue}
+              onChange={(e) => setProject({ ...project, [e.target.name]: +e.target.value })}
             />
           )}
 
@@ -212,6 +267,19 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
             name="attachments"
             maxFiles={5}
             multiple={true}
+          />
+        </div>
+        {/* Add a gray line */}
+        <div className="mt-8 border-b border-gray-300" />
+
+        {/* Add a button to submit the form */}
+        <div className="mt-8 flex justify-center">
+          <Button
+            type="submit"
+            border="border border-blue-ocean"
+            text={isSubmitting ? <Loader border="border-b-2 border-r-2 border-white" /> : "Create"}
+            customClass="py-2 px-4 rounded w-24 h-12 flex justify-center items-center"
+            color="bg-blue-ocean"
           />
         </div>
       </form>

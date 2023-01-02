@@ -30,15 +30,27 @@ const difficultyDto: difficultyOptions[] = [
   'expert',
 ];
 
+type projectTypeOptions = 'profiable' | 'non-profitable' | 'training project';
+const typeDto: projectTypeOptions[] = [
+  'profiable',
+  'non-profitable',
+  'training project',
+];
+
 export class project_idDto {
   @IsNumber()
   readonly project_id: number;
 }
 
 export class ProjectDto {
-  @IsNumber()
-  @IsOptional()
-  readonly id: number;
+  @IsBoolean()
+  @Transform(({ value }) => {
+    if (value === 'true') return true;
+    if (value === 'false') return false;
+
+    return value;
+  })
+  readonly is_online: boolean;
 
   @IsString()
   @Length(2, 255)
@@ -68,15 +80,10 @@ export class ProjectDto {
   @IsString()
   readonly difficulty: difficultyOptions;
 
+  @IsEnum(typeDto)
   @IsString()
   @Length(2, 255)
-  readonly type: string;
-
-  @IsNumber()
-  @Transform(({ value }) => parseInt(value))
-  @Min(1)
-  @Max(10)
-  readonly number_of_participants: number;
+  readonly type: projectTypeOptions;
 
   @IsNumber()
   @Transform(({ value }) => parseInt(value))
@@ -93,15 +100,6 @@ export class ProjectDto {
     return value;
   })
   readonly initial_investment: boolean;
-
-  @IsBoolean()
-  @Transform(({ value }) => {
-    if (value === 'true') return true;
-    if (value === 'false') return false;
-
-    return value;
-  })
-  readonly is_online: boolean;
 
   @IsArray()
   @Transform(({ value }) => JSON.parse(value))
@@ -121,7 +119,7 @@ export class ProjectDto {
 
   @IsOptional()
   @IsNotEmpty()
-  readonly attachments: string;
+  readonly attachments: string | string[];
 }
 
 export class FilterProjectDto {
