@@ -1,6 +1,7 @@
 import { ReactElement } from "react";
 
 interface TitleProps {
+  ref?: any;
   color?: "blue-dimmed" | "blue-ocean" | "blue-purple";
   customClassName?: string;
   children: string | ReactElement;

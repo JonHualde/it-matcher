@@ -13,11 +13,13 @@ import {
 } from '@nestjs/common';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+//dtos
 import {
   project_idDto,
   ProjectDto,
   FilterProjectDto,
 } from './dtos/project.dto';
+import { UpdateProjectDto } from './dtos/update-project.dto';
 import { ProjectService } from './projects.service';
 // Multer config
 import { multerOptions } from 'src/config/multer.config';
@@ -69,16 +71,19 @@ export class ProjectController {
   @Patch()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'projectPicture', maxCount: 1 },
-      { name: 'attachments', maxCount: 5 },
-    ]),
+    FileFieldsInterceptor(
+      [
+        { name: 'project_main_picture', maxCount: 1 },
+        { name: 'attachments', maxCount: 5 },
+      ],
+      multerOptions(),
+    ),
   )
   async updateApplicationStatus(
-    @Body() project: ProjectDto,
+    @Body() project: UpdateProjectDto,
     @UploadedFiles()
     files: {
-      projectPicture: Express.Multer.File[];
+      project_main_picture: Express.Multer.File[];
       attachments: Express.Multer.File[];
     },
     @Request() req,

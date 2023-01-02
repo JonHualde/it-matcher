@@ -22,7 +22,7 @@ interface ProjectCardInterface {
   project: ProjectTypes;
   setSelectedUser: (user: BasicUserDetails) => void;
   openDeleteProjectModal: () => void;
-  openEditProjectModal: () => void;
+  openUpdateProjectModal: (project: ProjectTypes) => void;
 }
 
 const ProjectCard = (props: ProjectCardInterface) => {
@@ -95,7 +95,7 @@ const ProjectCard = (props: ProjectCardInterface) => {
             elements={[
               {
                 content: "Edit project",
-                action: () => props.openEditProjectModal(),
+                action: () => props.openUpdateProjectModal(props.project),
               },
               {
                 content: "Delete project",

@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef, ReactElement } from "react";
 import FilterApplications from "shared/src/components/forms/filter-applications";
 import { PrivatePageLayout } from "@shared-components/layouts";
-import { ErrorMessage } from "@shared-components/error-message";
 import { Table } from "@shared-components/tables";
-import { Badge, Loader } from "@shared-components/status";
+import { Badge, Loader, Alert } from "@shared-components/status";
 import { Box } from "@shared-components/box";
 import { Paragraph, Italic } from "@shared-components/typography";
 import { Button } from "@shared-components/buttons";
@@ -22,6 +21,7 @@ const Requests = (props: { pathname: string }) => {
   const myToast = useRef<any>();
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectTypes | null>(null);
@@ -99,6 +99,8 @@ const Requests = (props: { pathname: string }) => {
         setJobTitles(() => jobTitles);
       })
       .catch((err) => {
+        setError(true);
+        setErrorMessage(err.message);
         console.error(err);
       });
   };
@@ -110,7 +112,14 @@ const Requests = (props: { pathname: string }) => {
 
   return (
     <PrivatePageLayout title="Applications Sent" pathname={props.pathname}>
-      {error && <ErrorMessage errorMessage={errorMessage} />}
+      {showAlert && (
+        <Alert
+          close={() => setShowAlert(false)}
+          status="info"
+          message="If a project is deleted, all applications associated with that project will also be deleted. Keep in mind that applications are temporary and may not be visible at all times."
+        />
+      )}
+      {error && <Alert status="error" close={() => setError(false)} message={errorMessage} />}
       {selectedProject && (
         <ShowProjectModal jobTitles={jobTitles} selectedProject={selectedProject} close={() => setSelectedProject(null)} />
       )}

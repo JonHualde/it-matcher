@@ -1,7 +1,7 @@
 export default interface SubmitProjectTypes {
   is_online: boolean;
   project_name: string;
-  starting_on: Date;
+  starting_on: Date | string;
   estimated_time_duration: number;
   estimated_time_duration_metric: string;
   description: string;

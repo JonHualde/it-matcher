@@ -40,7 +40,7 @@ const DateContainer = (props: CheckboxContainerProps) => {
         name={props.name}
         placeholder={props.placeholder ? props.placeholder : ""}
         onChange={props.onChange}
-        className={`focus:outline-none
+        className={`transition-all duration-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500
           ${props.errors ? "border-red " : ""}
           ${props.customClass ? props.customClass : ""}
           text-md rounded-md border border-gray-300 text-gray-700

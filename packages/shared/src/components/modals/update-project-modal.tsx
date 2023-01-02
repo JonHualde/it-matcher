@@ -7,52 +7,56 @@ import { DateContainer, InputContainer, SelectContainer, CheckboxContainer, Text
 import { MediaUpload } from "@shared-components/media";
 import { ErrorMessage } from "@shared-components/error-message";
 import { Button } from "@shared-components/buttons";
-import { Loader } from "@shared-components/status";
+import { Loader, Alert } from "@shared-components/status";
 // Types
-import { ProjectTypes, SubmitProjectTypes, JobTitlesTypes, ToolsAndTechnologiesTypes } from "@shared-types";
+import { ProjectTypes, UpdateProjectTypes, JobTitlesTypes, ToolsAndTechnologiesTypes } from "@shared-types";
 // utils
 import { fetchFormData, updateToast, notify } from "@shared-utils";
 
-interface CreateProjectModalProps {
+interface UpdateProjectModalProps {
   jobTitles: JobTitlesTypes[];
   toolsAndTechnologies: ToolsAndTechnologiesTypes[];
   close: () => void;
-  addCreatedProjectToList: (project: ProjectTypes) => void;
+  updateProjectFromList: (project: ProjectTypes) => void;
+  project: ProjectTypes;
 }
 
 const durationMetric = ["day", "week", "month"];
 const difficulty = ["beginner", "intermediate", "advanced", "expert"];
 const type = ["profitable", "non-profitable", "training project"];
 
-const CreateProjectModal = (props: CreateProjectModalProps) => {
+const UpdateProjectModal = (props: UpdateProjectModalProps) => {
   const myToast = useRef<any>();
+  const divRef = useRef<any>();
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [project, setProject] = useState<SubmitProjectTypes>({
-    is_online: false,
-    project_name: "",
-    starting_on: new Date(),
-    estimated_time_duration: 0,
-    estimated_time_duration_metric: "",
-    description: "",
-    difficulty: "",
-    type: "",
-    initial_investment: false,
-    initial_investment_cost: 0,
-    tools_and_technologies: [],
-    job_titles_wanted: [],
-    project_main_picture: "",
-    attachments: [""],
+  const [project, setProject] = useState<UpdateProjectTypes>({
+    id: props.project.id,
+    is_online: props.project.is_online,
+    project_name: props.project.project_name,
+    starting_on: new Date(props.project.starting_on).toISOString().split("T")[0],
+    estimated_time_duration: props.project.estimated_time_duration,
+    estimated_time_duration_metric: props.project.estimated_time_duration_metric,
+    description: props.project.description,
+    difficulty: props.project.difficulty,
+    type: props.project.type,
+    initial_investment: props.project.initial_investment,
+    initial_investment_cost: props.project.initial_investment_cost,
+    tools_and_technologies: props.project.tools_and_technologies,
+    job_titles_wanted: props.project.job_titles_wanted,
+    project_main_picture: props.project.project_main_picture,
+    attachments: props.project.attachments,
   });
 
-  const createProject = async () => {
+  const updateProject = async () => {
     setIsSubmitting(true);
     setError(false);
-    notify({ myToast, toastId: 2, message: "Creating project..." });
+    notify({ myToast, toastId: 3, message: "Updating your project...", autoClose: 3000 });
 
     // Generate a form data object with the project data
     const formData = new FormData();
+    formData.append("id", project.id.toString());
     formData.append("is_online", project.is_online.toString());
     formData.append("project_name", project.project_name);
     formData.append("starting_on", project.starting_on.toString());
@@ -68,16 +72,16 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
     formData.append("project_main_picture", project.project_main_picture);
     formData.append("attachments", project.attachments.length ? JSON.stringify(project.attachments) : "");
 
-    await fetchFormData("project", "POST", formData)
+    await fetchFormData("project", "PATCH", formData)
       .then((project: ProjectTypes) => {
-        props.addCreatedProjectToList(project);
-        updateToast({ myToast, toastId: 2, message: "Project created successfully", type: "SUCCESS" });
+        props.updateProjectFromList(project);
+        updateToast({ myToast, toastId: 3, message: "Project created successfully", type: "SUCCESS" });
       })
       .catch((err) => {
         document.getElementById("top")?.scrollIntoView({ behavior: "smooth", block: "center" });
         setError(true);
         setErrorMessage(err.message);
-        updateToast({ myToast, toastId: 2, message: err.message, type: "ERROR" });
+        updateToast({ myToast, toastId: 3, message: err.message, type: "ERROR" });
       })
       .finally(() => {
         setIsSubmitting(false);
@@ -97,15 +101,19 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
     setProject({ ...project, [name]: newArray });
   };
 
-  const updateFiles = (files: File[], name: "project_main_picture" | "attachments" | string) => {
+  const updateFiles = (files: File[] | string[], name: "project_main_picture" | "attachments" | string) => {
     if (name === "project_main_picture") {
       setProject({ ...project, [name as "project_main_picture"]: files.length ? files[0] : "" });
     }
 
     if (name === "attachments") {
-      setProject({ ...project, [name as "attachments"]: files });
+      setProject({ ...project, [name as "attachments"]: [...(files as any)] });
     }
   };
+
+  useEffect(() => {
+    console.log(project);
+  }, [project]);
 
   return (
     <Modal size="max-w-5xl" close={() => props.close()}>
@@ -113,11 +121,11 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
       <Title type="h2" customClassName="text-blue-dimmed mt-6 mb-8">
         Create a new project
       </Title>
-      {error && <ErrorMessage errorMessage={errorMessage} />}
+      {error && <Alert status="error" message={errorMessage} />}
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          createProject();
+          updateProject();
         }}
       >
         <div className="flex flex-col">
@@ -169,6 +177,7 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
             />
           </div>
 
+          {/* Starting Date */}
           <div className="grid grid-cols-2">
             <DateContainer label="Starting on" name="starting_on" onChange={updateValue} value={project.starting_on.toString()} />
           </div>
@@ -182,6 +191,7 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
             onChange={updateValueWithCheckbox}
           />
 
+          {/* Initial Investment */}
           {project.initial_investment && (
             <InputContainer
               customClass="transition duration-500 ease-in-out"
@@ -194,6 +204,7 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
             />
           )}
 
+          {/* Description */}
           <TextAreaContainer
             label="Project description"
             rows={8}
@@ -205,6 +216,7 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
             error={project.description.length < 2000 ? "" : "You have exceeded the 2000 character limit. Please shorten your input."}
           />
 
+          {/* Tools and technologies and roles */}
           <div className="mt-2">
             <label htmlFor="tools_and_technologies" className="font-base text-lg capitalize">
               Tools and technologies
@@ -217,6 +229,17 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
               options={props.toolsAndTechnologies.map((tool) => ({ value: tool.id, label: tool.name }))}
               className="basic-multi-select"
               classNamePrefix="select"
+              styles={{
+                multiValue: (baseStyles, state) => ({
+                  ...baseStyles,
+                  backgroundColor: "rgb(219,233,254)",
+                }),
+              }}
+              value={props.toolsAndTechnologies.map((tool) => {
+                if (project.tools_and_technologies.includes(tool.id)) {
+                  return { value: tool.id, label: tool.name };
+                }
+              })}
             />
           </div>
 
@@ -228,13 +251,25 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
               onChange={(array) => updateArray(array, "job_titles_wanted")}
               name="job_titles_wanted"
               isMulti
+              styles={{
+                multiValue: (baseStyles, state) => ({
+                  ...baseStyles,
+                  backgroundColor: "rgb(219,233,254)",
+                }),
+              }}
               isSearchable={true}
               options={props.jobTitles.map((tool) => ({ value: tool.id, label: tool.name }))}
               className="basic-multi-select"
               classNamePrefix="select"
+              value={props.jobTitles.map((tool) => {
+                if (project.job_titles_wanted.includes(tool.id)) {
+                  return { value: tool.id, label: tool.name };
+                }
+              })}
             />
           </div>
 
+          {/* Picture and attachments */}
           <MediaUpload
             accept={{
               "image/*": [".png", ".jpg", ".jpeg"],
@@ -243,6 +278,7 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
             label="Project main picture"
             name="project_main_picture"
             maxFiles={1}
+            previouslyUploaded={[project.project_main_picture as string]}
           />
           <MediaUpload
             accept={{
@@ -261,6 +297,7 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
             name="attachments"
             maxFiles={5}
             multiple={true}
+            previouslyUploaded={project.attachments as string[]}
           />
         </div>
         {/* Add a gray line */}
@@ -271,7 +308,7 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
           <Button
             type="submit"
             border="border border-blue-ocean"
-            text={isSubmitting ? <Loader border="border-b-2 border-r-2 border-white" /> : "Create"}
+            text={isSubmitting ? <Loader border="border-b-2 border-r-2 border-white" /> : "Update"}
             customClass="py-2 px-4 rounded w-24 h-12 flex justify-center items-center"
             color="bg-blue-ocean"
           />
@@ -281,4 +318,4 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
   );
 };
 
-export default CreateProjectModal;
+export default UpdateProjectModal;

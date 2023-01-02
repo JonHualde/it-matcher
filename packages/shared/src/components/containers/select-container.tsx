@@ -33,7 +33,7 @@ const SelectContainer = (props: SelectContainerProps) => {
         value={props.value && props.value}
         onChange={props.onChange}
         name={props.name}
-        className={`focus:outline-none 
+        className={`transition-all duration-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 
         ${props.errors ? "border-red " : ""}
         ${props.customClass && props.customClass}
         text-md rounded-md border border-gray-300 px-3 py-3 text-gray-700

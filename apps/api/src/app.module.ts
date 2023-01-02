@@ -8,6 +8,7 @@ import { FavouritesModule } from './favourites/favourites.module';
 import { UserModule } from './user/user.module';
 import { JobTitlesModule } from './job-titles/job-titles.module';
 import { ToolsAndTechnologiesModule } from './tools-and-technologies/tools-and-technologies.module';
+import { MediaModule } from './media/media.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { ToolsAndTechnologiesModule } from './tools-and-technologies/tools-and-t
     UserModule,
     JobTitlesModule,
     ToolsAndTechnologiesModule,
+    MediaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,6 +1,7 @@
 import { IoClose } from "react-icons/io5";
-import { BsCheck2, BsInfo } from "react-icons/bs";
+import { BsCheck2 } from "react-icons/bs";
 import { CiWarning } from "react-icons/ci";
+import { FiInfo } from "react-icons/fi";
 
 interface IconProps {
   type: "success" | "error" | "info" | "warning";
@@ -39,8 +40,8 @@ const Icon = (props: IconProps) => {
         );
       case "info":
         return (
-          <div className="flex items-center justify-center rounded-full bg-blue-300 p-2.5">
-            <BsInfo className="text-blue-700" size={getSize()} />
+          <div className="flex items-center justify-center rounded-full bg-blue-300 p-2">
+            <FiInfo className="text-blue-700" size={getSize()} />
           </div>
         );
       case "warning":

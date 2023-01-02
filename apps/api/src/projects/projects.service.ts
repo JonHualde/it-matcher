@@ -2,11 +2,11 @@ import { Injectable, ForbiddenException } from '@nestjs/common';
 import { JwtDecodeDto } from 'src/auth/dtos/jwt-decoded.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { MediaService } from 'src/media/media.service';
-import { FilterProjectDto, ProjectDto } from './dtos/project.dto';
 // Types
 import { S3UploadResponse } from '@types';
-import { ProjectTypes } from '@shared-types';
-
+// dtos
+import { FilterProjectDto, ProjectDto } from './dtos/project.dto';
+import { UpdateProjectDto } from './dtos/update-project.dto';
 @Injectable()
 export class ProjectService {
   constructor(
@@ -33,7 +33,7 @@ export class ProjectService {
     });
   }
 
-  async getProjectByuser_id(user_id: number) {
+  async getProjectByUserId(user_id: number) {
     return await this.prisma.project.findMany({
       where: { user_id },
     });
@@ -129,37 +129,93 @@ export class ProjectService {
     });
   }
 
-  async updateProject(files: any, project: ProjectDto, user: JwtDecodeDto) {
-    return 'hey';
-    // @TODO
+  async updateProject(
+    files: any,
+    project: UpdateProjectDto,
+    user: JwtDecodeDto,
+  ) {
     // Check if a file exists
-    // const existingProject = await this.prisma.project.findUniqueOrThrow({
-    //   where: { id: project.id },
-    // });
-    // if (existingProject.user_id !== user.id) {
-    //   throw new ForbiddenException(
-    //     'You are not allowed to update this project.',
-    //   );
+    const projectToUpdate = await this.prisma.project.findUniqueOrThrow({
+      where: { id: project.id },
+    });
+
+    if (projectToUpdate.user_id !== user.id) {
+      throw new ForbiddenException(
+        'You are not allowed to update this project.',
+      );
+    }
+
+    if (projectToUpdate.project_name.trim() === project.project_name.trim()) {
+      throw new ForbiddenException(
+        'This project name is already taken. Please choose another one.',
+      );
+    }
+
+    // Get current project picture and attachments references
+    const currentProjectPicture = projectToUpdate.project_main_picture;
+    const currentAttachments = projectToUpdate.attachments;
+
+    console.log(
+      'ATTACHMENTTTT',
+      files.attachments,
+      currentAttachments,
+      project.attachments,
+    );
+
+    // if (
+    //   currentAttachments.length !== project.attachments.length &&
+    //   currentAttachments.length > 0
+    // ) {
+    //   if (!project.attachments) {
+    //     // Delete all attachments
+    //     currentAttachments.forEach(async (key: string) => {
+    //       await this.mediaService.deleteMedia(key);
+    //     });
+    //   } else {
+    //     // Return an array of the attachments to delete
+    //     const attachmentsToDelete = currentAttachments.filter((attachment) => {
+    //       return !project.attachments.includes(attachment);
+    //     });
+
+    //     // Delete the attachments
+    //     attachmentsToDelete.forEach(async (key: string) => {
+    //       await this.mediaService.deleteMedia(key);
+    //     });
+    //     console.log('DELETE', attachmentsToDelete);
+    //   }
     // }
-    // return await this.prisma.project.update({
-    //   where: { id: project.id },
-    //   data: {
-    //     project_name: project.project_name,
-    //     starting_on: project.starting_on,
-    //     estimated_time_duration: project.estimated_time_duration,
-    //     estimated_time_duration_metric: project.estimated_time_duration_metric,
-    //     description: project.description,
-    //     difficulty: project.difficulty,
-    //     type: project.type,
-    //     number_of_participants: project.number_of_participants,
-    //     initial_investment: project.initial_investment,
-    //     initial_investment_cost: project.initial_investment_cost || null,
-    //     is_online: project.is_online,
-    //     tools_and_technologies: project.tools_and_technologies,
-    //     job_titles_wanted: project.job_titles_wanted,
-    //     // projectPicture,
-    //     // attachments,
-    //   },
-    // });
+
+    return 'hey';
+
+    if (files.project_main_picture) {
+      // Delete the existing picture
+      await this.mediaService.deleteMedia(currentProjectPicture);
+      // Upload new picture
+      const projectPicture: S3UploadResponse[] =
+        await this.mediaService.uploadMedia(
+          files.project_main_picture,
+          'pictures',
+        );
+    }
+
+    return await this.prisma.project.update({
+      where: { id: project.id },
+      data: {
+        project_name: project.project_name,
+        starting_on: project.starting_on,
+        estimated_time_duration: project.estimated_time_duration,
+        estimated_time_duration_metric: project.estimated_time_duration_metric,
+        description: project.description,
+        difficulty: project.difficulty,
+        type: project.type,
+        initial_investment: project.initial_investment,
+        initial_investment_cost: project.initial_investment_cost || null,
+        is_online: project.is_online,
+        tools_and_technologies: project.tools_and_technologies,
+        job_titles_wanted: project.job_titles_wanted,
+        // projectPicture,
+        // attachments,
+      },
+    });
   }
 }

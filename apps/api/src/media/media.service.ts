@@ -3,10 +3,22 @@ import { v4 as uuid } from 'uuid';
 const AWS = require('aws-sdk');
 // Types
 import { S3UploadResponse } from '@types';
+import { GetPictureDataDto } from './dtos/get-picture-data.dto';
 
 @Injectable()
 export class MediaService {
   constructor() {}
+
+  async getPictureData(body: GetPictureDataDto): Promise<S3UploadResponse> {
+    const s3 = new AWS.S3();
+
+    const params = {
+      Bucket: process.env.AWS_S3_BUCKET_NAME,
+      Key: body.key,
+    };
+
+    return await s3.getObject(params).promise();
+  }
 
   async uploadMedia(
     files: any[],
@@ -17,7 +29,7 @@ export class MediaService {
     const params = files.map((file) => {
       return {
         Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Key: `${type}/${uuid()}-${file.originalname}`,
+        Key: `${type}/${file.originalname}-${uuid()}`,
         Body: file.buffer,
         ContentType: file.mimetype,
       };

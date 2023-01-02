@@ -1,6 +1,7 @@
 export type { default as FilterApplicationsData } from "./filter-application-data";
 export type { default as ProjectTypes } from "./project.types";
 export type { default as SubmitProjectTypes } from "./submit-project.types";
+export type { default as UpdateProjectTypes } from "./update-project.types";
 export type { default as User } from "./user.types";
 export type { default as BasicUserDetails } from "./basic-user-details.types";
 export type { default as HttpResponse } from "./httpResponse";
@@ -12,4 +13,5 @@ export type { default as GetUserReceivedApplicationsResponse } from "./received-
 export type { default as UserSentApplicationsResponse } from "./sent-applications.types";
 export type { default as ApplicationsFiltersTypes } from "./application-filter.types";
 export type { default as ApplicationTypes } from "./create-new-application.types";
+export type { default as S3Response } from "./s3-response.types";
 export * from "./styles.types";

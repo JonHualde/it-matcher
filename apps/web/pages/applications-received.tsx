@@ -3,7 +3,7 @@ import FilterApplications from "shared/src/components/forms/filter-applications"
 import { PrivatePageLayout } from "@shared-components/layouts";
 import { ErrorMessage } from "@shared-components/error-message";
 import { Table } from "@shared-components/tables";
-import { Badge, Loader } from "@shared-components/status";
+import { Badge, Loader, Alert } from "@shared-components/status";
 import { Box } from "@shared-components/box";
 import { Paragraph, Italic } from "@shared-components/typography";
 import { ApplicationTableButtons } from "shared/src/components/buttons";
@@ -28,6 +28,7 @@ const ApplicationsReceived = (props: { pathname: string }) => {
   const myToast = useRef<any>();
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isFiltering, setIsFiltering] = useState(false);
   const [selectedUser, setSelectedUser] = useState<BasicUserDetails | null>(null);
@@ -119,6 +120,8 @@ const ApplicationsReceived = (props: { pathname: string }) => {
         setJobTitles(() => jobTitles);
       })
       .catch((err) => {
+        setError(true);
+        setErrorMessage(err.message);
         console.error(err);
       });
   };
@@ -130,7 +133,14 @@ const ApplicationsReceived = (props: { pathname: string }) => {
 
   return (
     <PrivatePageLayout title="Applications Received" pathname={props.pathname}>
-      {error && <ErrorMessage errorMessage={errorMessage} />}
+      {showAlert && (
+        <Alert
+          close={() => setShowAlert(false)}
+          status="info"
+          message="If you accept an application for a specific role in a project, all other applications for that same role in the same project will be automatically rejected."
+        />
+      )}
+      {error && <Alert status="error" close={() => setError(false)} message={errorMessage} />}
       {selectedUser && <ShowUserModal user={selectedUser} close={() => setSelectedUser(null)} />}
       {selectedProject && (
         <ShowProjectModal jobTitles={jobTitles} selectedProject={selectedProject} close={() => setSelectedProject(null)} />
