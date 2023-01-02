@@ -1,10 +1,10 @@
-import Modal from "./modal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Select from "react-select";
 // Components
+import Modal from "./modal";
 import { Title } from "@shared-components/typography";
 import { InputContainer, SelectContainer, CheckboxContainer, TextAreaContainer } from "@shared-components/containers";
-import { ImageUpload } from "@shared-components/media";
+import { MediaUpload } from "@shared-components/media";
 // Types
 import { ProjectTypes, JobTitlesTypes, ToolsAndTechnologiesTypes } from "@shared-types";
 
@@ -54,6 +54,20 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
   const updateArray = (array: unknown, name: "job_titles_wanted" | "tools_and_technologies") => {
     setProject({ ...project, [name]: array });
   };
+
+  const updateFiles = (files: File[], name: "project_main_picture" | "attachments" | string) => {
+    if (name === "project_main_picture") {
+      setProject({ ...project, [name]: files[0] });
+    }
+
+    if (name === "attachments") {
+      setProject({ ...project, [name]: files });
+    }
+  };
+
+  useEffect(() => {
+    console.log(project);
+  }, [project.job_titles_wanted, project.tools_and_technologies]);
 
   return (
     <Modal size="max-w-5xl" close={() => props.close()}>
@@ -172,16 +186,33 @@ const CreateProjectModal = (props: CreateProjectModalProps) => {
             />
           </div>
 
-          <ImageUpload label="Project main picture" name="project_main_picture" multiple={true} maxFiles={2} />
-          {/* 
-          <InputContainer
+          <MediaUpload
+            accept={{
+              "image/*": [".png", ".jpg", ".jpeg"],
+            }}
+            updateFiles={updateFiles}
             label="Project main picture"
-            type="text"
             name="project_main_picture"
-            placeholder="Project main picture"
-            value={project.project_main_picture}
-            onChange={updateValue}
-          /> */}
+            maxFiles={1}
+          />
+          <MediaUpload
+            accept={{
+              "image/*": [".png", ".jpg", ".jpeg"],
+              "application/pdf": [".pdf"],
+              "application/msword": [".doc", ".docx"],
+              "application/vnd.ms-excel": [".xls", ".xlsx"],
+              "application/vnd.ms-powerpoint": [".ppt", ".pptx"],
+              "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"],
+              "application/vnd.oasis.opendocument.presentation": [".odp"],
+              "application/vnd.oasis.opendocument.spreadsheet": [".ods"],
+            }}
+            updateFiles={updateFiles}
+            label="Project attachments"
+            name="attachments"
+            maxFiles={5}
+            multiple={true}
+          />
         </div>
       </form>
     </Modal>

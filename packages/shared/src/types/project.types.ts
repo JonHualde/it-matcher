@@ -19,6 +19,6 @@ export default interface ProjectTypes {
   participants_ids: number[];
   job_titles_filled: number[];
   job_titles_wanted: number[];
-  project_main_picture: string;
-  attachments: string[];
+  project_main_picture: string | File;
+  attachments: string[] | File[];
 }
