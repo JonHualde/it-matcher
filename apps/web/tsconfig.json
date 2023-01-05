@@ -31,6 +31,7 @@
       "@shared-hooks": ["./../../packages/shared/src/hooks/index.ts"],
       "@shared-types": ["./../../packages/shared/src/types/index.ts"],
       "@shared-utils": ["./../../packages/shared/src/utils/index.ts"],
+      "@shared-validation": ["./../../packages/shared/src/utils/validation/index.ts"],
       "@shared-vars": ["./../../packages/shared/var/index.ts"],
     }
   }

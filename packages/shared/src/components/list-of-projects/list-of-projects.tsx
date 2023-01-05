@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Popover, PopoverTrigger, PopoverContent, PopoverHeader, PopoverArrow, PopoverBody, PopoverCloseButton } from "@chakra-ui/react";
 // Components
 import { Italic, DateTag, Paragraph, Title } from "@shared-components/typography";
 import { Badge, Loader } from "@shared-components/status";
@@ -93,7 +94,7 @@ const ListOfProjects = ({ updateFavourites, favourites, isUserLoggedIn, projects
                     // If the wanted job is in the list of job filled, we display a gray badge
                     if (project.job_titles_filled.find((jobTitleFilledId) => jobTitleFilledId === job.id)) {
                       return (
-                        <Badge key={job.name + "-" + index} color="gray" customClassName="inline-flex text-xs font-medium m-0.5">
+                        <Badge key={job.name + "-" + index} color="red" customClassName="inline-flex text-xs font-medium m-0.5">
                           {job.name}
                         </Badge>
                       );
@@ -109,6 +110,7 @@ const ListOfProjects = ({ updateFavourites, favourites, isUserLoggedIn, projects
               })}
             </div>
           </div>
+
           {/* Project's status && favourites */}
           <div className="absolute bottom-0 right-0 flex items-center gap-x-2">
             {isUserLoggedIn && (

@@ -1,33 +1,45 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 // Components
 import { InputContainer } from "@shared-components/containers";
-import { ErrorMessage } from "../error-message";
 import { Title, Paragraph } from "@shared-components/typography";
 import { Button } from "@shared-components/buttons";
-import { Loader } from "@shared-components/status";
+import { Loader, Alert } from "@shared-components/status";
 // Store
 import { useStoreActions } from "easy-peasy";
 // utils
 import { fetchJSON } from "@shared-utils";
 // types
 import { User } from "@shared-types";
+// validation
+import { logInValidation } from "@shared-validation";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
-
   const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    resolver: yupResolver(logInValidation().schema),
+    defaultValues: logInValidation().initialValues,
+    mode: "onBlur",
+  });
+
+  const onSubmit = (data: { email: string; password: string }) => {
     setIsProcessing(true);
     setError(false);
+
+    const { email, password } = data;
 
     fetchJSON("auth/login", "POST", {
       email,
@@ -48,32 +60,38 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col">
-      <Title type="h3" customClassName="mt-8 font-medium">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+      <Title type="h3" customClassName="mt-6 mb-0 font-medium">
         Log in
       </Title>
       <Title type="h6" customClassName="mb-4 lg:mb-8">
-        <div className="flex items-center">
-          <Paragraph>Need an EXPERT:MATCHER account? </Paragraph>
+        <div className="flex flex-col sm:flex-row">
+          <Paragraph size="large"> Do you need an account?</Paragraph>
           <Link href="/signup">
-            <a className="text-link-color ml-1 underline">Create an account</a>
+            <a className="text-link-color underline sm:ml-1">Create an account</a>
           </Link>
         </div>
       </Title>
-      {error && <ErrorMessage errorMessage={errorMessage} />}
+      {error && <Alert status="error" message={errorMessage} />}
       <InputContainer
         type="email"
         placeholder="email"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue("email", e.target.value)}
         name="email"
         label="Email"
+        register={register}
+        error={errors.email ? true : false}
+        errorMessage={errors.email && errors.email.message}
       />
       <InputContainer
         type="password"
         placeholder="password"
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue("password", e.target.value)}
         name="password"
         label="Password"
+        register={register}
+        error={errors.password ? true : false}
+        errorMessage={errors.password && errors.password.message}
       />
       <Button
         type="submit"

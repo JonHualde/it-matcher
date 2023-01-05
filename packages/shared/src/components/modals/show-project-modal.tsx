@@ -122,7 +122,12 @@ const ShowProjectModal = (props: LogInModalProps) => {
         </div>
 
         {/* Apply / favourite */}
-        {props.setApplications && props.applications && (
+        {props.setApplications &&
+        props.applications &&
+        // Only display the apply button if the filled job titles list misses a job title wanted by the project
+        props.selectedProject.job_titles_wanted.some(
+          (jobTitleWanted: number) => !props.selectedProject.job_titles_filled.includes(jobTitleWanted)
+        ) ? (
           <div className="flex w-full flex-col items-center justify-center pb-8">
             <select
               value={jobSelected}
@@ -155,6 +160,17 @@ const ShowProjectModal = (props: LogInModalProps) => {
             />
             <div className="relative flex items-center pl-4">
               <img src="/images/heart.png" alt="" className="rounded-md" />
+            </div>
+          </div>
+        ) : (
+          // If the project is full, display a badge
+          <div className="flex w-full flex-col items-center justify-center pb-8">
+            <div className="flex items-center justify-center">
+              <div className="flex items-center justify-center">
+                <Badge color="red" customClassName="py-2 px-4">
+                  This project is full and does not accept new members at the moment.
+                </Badge>
+              </div>
             </div>
           </div>
         )}

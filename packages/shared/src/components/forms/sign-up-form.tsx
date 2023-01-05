@@ -1,113 +1,146 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 // Components
 import { InputContainer } from "@shared-components/containers";
-import { ErrorMessage } from "../error-message";
+import { Title, Paragraph } from "@shared-components/typography";
+import { Button } from "@shared-components/buttons";
+import { Loader, Alert } from "@shared-components/status";
+// Store
+import { useStoreActions } from "easy-peasy";
+// types
+import { User } from "@shared-types";
+// utils
+import { fetchJSON } from "@shared-utils";
+// validation
+import { RegisterValidation } from "@shared-validation";
 
 const SignUpForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [linkedInUrl, setLinkedInUrl] = useState("");
-  const [instagramUsername, setInstagramUserName] = useState("");
-  const [websiteUrl, setWebsiteUrl] = useState("");
-  const [notionPageUrl, setNotionPageUrl] = useState("");
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const [isProcessing, setIsProcessing] = useState(false);
   const router = useRouter();
+  const updateAuthStatus = useStoreActions((actions: any) => actions.updateUserAuthStatus);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    resolver: yupResolver(RegisterValidation().schema),
+    defaultValues: RegisterValidation().initialValues,
+    mode: "onBlur",
+  });
+
+  const onSubmit = (data: { email: string; firstName: string; lastName: string; password: string }) => {
+    setIsProcessing(true);
     setError(false);
 
-    fetch("/api/auth/signup", {
-      method: "post",
-      headers: {
-        "Content-Type": "Application/json",
-      },
-      body: JSON.stringify({
-        email,
-        password,
-        firstname,
-        lastname,
-        linkedInUrl,
-        instagramUsername,
-        websiteUrl,
-        notionPageUrl,
-      }),
-    })
-      .then((res) => res.json())
-      .then((result) => {
-        if (result.error) throw new Error(result.errorMessage);
+    const { email, password, firstName, lastName } = data;
 
+    fetchJSON("auth/register", "POST", {
+      email,
+      password,
+      firstName,
+      lastName,
+    })
+      .then((user: User) => {
+        updateAuthStatus({ isLoggedIn: true, id: user.id });
         router.push("/profile");
       })
       .catch((err) => {
         console.error(err);
         setError(true);
         setErrorMessage(err.message);
+      })
+      .finally(() => {
+        setIsProcessing(false);
       });
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col">
-      <h3 className="mt-8 font-medium">Log in</h3>
-      <h6 className="mb-4 lg:mb-8">
-        Already have an account?
-        <Link href="/login">
-          <a className="text-link-color ml-1 underline">Log in</a>
-        </Link>
-      </h6>
-      {error && <ErrorMessage errorMessage={errorMessage} />}
-      <div className="flex flex-col lg:flex-row">
+    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+      <Title type="h3" customClassName="mt-6 mb-0 font-medium">
+        Register
+      </Title>
+      <Title type="h6" customClassName="mb-4 lg:mb-8">
+        <div className="flex flex-col sm:flex-row">
+          <Paragraph size="large"> Already have an account?</Paragraph>
+          <Link href="/login">
+            <a className="text-link-color underline sm:ml-1">Log in</a>
+          </Link>
+        </div>
+      </Title>
+      {error && <Alert status="error" message={errorMessage} />}
+      <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2 md:gap-x-2">
         <InputContainer
           type="text"
           placeholder="John"
-          onChange={(e) => setFirstname(e.target.value)}
+          onChange={(e) => setValue("firstName", e.target.value)}
           name="firstName"
           label="First name"
           width="full lg:mr-2"
+          register={register}
+          error={errors.firstName ? true : false}
+          errorMessage={errors.firstName && errors.firstName.message}
         />
         <InputContainer
           type="text"
           placeholder="Doe"
-          onChange={(e) => setLastname(e.target.value)}
+          onChange={(e) => setValue("lastName", e.target.value)}
           name="lastName"
           label="Last name"
           width="full lg:ml-2"
+          register={register}
+          error={errors.lastName ? true : false}
+          errorMessage={errors.lastName && errors.lastName.message}
         />
       </div>
-      <InputContainer type="email" placeholder="email" onChange={(e) => setEmail(e.target.value)} name="email" label="Email" />
-      <div className="flex flex-col lg:flex-row">
+      <InputContainer
+        type="email"
+        placeholder="email"
+        onChange={(e) => setValue("email", e.target.value)}
+        name="email"
+        label="Email"
+        register={register}
+        error={errors.email ? true : false}
+        errorMessage={errors.email && errors.email.message}
+      />
+      <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2 md:gap-x-2">
         <InputContainer
           type="password"
           placeholder="password"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => setValue("password", e.target.value)}
           name="password"
           label="Password"
           width="full lg:mr-2"
+          register={register}
+          error={errors.password ? true : false}
+          errorMessage={errors.password && errors.password.message}
         />
         <InputContainer
           type="password"
-          placeholder="confirmPassword"
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="confirm password"
+          onChange={(e) => setValue("confirmPassword", e.target.value)}
           name="confirmPassword"
           label="Confirm Password"
           width="full lg:ml-2"
+          register={register}
+          error={errors.confirmPassword ? true : false}
+          errorMessage={errors.confirmPassword && errors.confirmPassword.message}
         />
       </div>
-      <button
+      <Button
         type="submit"
-        className="mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3 font-medium
-        text-white hover:bg-blue-800"
-      >
-        Sign up{" "}
-      </button>
+        text={isProcessing ? <Loader border="border-b-2 border-r-2 border-white" /> : "Sign up"}
+        customClass="mt-4 h-12 flex items-center justify-center"
+        rounded="rounded-sm"
+        color="bg-blue-ocean"
+        hover="bg-blue-800"
+      />
     </form>
   );
 };

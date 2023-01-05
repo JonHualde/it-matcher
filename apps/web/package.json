@@ -11,13 +11,13 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "aws-sdk": "^2.1282.0",
     "@chakra-ui/react": "^2.4.6",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@prisma/client": "^4.5.0",
     "@types/jest": "^27.4.1",
     "@types/react-dom": "^18.0.3",
+    "aws-sdk": "^2.1282.0",
     "bcrypt": "^5.0.1",
     "cookie": "^0.4.1",
     "cookies": "^0.8.0",
@@ -33,6 +33,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-dropzone": "^14.2.3",
+    "react-hook-form": "^7.41.5",
     "react-icons": "^4.3.1",
     "react-select": "^5.7.0",
     "react-toastify": "^9.0.1",

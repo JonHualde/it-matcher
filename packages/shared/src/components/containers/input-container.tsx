@@ -2,19 +2,22 @@ import { useState, useRef } from "react";
 import { BsEye, BsEyeSlash, BsArrowCounterclockwise, BsCheck2 } from "react-icons/bs";
 import { BiCopy } from "react-icons/bi";
 import { notify } from "@shared-utils";
+import { useEffect } from "react";
 
 interface inputContainerProps {
   width?: string;
   placeholder?: string;
   name: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   type: string;
   margin?: string;
   label?: string;
   value?: string | number;
-  errors?: any;
   customClass?: string;
   disabled?: boolean;
+  register?: any;
+  error?: boolean;
+  errorMessage?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 const InputContainer = (props: inputContainerProps) => {
   const myToast = useRef<any>();
@@ -64,40 +67,40 @@ const InputContainer = (props: inputContainerProps) => {
     );
   };
 
+  const register = (props.register && props.register(props.name)) || {};
+
   return (
-    <div className={`relative ${props.margin ? props.margin : "mb-5"} flex flex-col ${props.width ? "w-" + props.width : "w-full"}`}>
-      {props.label && (
-        <label
-          htmlFor={props.name}
-          className={` ${props.errors && "text-red"}
-        font-base text-lg capitalize
-        `}
-        >
-          {props.label}
-        </label>
-      )}
-      <input
-        ref={inputRef}
-        type={props.type}
-        name={props.name}
-        placeholder={props.placeholder ? props.placeholder : ""}
-        onChange={props.onChange}
-        className={`transition-all duration-300 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500 
-          ${props.errors ? "border-red " : ""}
+    <div className={`flex flex-col ${props.margin ? props.margin : "mb-5"} ${props.width ? "w-" + props.width : "w-full"}`}>
+      <div className="relative flex flex-col">
+        {props.label && (
+          <label htmlFor={props.name} className={` ${props.error && "text-red-600"} font-base text-lg capitalize`}>
+            {props.label}
+          </label>
+        )}
+        <input
+          {...register}
+          ref={inputRef}
+          type={props.type}
+          placeholder={props.placeholder ? props.placeholder : ""}
+          onChange={props.onChange}
+          name={props.name}
+          className={`
+          ${props.error ? "border-red-600" : ""}
           ${props.customClass && props.customClass}
           text-md rounded-md border border-gray-300 px-3 py-2 text-gray-700
           ${props.disabled && "cursor-not-allowed bg-gray-100"}
         `}
-        value={props.value && props.value}
-        disabled={props.disabled ?? false}
-      />
-      {props.type === "password" && (
-        <div className="absolute right-0 top-3.5 flex h-full cursor-pointer items-center px-3">
-          {show ? <BsEyeSlash size={20} onClick={togglePasswordDisplay} /> : <BsEye size={20} onClick={togglePasswordDisplay} />}
-          {props.name === "newPassword" && passwordGenerator()}
-        </div>
-      )}
-      {props.errors && <span className="help-block text-red ml-1 text-left">{props.errors}</span>}
+          value={props.value && props.value}
+          disabled={props.disabled ?? false}
+        />
+        {props.type === "password" && (
+          <div className="absolute right-0 top-4 flex h-full cursor-pointer items-center px-3">
+            {show ? <BsEyeSlash size={20} onClick={togglePasswordDisplay} /> : <BsEye size={20} onClick={togglePasswordDisplay} />}
+            {props.name === "newPassword" && passwordGenerator()}
+          </div>
+        )}
+      </div>
+      {props.error && props.errorMessage?.length && <span className="text-red ml-1 text-left text-red-600">{props.errorMessage}</span>}
     </div>
   );
 };
