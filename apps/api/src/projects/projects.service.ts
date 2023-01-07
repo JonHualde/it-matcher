@@ -89,20 +89,28 @@ export class ProjectService {
       );
     }
 
-    // Upload files to S3
-    const projectPicture: S3UploadResponse[] =
-      await this.mediaService.uploadMedia(
-        files.project_main_picture,
-        'pictures',
-      );
-    const attachments: S3UploadResponse[] = await this.mediaService.uploadMedia(
-      files.attachments,
-      'attachments',
-    );
+    let projectPicture: string;
+    let attachmentsKeys: string[] = [];
 
-    const attachmentsKeys: string[] = attachments.map(
-      (attachment) => attachment.key,
-    );
+    // if the NODE_ENV is not dev, then upload files to S3
+    if (process.env.NODE_ENV === 'prod') {
+      const awsPictureUpload: S3UploadResponse[] =
+        await this.mediaService.uploadMedia(
+          files.project_main_picture,
+          'pictures',
+        );
+      projectPicture = awsPictureUpload[0].key;
+
+      const attachments: S3UploadResponse[] =
+        await this.mediaService.uploadMedia(files.attachments, 'attachments');
+
+      attachmentsKeys = attachments.map((attachment) => attachment.key);
+    }
+
+    if (process.env.NODE_ENV === 'dev') {
+      projectPicture = files.project_main_picture[0].path;
+      attachmentsKeys = files.attachments.map((attachment) => attachment.path);
+    }
 
     return await this.prisma.project.create({
       data: {
@@ -123,7 +131,7 @@ export class ProjectService {
         participants_ids: [],
         job_titles_filled: [],
         job_titles_wanted: project.job_titles_wanted,
-        project_main_picture: projectPicture[0].key,
+        project_main_picture: projectPicture,
         attachments: attachmentsKeys,
       },
     });

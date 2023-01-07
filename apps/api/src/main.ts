@@ -3,10 +3,16 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { AllExceptionsFilter } from './utils/error.filter';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { ServeStaticModule } from '@nestjs/serve-static';
+
 import {
   CorsOptions,
   CorsOptionsDelegate,
 } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { join } from 'path';
+const databaseUrl = process.env.DATABASE_URL;
+console.log('databaseUrl', databaseUrl);
 
 function getCors():
   | boolean
@@ -36,14 +42,17 @@ function getCors():
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: getCors(),
+  });
+  const { httpAdapter } = app.get(HttpAdapterHost);
+
+  app.useStaticAssets(process.cwd() + '/uploads', {
+    prefix: '/uploads/',
   });
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.use(cookieParser());
-
-  const { httpAdapter } = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
   await app.listen(8000);

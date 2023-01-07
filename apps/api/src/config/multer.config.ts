@@ -1,6 +1,13 @@
 import { extname } from 'path';
-import { memoryStorage } from 'multer';
+import { memoryStorage, diskStorage } from 'multer';
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { existsSync, mkdirSync } from 'fs';
+import { v4 as uuidv4 } from 'uuid';
+import * as dotenv from 'dotenv';
+
+dotenv.config({
+  path: `${process.cwd()}/environment/${process.env.NODE_ENV}.env`,
+});
 
 // Multer configuration
 const multerConfig = {
@@ -41,26 +48,28 @@ export const multerOptions = () => ({
     }
   },
   // Storage properties
-  storage: memoryStorage(),
-});
+  storage:
+    process.env.NODE_ENV === 'prod'
+      ? memoryStorage()
+      : diskStorage({
+          // Destination storage path details
+          destination: (req: any, file: any, cb: any) => {
+            const uploadPath =
+              multerConfig[
+                isPicture(file.fieldname) ? 'destPictures' : 'destAttachments'
+              ];
 
-// storage: diskStorage({
-//   // Destination storage path details
-//   destination: (req: any, file: any, cb: any) => {
-//     const uploadPath =
-//       multerConfig[
-//         isPicture(file.fieldname) ? 'destPictures' : 'destAttachments'
-//       ];
-//     // Create folder if doesn't exist
-//     if (!existsSync(uploadPath)) {
-//       mkdirSync(uploadPath);
-//     }
-//     cb(null, uploadPath);
-//   },
-//   // File modification details
-//   filename: (req: any, file: any, cb: any) => {
-//     file.updatedFilename = `${uuid()}${extname(file.originalname)}`;
-//     // Calling the callback passing the random name generated with the original extension name
-//     cb(null, `${uuid()}${extname(file.originalname)}`);
-//   },
-// }),
+            // Create folder if doesn't exist
+            if (!existsSync(uploadPath)) {
+              mkdirSync(uploadPath);
+            }
+            cb(null, uploadPath);
+          },
+          // File modification details
+          filename: (req: any, file: any, cb: any) => {
+            file.updatedFilename = `${uuidv4()}${extname(file.originalname)}`;
+            // Calling the callback passing the random name generated with the original extension name
+            cb(null, `${uuidv4()}${extname(file.originalname)}`);
+          },
+        }),
+});

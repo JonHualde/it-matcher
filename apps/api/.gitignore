@@ -394,5 +394,13 @@ Temporary Items
 
 =======
 # Local
-.env
+**/*.env
+.dev.env
+.prod.env
+.release.env
+./.dev.env
+./.prod.env
+./.release.env
 dist
+upload/attachments
+upload/pictures

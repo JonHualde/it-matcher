@@ -9,7 +9,11 @@ import { UserModule } from './user/user.module';
 import { JobTitlesModule } from './job-titles/job-titles.module';
 import { ToolsAndTechnologiesModule } from './tools-and-technologies/tools-and-technologies.module';
 import { MediaModule } from './media/media.module';
+import * as dotenv from 'dotenv';
 
+dotenv.config({
+  path: `${process.cwd()}/environment/${process.env.NODE_ENV}.env`,
+});
 @Module({
   imports: [
     AuthModule,
@@ -25,3 +29,11 @@ import { MediaModule } from './media/media.module';
   providers: [AppService],
 })
 export class AppModule {}
+
+// ConfigModule.forRoot({
+//   isGlobal: true,
+//   envFilePath:
+//     process.env.NODE_ENV === 'dev'
+//       ? join(process.cwd(), 'environment', 'dev.env')
+//       : join(process.cwd(), 'environment', 'prod.env'),
+// }),
