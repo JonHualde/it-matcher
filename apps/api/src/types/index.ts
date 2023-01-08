@@ -1,2 +1,10 @@
 export type { default as S3UploadResponse } from './S3-upload-response.types';
 export type { default as UserResponse } from './user-response.types';
+export type { default as ProjectTypes } from './project.types';
+export type { default as User } from './user.types';
+export type { default as GetUserReceivedApplicationsResponse } from './received-applications.types';
+export type { default as UserSentApplicationsResponse } from './sent-applications.types';
+export type { default as ApplicationsFiltersTypes } from './application-filter.types';
+export type { default as ApplicationTypes } from './create-new-application.types';
+export type { default as ToolsAndTechnologiesTypes } from './tools_and_technologies.types';
+export type { default as BasicUserDetails } from './basic-user-details.types';

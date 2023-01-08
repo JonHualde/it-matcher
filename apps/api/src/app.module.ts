@@ -14,6 +14,8 @@ import * as dotenv from 'dotenv';
 dotenv.config({
   path: `${process.cwd()}/environment/${process.env.NODE_ENV}.env`,
 });
+
+console.log('node env app: ', process.env.NODE_ENV);
 @Module({
   imports: [
     AuthModule,

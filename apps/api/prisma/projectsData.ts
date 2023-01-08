@@ -26,12 +26,12 @@ const attachmentUrls = [
 const data = () => ({
   user_id:
     Math.floor(Math.random() * (lastUserId - firstUserId + 1)) + firstUserId,
-  project_name: faker.name.findName(),
+  project_name: faker.name.fullName(),
   starting_on: faker.date.between('2022-06-01', '2022-08-05'),
   estimated_time_duration: faker.datatype.number({ max: 10 }),
   estimated_time_duration_metric:
     durationMetric[Math.floor(Math.random() * 2) + 1],
-  full_name: faker.name.findName(),
+  full_name: faker.name.fullName(),
   description: faker.lorem.paragraph(10),
   difficulty: difficulty[Math.floor(Math.random() * 3) + 1],
   type: type[Math.floor(Math.random() * 2) + 1],

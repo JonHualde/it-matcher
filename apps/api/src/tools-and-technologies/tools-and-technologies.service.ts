@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 // types
-import { ToolsAndTechnologiesTypes } from '@shared-types';
+import { ToolsAndTechnologiesTypes } from '@types';
 
 @Injectable()
 export class ToolsAndTechnologiesService {

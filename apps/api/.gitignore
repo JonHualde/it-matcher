@@ -394,7 +394,6 @@ Temporary Items
 
 =======
 # Local
-**/*.env
 environment/dev.env
 environment/prod.env
 environment/stating.env

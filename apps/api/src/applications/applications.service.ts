@@ -19,8 +19,7 @@ import {
   ProjectTypes,
   ApplicationTypes,
   User,
-  BasicUserDetails,
-} from '@shared-types';
+} from '@types';
 
 @Injectable()
 export class ApplicationService {

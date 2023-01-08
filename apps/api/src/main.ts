@@ -4,14 +4,13 @@ import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { AllExceptionsFilter } from './utils/error.filter';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { ServeStaticModule } from '@nestjs/serve-static';
 
 import {
   CorsOptions,
   CorsOptionsDelegate,
 } from '@nestjs/common/interfaces/external/cors-options.interface';
-import { join } from 'path';
 const databaseUrl = process.env.DATABASE_URL;
+
 console.log('databaseUrl', databaseUrl);
 
 function getCors():

@@ -15,7 +15,6 @@
     "paths": {
       "@config/*": ["./src/config/*"],
       "@types": ["./src/types/index.ts"],
-      "@shared-types": ["./../../packages/shared/src/types/index.ts"],
       "@decorators/*": ["./src/utils/decorators/*"],
     }
   }

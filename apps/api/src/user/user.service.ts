@@ -4,7 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { MediaService } from 'src/media/media.service';
 // Types
 import { S3UploadResponse, UserResponse } from '@types';
-import { BasicUserDetails } from '@shared-types';
+import { BasicUserDetails } from '@types';
 // dtos
 import { UpdateUserDetailsDto } from './dtos/account-details.dto';
 import { BasicDetailsDto } from './dtos/basic-details.dto';
