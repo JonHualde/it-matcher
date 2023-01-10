@@ -396,7 +396,7 @@ Temporary Items
 # Local
 environment/dev.env
 environment/prod.env
-environment/stating.env
+environment/staging.env
 dist
 uploads/attachments
 uploads/pictures

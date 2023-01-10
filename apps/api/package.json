@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "nest build",
+    "build": "NODE_ENV=prod nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "prisma:create": "npm run prisma:generate && npm run prisma:push && npm run prisma:seed",
     "prisma:generate": "dotenv -e ./environment/dev.env -- npx prisma generate",
