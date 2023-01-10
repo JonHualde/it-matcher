@@ -23,6 +23,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
+# docker
+./docker/postgres-data
+docker/postgres-data/*
+docker/**
+./docker/**
+
 # local env files
 .env.local
 .env.development.local
