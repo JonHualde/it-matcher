@@ -133,7 +133,7 @@ const Search = ({ pathname }: any) => {
   useEffect(() => {
     getJobTitles();
     getProjects();
-  }, [getProjects]);
+  }, []);
 
   const queryBuilder = (): void => {
     // builder a query string from the filters object and return it

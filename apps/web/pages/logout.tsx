@@ -14,7 +14,7 @@ const Profile = (props: any) => {
     updateAuthStatus(false);
     resetAuthAndUserData();
     router.push("/");
-  }, [updateAuthStatus, resetAuthAndUserData, router]);
+  }, []);
 
   return <PublicPageLayout>Logout</PublicPageLayout>;
 };
