@@ -65,13 +65,13 @@ const LoginForm = () => {
         Log in
       </Title>
       <Title type="h6" customClassName="mb-4 lg:mb-8">
-        <div className="flex flex-col sm:flex-row">
-          <Paragraph size="large"> Do you need an account?</Paragraph>
-          <Link href="/signup">
-            <a className="text-link-color underline sm:ml-1">Create an account</a>
-          </Link>
-        </div>
+        Do you need an account?
       </Title>
+      <div className="flex flex-col sm:flex-row">
+        <Link href="/signup">
+          <a className="text-link-color underline sm:ml-1">Create an account</a>
+        </Link>
+      </div>
       {error && <Alert status="error" message={errorMessage} />}
       <InputContainer
         type="email"

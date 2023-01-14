@@ -1,11 +1,10 @@
-import { ReactElement } from "react";
 // Components
 import { Icon } from "@shared-components/icons";
 import { BsXLg } from "react-icons/bs";
 
 interface AlertProps {
   status: "success" | "error" | "warning" | "info";
-  message: string | string[] | ReactElement;
+  message: string | string[];
   close?: () => void;
 }
 

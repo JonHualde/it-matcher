@@ -172,9 +172,7 @@ const MediaUpload = (props: MediaUploadProps) => {
         <input type="file" name={props.name} {...getInputProps()} />
         <div className="flex flex-col space-y-2">
           <Paragraph customClassName="text-center text-gray-600">Drag and drop some files here, or click to select files</Paragraph>
-          <Paragraph customClassName="text-center text-gray-600">
-            <>File upload limit: {props.maxFiles ? props.maxFiles : 1}</>
-          </Paragraph>
+          <Paragraph customClassName="text-center text-gray-600">{`File upload limit: ${props.maxFiles ? props.maxFiles : 1}`}</Paragraph>
         </div>
       </div>
       {pastUploadedFiles && pastUploadedFiles.length > 0 && (

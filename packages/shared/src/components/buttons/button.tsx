@@ -1,6 +1,6 @@
-import { ReactElement } from "react";
+import { ReactNode } from "react";
 interface ButtonProps {
-  text: string | ReactElement;
+  text: string | ReactNode | any;
   color?: string;
   hover?: string;
   textColor?: string;

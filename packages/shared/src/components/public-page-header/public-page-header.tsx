@@ -43,7 +43,7 @@ const PublicPageHeader = () => {
               color="bg-transparent"
               textColor="text-blue-ocean"
               hover="text-blue-800"
-              borderColor="border-blue-ocean"
+              border="border-2 border-blue-ocean"
               action={() => router.push("/login")}
             />
             <Button
@@ -52,7 +52,7 @@ const PublicPageHeader = () => {
               hover="bg-blue-800"
               textColor="text-white"
               margin="ml-4 "
-              borderColor="border-blue-ocean"
+              border="border-2 border-blue-ocean"
               action={() => router.push("/signup")}
             />
           </>
@@ -66,7 +66,7 @@ const PublicPageHeader = () => {
               color="bg-blue-ocean"
               hover="bg-blue-800"
               textColor="text-white"
-              borderColor="border-blue-ocean"
+              border="border-2 border-blue-ocean"
               action={() => logout()}
             />
           </>

@@ -5,12 +5,11 @@ import PrivatePageHeader from "../private-page-header/private-page-header";
 import PrivatePageSidebar from "../private-page-sidebar/private-page-sidebar";
 import { Title } from "@shared-components/typography";
 import { ToastContainer, Zoom } from "react-toastify";
-import { Button } from "@shared-components/buttons";
 // Hooks
 import { useTokenVerification } from "@shared-hooks";
 
 interface PublicPageLayoutProps {
-  children?: ReactNode;
+  children?: any;
   pathname?: any;
   title: string;
   cta?: ReactElement;
@@ -42,7 +41,7 @@ const PrivatePageLayout = (props: PublicPageLayoutProps) => {
       />
       <PrivatePageHeader />
       <div className="flex h-[calc(100%-60px)]">
-        <PrivatePageSidebar pathname={props.pathname} />
+        {/* <PrivatePageSidebar pathname={props.pathname} />
         <div className="flex w-full flex-col overflow-y-auto px-10 py-8">
           <div className="flex items-center justify-between">
             <Title type="h2" customClassName="text-blue-dimmed my-0 mb-4">
@@ -51,7 +50,7 @@ const PrivatePageLayout = (props: PublicPageLayoutProps) => {
             {props.cta && props.cta}
           </div>
           {props.children}
-        </div>
+        </div> */}
       </div>
     </div>
   );

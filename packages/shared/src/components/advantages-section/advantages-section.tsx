@@ -30,7 +30,7 @@ const AdvantagesSection = () => {
                 color="bg-blue-ocean"
                 hover="bg-blue-800"
                 textColor="text-white"
-                borderColor="border-blue-ocean"
+                border="border-2 border-blue-ocean"
                 action={() => router.push("/signup")}
               />
             </div>
@@ -56,7 +56,7 @@ const AdvantagesSection = () => {
                 color="bg-transparent"
                 textColor="text-blue-ocean"
                 hover="text-blue-800"
-                borderColor="border-blue-ocean"
+                border="border-2 border-blue-ocean"
                 action={() => router.push("/signup")}
               />
             </div>

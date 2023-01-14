@@ -112,90 +112,92 @@ const Requests = (props: { pathname: string }) => {
 
   return (
     <PrivatePageLayout title="Applications Sent" pathname={props.pathname}>
-      {showAlert && (
-        <Alert
-          close={() => setShowAlert(false)}
-          status="info"
-          message="If a project is deleted, all applications associated with that project will also be deleted. Keep in mind that applications are temporary and may not be visible at all times."
+      {/* <>
+        {showAlert && (
+          <Alert
+            close={() => setShowAlert(false)}
+            status="info"
+            message="If a project is deleted, all applications associated with that project will also be deleted. Keep in mind that applications are temporary and may not be visible at all times."
+          />
+        )}
+        {error && <Alert status="error" close={() => setError(false)} message={errorMessage} />}
+        {selectedProject && (
+          <ShowProjectModal jobTitles={jobTitles} selectedProject={selectedProject} close={() => setSelectedProject(null)} />
+        )}
+        <FilterApplications
+          isFiltering={isFiltering}
+          filters={filters}
+          updateFilters={(e) => updateFilters(e)}
+          applicationsFilter={applicationsFilter}
         />
-      )}
-      {error && <Alert status="error" close={() => setError(false)} message={errorMessage} />}
-      {selectedProject && (
-        <ShowProjectModal jobTitles={jobTitles} selectedProject={selectedProject} close={() => setSelectedProject(null)} />
-      )}
-      <FilterApplications
-        isFiltering={isFiltering}
-        filters={filters}
-        updateFilters={(e) => updateFilters(e)}
-        applicationsFilter={applicationsFilter}
-      />
-      {isLoading ? (
-        <Box>
-          <>
-            <Paragraph customClassName="flex items-center m-0 p-0 text-blue-dimmed italic text-xl font-semibold mb-4">
-              Loading applications...
-            </Paragraph>
-            <Loader size={10} />
-          </>
-        </Box>
-      ) : (
-        <Table
-          tableHeaders={{
-            project: "Project name",
-            created_at: "Sent at",
-            status: "Status",
-            role: "Role",
-            // Element added to the end of the table row, not part of applications data
-            action: "Action",
-          }}
-          tableBody={{
-            project: (project: ProjectTypes) => (
-              <Paragraph
-                click={() => setSelectedProject(project)}
-                customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
-              >
-                {project.full_name}
+        {isLoading ? (
+          <Box>
+            <>
+              <Paragraph customClassName="flex items-center m-0 p-0 text-blue-dimmed italic text-xl font-semibold mb-4">
+                Loading applications...
               </Paragraph>
-            ),
+              <Loader size={10} />
+            </>
+          </Box>
+        ) : (
+          <Table
+            tableHeaders={{
+              project: "Project name",
+              created_at: "Sent at",
+              status: "Status",
+              role: "Role",
+              // Element added to the end of the table row, not part of applications data
+              action: "Action",
+            }}
+            tableBody={{
+              project: (project: ProjectTypes) => (
+                <Paragraph
+                  click={() => setSelectedProject(project)}
+                  customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
+                >
+                  {project.full_name}
+                </Paragraph>
+              ),
 
-            created_at: (value) => new Date(value).toLocaleString(),
-            status: (value) => (
-              <Badge customClassName="capitalize w-min" color={value === "Pending" ? "yellow" : value === "Accepted" ? "green" : "red"}>
-                {value}
-              </Badge>
-            ),
-            role: (item: UserSentApplicationsResponse) => (
-              <Italic customClassName="text-sm capitalize w-min">
-                {jobTitles.find((jobTitle) => jobTitle.id === item.job_title_id)?.name ?? ""}
-              </Italic>
-            ),
-            action: (application: UserSentApplicationsResponse): ReactElement | string => {
-              if (application.status === "Pending") {
-                return (
-                  <Button
-                    customClass="w-min"
-                    padding="px-4 py-1.5"
-                    text={"Delete"}
-                    rounded="rounded-sm"
-                    type="button"
-                    color="bg-red-100"
-                    textColor="text-red-800"
-                    hover="hover:scale-105 transform transition duration-100 ease-in-out"
-                    border="border border-red-800"
-                    action={() => {
-                      deleteApplication(application.id);
-                    }}
-                  />
-                );
-              }
+              created_at: (value) => new Date(value).toLocaleString(),
+              status: (value) => (
+                <Badge customClassName="capitalize w-min" color={value === "Pending" ? "yellow" : value === "Accepted" ? "green" : "red"}>
+                  {value}
+                </Badge>
+              ),
+              role: (item: UserSentApplicationsResponse) => (
+                <Italic customClassName="text-sm capitalize w-min">
+                  {jobTitles.find((jobTitle) => jobTitle.id === item.job_title_id)?.name ?? ""}
+                </Italic>
+              ),
+              action: (application: UserSentApplicationsResponse): ReactElement | string => {
+                if (application.status === "Pending") {
+                  return (
+                    <Button
+                      customClass="w-min"
+                      padding="px-4 py-1.5"
+                      text={"Delete"}
+                      rounded="rounded-sm"
+                      type="button"
+                      color="bg-red-100"
+                      textColor="text-red-800"
+                      hover="hover:scale-105 transform transition duration-100 ease-in-out"
+                      border="border border-red-800"
+                      action={() => {
+                        deleteApplication(application.id);
+                      }}
+                    />
+                  );
+                }
 
-              return "-";
-            },
-          }}
-          tableData={filteredApplications.length > 0 ? filteredApplications : applications}
-          emptyData="There is no applications to show."
-        />
-      )}{" "}
+                return "-";
+              },
+            }}
+            tableData={filteredApplications.length > 0 ? filteredApplications : applications}
+            emptyData="There is no applications to show."
+          />
+        )}
+      </> */}
     </PrivatePageLayout>
   );
 };

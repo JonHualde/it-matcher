@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import FilterApplications from "shared/src/components/forms/filter-applications";
 import { PrivatePageLayout } from "@shared-components/layouts";
-import { ErrorMessage } from "@shared-components/error-message";
 import { Table } from "@shared-components/tables";
 import { Badge, Loader, Alert } from "@shared-components/status";
 import { Box } from "@shared-components/box";
@@ -133,80 +132,82 @@ const ApplicationsReceived = (props: { pathname: string }) => {
 
   return (
     <PrivatePageLayout title="Applications Received" pathname={props.pathname}>
-      {showAlert && (
-        <Alert
-          close={() => setShowAlert(false)}
-          status="info"
-          message="If you accept an application for a specific role in a project, all other applications for that same role in the same project will be automatically rejected."
+      {/* <>
+        {showAlert && (
+          <Alert
+            close={() => setShowAlert(false)}
+            status="info"
+            message="If you accept an application for a specific role in a project, all other applications for that same role in the same project will be automatically rejected."
+          />
+        )}
+        {error && <Alert status="error" close={() => setError(false)} message={errorMessage} />}
+        {selectedUser && <ShowUserModal user={selectedUser} close={() => setSelectedUser(null)} />}
+        {selectedProject && (
+          <ShowProjectModal jobTitles={jobTitles} selectedProject={selectedProject} close={() => setSelectedProject(null)} />
+        )}
+        <FilterApplications
+          isFiltering={isFiltering}
+          filters={filters}
+          updateFilters={(e) => updateFilters(e)}
+          applicationsFilter={applicationsFilter}
         />
-      )}
-      {error && <Alert status="error" close={() => setError(false)} message={errorMessage} />}
-      {selectedUser && <ShowUserModal user={selectedUser} close={() => setSelectedUser(null)} />}
-      {selectedProject && (
-        <ShowProjectModal jobTitles={jobTitles} selectedProject={selectedProject} close={() => setSelectedProject(null)} />
-      )}
-      <FilterApplications
-        isFiltering={isFiltering}
-        filters={filters}
-        updateFilters={(e) => updateFilters(e)}
-        applicationsFilter={applicationsFilter}
-      />
-      {isLoading ? (
-        <Box border="border border-blue-ocean">
-          <>
-            <Paragraph customClassName="flex items-center m-0 p-0 text-blue-dimmed italic text-xl font-semibold mb-4">
-              Loading applications...
-            </Paragraph>
-            <Loader size={10} />
-          </>
-        </Box>
-      ) : (
-        <Table
-          tableHeaders={{
-            user: "Applicant name",
-            project: "Project name",
-            created_at: "Sent at",
-            role: "Role",
-            status: "Status",
-            // Element added to the end of the table row, not part of applications data
-            action: "Action",
-          }}
-          tableBody={{
-            user: (user: BasicUserDetails) => (
-              <Paragraph
-                click={() => setSelectedUser(user)}
-                customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
-              >
-                {user.first_name + " " + user.last_name}
+        {isLoading ? (
+          <Box border="border border-blue-ocean">
+            <>
+              <Paragraph customClassName="flex items-center m-0 p-0 text-blue-dimmed italic text-xl font-semibold mb-4">
+                Loading applications...
               </Paragraph>
-            ),
-            project: (project: ProjectTypes) => (
-              <Paragraph
-                click={() => setSelectedProject(project)}
-                customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
-              >
-                {project.full_name}
-              </Paragraph>
-            ),
-            created_at: (value) => new Date(value).toLocaleString(),
-            role: (item: GetUserReceivedApplicationsResponse) => (
-              <Italic customClassName="text-sm capitalize w-min">
-                {jobTitles.find((jobTitle) => jobTitle.id === item.job_title_id)?.name ?? ""}
-              </Italic>
-            ),
-            status: (value) => (
-              <Badge customClassName="capitalize w-min" color={value === "Pending" ? "yellow" : value === "Accepted" ? "green" : "red"}>
-                {value}
-              </Badge>
-            ),
-            action: (item: GetUserReceivedApplicationsResponse) => (
-              <ApplicationTableButtons item={item} action={(item, status) => updateApplicationStatus(item, status)} />
-            ),
-          }}
-          tableData={filteredApplications.length > 0 ? filteredApplications : applications}
-          emptyData="There is no applications to show."
-        />
-      )}
+              <Loader size={10} />
+            </>
+          </Box>
+        ) : (
+          <Table
+            tableHeaders={{
+              user: "Applicant name",
+              project: "Project name",
+              created_at: "Sent at",
+              role: "Role",
+              status: "Status",
+              // Element added to the end of the table row, not part of applications data
+              action: "Action",
+            }}
+            tableBody={{
+              user: (user: BasicUserDetails) => (
+                <Paragraph
+                  click={() => setSelectedUser(user)}
+                  customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
+                >
+                  {user.first_name + " " + user.last_name}
+                </Paragraph>
+              ),
+              project: (project: ProjectTypes) => (
+                <Paragraph
+                  click={() => setSelectedProject(project)}
+                  customClassName="cursor-pointer text-blue-dimmed hover:underline hover:text-blue-500"
+                >
+                  {project.full_name}
+                </Paragraph>
+              ),
+              created_at: (value) => new Date(value).toLocaleString(),
+              role: (item: GetUserReceivedApplicationsResponse) => (
+                <Italic customClassName="text-sm capitalize w-min">
+                  {jobTitles.find((jobTitle) => jobTitle.id === item.job_title_id)?.name ?? ""}
+                </Italic>
+              ),
+              status: (value) => (
+                <Badge customClassName="capitalize w-min" color={value === "Pending" ? "yellow" : value === "Accepted" ? "green" : "red"}>
+                  {value}
+                </Badge>
+              ),
+              action: (item: GetUserReceivedApplicationsResponse) => (
+                <ApplicationTableButtons item={item} action={(item, status) => updateApplicationStatus(item, status)} />
+              ),
+            }}
+            tableData={filteredApplications.length > 0 ? filteredApplications : applications}
+            emptyData="There is no applications to show."
+          />
+        )}
+      </> */}
     </PrivatePageLayout>
   );
 };

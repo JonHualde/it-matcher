@@ -57,7 +57,7 @@ const PublicPageMobileHeader = () => {
                 textColor="text-blue-ocean"
                 hover="text-blue-800"
                 margin="text-2xl"
-                borderColor="border-blue-ocean"
+                border="border-2 border-blue-ocean"
                 action={() => router.push("/login")}
               />
               <Button
@@ -66,7 +66,7 @@ const PublicPageMobileHeader = () => {
                 hover="bg-blue-800"
                 textColor="text-white"
                 margin="mt-8 text-2xl"
-                borderColor="border-blue-ocean"
+                border="border-2 border-blue-ocean"
                 action={() => router.push("/signup")}
               />
             </>
@@ -78,7 +78,7 @@ const PublicPageMobileHeader = () => {
             hover="bg-blue-800"
             textColor="text-white"
             margin="text-2xl"
-            borderColor="border-blue-ocean"
+            border="border-2 border-blue-ocean"
             action={() => logout()}
           />
         </div>

@@ -109,28 +109,30 @@ const Profile = (props: ProfileProps) => {
 
   return (
     <PrivatePageLayout pathname={props.pathname} title={"Edit Information"}>
-      {error && <ErrorMessage errorMessage={errorMessage} />}
-      {isLoading ? (
-        <Box>
+      {/* <>
+        {error && <ErrorMessage errorMessage={errorMessage} />}
+        {isLoading ? (
+          <Box>
+            <>
+              <Paragraph customClassName="flex items-center m-0 p-0 text-blue-dimmed italic text-xl font-semibold mb-4">
+                Loading your account details...
+              </Paragraph>
+              <Loader size={10} />
+            </>
+          </Box>
+        ) : (
           <>
-            <Paragraph customClassName="flex items-center m-0 p-0 text-blue-dimmed italic text-xl font-semibold mb-4">
-              Loading your account details...
-            </Paragraph>
-            <Loader size={10} />
+            <UploadProfilePictureForm setUserData={setUserData} profilePicture={userData.profile_picture_ref as string} />
+            <AccountInformationForm
+              isSubmitting={isSubmitting}
+              handleSubmit={handleSubmit}
+              userData={userData}
+              updateUserData={updateUserData}
+            />
+            <UpdatePasswordForm />
           </>
-        </Box>
-      ) : (
-        <>
-          <UploadProfilePictureForm setUserData={setUserData} profilePicture={userData.profile_picture_ref as string} />
-          <AccountInformationForm
-            isSubmitting={isSubmitting}
-            handleSubmit={handleSubmit}
-            userData={userData}
-            updateUserData={updateUserData}
-          />
-          <UpdatePasswordForm />
-        </>
-      )}
+        )}
+      </> */}
     </PrivatePageLayout>
   );
 };

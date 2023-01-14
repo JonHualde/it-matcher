@@ -1,65 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { useFormik } from "formik";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-
 // components
 import { ErrorMessage } from "../error-message";
 import { InputContainer } from "@shared-components/containers";
+// validation
+import { ContactFormValidation } from "@shared-validation";
 
 const ContactForm = () => {
   const [error, setError] = useState<boolean>(false);
-  const [messageSent, setMessageSent] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<any>(
+  const [errorMessage, setErrorMessage] = useState<string>(
     "An error has occurred when we were sending the form. Please reload the page an retry."
   );
+  const [messageSent, setMessageSent] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const validationSchema = Yup.object().shape({
-    senderEmail: Yup.string().email("Email not valid").required("Email is required"),
-    firstname: Yup.string()
-      .required("A first name is required")
-      .min(2, "The first name must be 2 characters long minimum")
-      .max(50, "The first name cannot exceed 50 characters"),
-    lastname: Yup.string()
-      .required("A last name is required")
-      .min(2, "The last name must be 2 characters long minimum")
-      .max(50, "The last name cannot exceed 50 characters"),
-    message: Yup.string()
-      .required("A message is required")
-      .min(10, "The message field must be 10 characters long minimum")
-      .max(5000, "The message field cannot exceed 5000 characters"),
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+  } = useForm({
+    resolver: yupResolver(ContactFormValidation().schema),
+    defaultValues: ContactFormValidation().initialValues,
+    mode: "onBlur",
   });
 
-  const { handleSubmit, handleChange, values, errors, touched, isSubmitting, resetForm } = useFormik({
-    initialValues: {
-      firstname: "",
-      lastname: "",
-      message: "",
-      senderEmail: "",
-    },
-    validationSchema,
-    onSubmit: async (values: any, { resetForm }) => {
-      console.log(values);
-      return;
-    },
-  });
+  const onSubmit = (data: any) => {
+    console.log(data);
+  };
 
   return (
     <React.Fragment>
-      <div
-        className="my-4
-        mx-auto
-        flex
-			w-full
-			max-w-screen-lg
-			items-center
-			justify-center
-			rounded-lg
-            px-4
-			filter
-			md:my-8
-			lg:my-12"
-      >
-        <form onSubmit={handleSubmit} className="formContainer w-full max-w-xl rounded-xl border-2 border-gray-200 px-8 py-8 shadow-lg">
+      <div className="my-4 mx-auto flex w-full max-w-screen-lg items-center justify-center rounded-lg px-4 filter md:my-8 lg:my-12">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="formContainer w-full max-w-xl rounded-xl border-2 border-gray-200 px-8 py-8 shadow-lg"
+        >
           <h3 className="mb-6 mt-0  text-left">Contact us</h3>
 
           {error && <ErrorMessage errorMessage={errorMessage} />}
@@ -68,22 +46,24 @@ const ContactForm = () => {
             <InputContainer
               type="text"
               placeholder="john"
-              onChange={handleChange}
-              value={values.firstname}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue("firstname", e.target.value)}
               name="firstname"
               label="First name"
-              errors={errors.firstname}
+              register={register}
+              error={errors.firstname ? true : false}
+              errorMessage={errors.firstname && errors.firstname.message}
             />
           </div>
           <div className="form-group relative flex flex-col">
             <InputContainer
               type="text"
               placeholder="Doe"
-              onChange={handleChange}
-              value={values.lastname}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue("lastname", e.target.value)}
               name="lastname"
               label="Last name"
-              errors={errors.lastname}
+              register={register}
+              error={errors.lastname ? true : false}
+              errorMessage={errors.lastname && errors.lastname.message}
             />
           </div>
 
@@ -91,22 +71,24 @@ const ContactForm = () => {
             <InputContainer
               type="email"
               placeholder="email"
-              onChange={handleChange}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue("senderEmail", e.target.value)}
               name="senderEmail"
-              value={values.senderEmail}
               label="Email"
-              errors={errors.senderEmail}
+              register={register}
+              error={errors.senderEmail ? true : false}
+              errorMessage={errors.senderEmail && errors.senderEmail.message}
             />
           </div>
           <div className="form-group relative flex flex-col">
             <InputContainer
               type="text"
               placeholder="Your message"
-              onChange={handleChange}
-              value={values.message}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue("message", e.target.value)}
               name="message"
               label="Your message"
-              errors={errors.message}
+              register={register}
+              error={errors.message ? true : false}
+              errorMessage={errors.message && errors.message.message}
             />
           </div>
 
@@ -118,7 +100,7 @@ const ContactForm = () => {
               className="mt-4 flex w-full justify-center rounded-sm bg-blue-ocean py-3 font-medium
           text-white hover:bg-blue-800"
             >
-              {isSubmitting ? "Sending message..." : "Send enquiry"}
+              {isProcessing ? "Sending message..." : "Send enquiry"}
             </button>
           </div>
         </form>

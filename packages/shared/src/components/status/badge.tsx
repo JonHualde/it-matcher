@@ -1,9 +1,9 @@
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 
 interface BadgeProps {
   color?: "green" | "red" | "yellow" | "blue" | "gray";
   customClassName?: string;
-  children: string | number | ReactElement;
+  children: string | number | ReactNode;
   rounded?: "sm" | "md" | "lg" | "xl" | "full";
   icon?: ReactElement;
   id?: string;
@@ -44,8 +44,10 @@ const Badge = (props: BadgeProps) => {
 
   return (
     <div onClick={props.click} id={props.id && props.id} className={generateClassName()}>
-      {props.children}
-      {props.icon && props.icon}
+      <>
+        {props.children}
+        {props.icon && props.icon}
+      </>
     </div>
   );
 };

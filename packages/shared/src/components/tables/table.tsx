@@ -1,14 +1,14 @@
-import { ReactElement } from "react";
+import { ReactNode } from "react";
 import { Box } from "@shared-components/box";
 import { Icon } from "@shared-components/icons";
 import { Paragraph } from "@shared-components/typography";
 
 interface TableProps {
   tableHeaders: {
-    [key: string]: string | ReactElement;
+    [key: string]: any;
   };
   tableBody: {
-    [key: string]: (value?: any) => string | ReactElement;
+    [key: string]: (value?: any) => any;
   };
   tableData: Array<{ [key: string]: any }>;
   emptyData: string;

@@ -2,7 +2,7 @@ import { Popover, PopoverTrigger, PopoverContent, PopoverBody, PopoverCloseButto
 import { ReactNode } from "react";
 
 interface PopoverElementProps {
-  icon: ReactNode;
+  icon: ReactNode | any;
   elements: Array<{
     content: ReactNode | string;
     action: () => void;

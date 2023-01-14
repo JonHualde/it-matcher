@@ -112,60 +112,62 @@ const Projects = (props: any) => {
 
   return (
     <PrivatePageLayout title="My projects" pathname={props.pathname} cta={cta()}>
-      {error && <ErrorMessage errorMessage={errorMessage} />}
-      {selectedUser && <ShowUserModal user={selectedUser} close={() => setSelectedUser(null)} />}
-      {isLoading ? (
-        <Box border="border border-blue-ocean">
-          <>
-            <Paragraph customClassName="flex items-center m-0 p-0 text-blue-dimmed italic text-xl font-semibold mb-4">
-              Loading your projects...
-            </Paragraph>
-            <Loader size={10} />
-          </>
-        </Box>
-      ) : (
-        <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
-          {!!projects.length &&
-            projects.map((project: any, index: number) => (
-              <ProjectCard
-                setSelectedUser={(user: BasicUserDetails) => setSelectedUser(user)}
-                project={project}
-                key={index}
-                openDeleteProjectModal={openDeleteProjectModal}
-                openUpdateProjectModal={openUpdateProjectModal}
+      {/* <>
+        {error && <ErrorMessage errorMessage={errorMessage} />}
+        {selectedUser && <ShowUserModal user={selectedUser} close={() => setSelectedUser(null)} />}
+        {isLoading ? (
+          <Box border="border border-blue-ocean">
+            <>
+              <Paragraph customClassName="flex items-center m-0 p-0 text-blue-dimmed italic text-xl font-semibold mb-4">
+                Loading your projects...
+              </Paragraph>
+              <Loader size={10} />
+            </>
+          </Box>
+        ) : (
+          <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-2">
+            {!!projects.length &&
+              projects.map((project: any, index: number) => (
+                <ProjectCard
+                  setSelectedUser={(user: BasicUserDetails) => setSelectedUser(user)}
+                  project={project}
+                  key={index}
+                  openDeleteProjectModal={openDeleteProjectModal}
+                  openUpdateProjectModal={openUpdateProjectModal}
+                />
+              ))}
+            {createProjectModal && (
+              <CreateProjectModal
+                toolsAndTechnologies={toolsAndTechnologies}
+                jobTitles={jobTitles}
+                close={() => setCreateProjectModal(false)}
+                addCreatedProjectToList={addCreatedProjectToList}
               />
-            ))}
-          {createProjectModal && (
-            <CreateProjectModal
-              toolsAndTechnologies={toolsAndTechnologies}
-              jobTitles={jobTitles}
-              close={() => setCreateProjectModal(false)}
-              addCreatedProjectToList={addCreatedProjectToList}
-            />
-          )}
-          {updateProjectModal && selectedProject && (
-            <UpdateProjectModal
-              toolsAndTechnologies={toolsAndTechnologies}
-              jobTitles={jobTitles}
-              close={() => {
-                setUpdateProjectModal(false);
-                setSelectedProject(null);
-              }}
-              updateProjectFromList={updateProjectFromList}
-              project={selectedProject}
-            />
-          )}
-          {showDeleteProjectModal && selectedProject && (
-            <DeleteProjectModal
-              title="Delete this project"
-              subtitle="This operation is irreversible, we will not be able to recover your data."
-              close={() => setShowDeleteProjectModal(false)}
-              delete={(project: ProjectTypes) => deleteProject(project)}
-              project={selectedProject}
-            />
-          )}
-        </div>
-      )}
+            )}
+            {updateProjectModal && selectedProject && (
+              <UpdateProjectModal
+                toolsAndTechnologies={toolsAndTechnologies}
+                jobTitles={jobTitles}
+                close={() => {
+                  setUpdateProjectModal(false);
+                  setSelectedProject(null);
+                }}
+                updateProjectFromList={updateProjectFromList}
+                project={selectedProject}
+              />
+            )}
+            {showDeleteProjectModal && selectedProject && (
+              <DeleteProjectModal
+                title="Delete this project"
+                subtitle="This operation is irreversible, we will not be able to recover your data."
+                close={() => setShowDeleteProjectModal(false)}
+                delete={(project: ProjectTypes) => deleteProject(project)}
+                project={selectedProject}
+              />
+            )}
+          </div>
+        )}
+      </> */}
     </PrivatePageLayout>
   );
 };

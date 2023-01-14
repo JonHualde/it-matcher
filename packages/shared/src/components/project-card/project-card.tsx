@@ -59,8 +59,6 @@ const ProjectCard = (props: ProjectCardInterface) => {
   return (
     <div className="w-full rounded-md border border-gray-200 px-6 py-6 shadow-xl transition-all hover:scale-105">
       {/* Project's card header */}
-      {console.log(process.env.NEXT_PUBLIC_AWS_S3_LINK, props.project.project_main_picture)}
-
       <div className="flex w-full items-start justify-between ">
         {/* Project's main picture */}
         <div className="relative h-14 w-16">

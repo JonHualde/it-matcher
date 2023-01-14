@@ -51,9 +51,7 @@ const TextAreaContainer = (props: TextareaContainerProps) => {
         {/* Write a piece of code that checks the number of characters typed in the description field */}
         {props.counterLimit && (
           <Badge color={props.value.length < props.counterLimit ? "blue" : "red"} customClassName="text-xs">
-            <>
-              {props.value.length} / {props.counterLimit}
-            </>
+            {props.value.length / props.counterLimit}
           </Badge>
         )}
       </div>

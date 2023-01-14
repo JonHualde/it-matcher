@@ -1,8 +1,8 @@
-import { ReactElement } from "react";
+import { ReactNode } from "react";
 
 interface TitleProps {
   customClassName?: string;
-  children: string | ReactElement;
+  children: string;
   size?: "tiny" | "small" | "medium" | "large";
   ref?: any;
   click?: () => void;

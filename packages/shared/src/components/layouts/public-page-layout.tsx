@@ -69,10 +69,10 @@ const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
         closeOnClick
         transition={Zoom}
       />
-      <PublicPageHeader />
+      {/* <PublicPageHeader />
       <PublicPageMobileHeader />
       {children}
-      {!isFooterHidden && <PublicPageFooter />}
+      {!isFooterHidden && <PublicPageFooter />} */}
     </div>
   );
 };

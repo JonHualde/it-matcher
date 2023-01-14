@@ -1,9 +1,9 @@
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 
 interface BoxProps {
   customClassName?: string;
   size?: number;
-  children: string | ReactElement;
+  children: any;
   border?: string;
 }
 
