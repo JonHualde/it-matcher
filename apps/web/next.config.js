@@ -13,6 +13,5 @@ module.exports = withTM({
         hostname: "expert-matcher-s3-bucket.s3.eu-central-1.amazonaws.com",
       },
     ],
-    domains: null,
   },
 });
