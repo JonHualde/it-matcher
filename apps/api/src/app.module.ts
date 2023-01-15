@@ -9,6 +9,7 @@ import { UserModule } from './user/user.module';
 import { JobTitlesModule } from './job-titles/job-titles.module';
 import { ToolsAndTechnologiesModule } from './tools-and-technologies/tools-and-technologies.module';
 import { MediaModule } from './media/media.module';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import * as dotenv from 'dotenv';
 
 dotenv.config({
@@ -26,9 +27,19 @@ console.log('node env app: ', process.env.NODE_ENV);
     JobTitlesModule,
     ToolsAndTechnologiesModule,
     MediaModule,
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 20,
+    }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'APP_GUARD',
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
 

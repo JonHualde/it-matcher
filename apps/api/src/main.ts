@@ -44,7 +44,6 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: getCors(),
   });
-  const { httpAdapter } = app.get(HttpAdapterHost);
 
   app.useStaticAssets(process.cwd() + '/uploads', {
     prefix: '/uploads/',
@@ -52,7 +51,9 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   app.use(cookieParser());
-  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
+
+  const { httpAdapter } = app.get(HttpAdapterHost);
+  app.useGlobalFilters(new AllExceptionsFilter(httpAdapter as any));
 
   await app.listen(8000);
 }
