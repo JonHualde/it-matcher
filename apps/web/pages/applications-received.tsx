@@ -132,7 +132,7 @@ const ApplicationsReceived = (props: { pathname: string }) => {
 
   return (
     <PrivatePageLayout title="Applications Received" pathname={props.pathname}>
-      {/* <>
+      <>
         {showAlert && (
           <Alert
             close={() => setShowAlert(false)}
@@ -207,7 +207,7 @@ const ApplicationsReceived = (props: { pathname: string }) => {
             emptyData="There is no applications to show."
           />
         )}
-      </> */}
+      </>
     </PrivatePageLayout>
   );
 };

@@ -112,7 +112,7 @@ const Projects = (props: any) => {
 
   return (
     <PrivatePageLayout title="My projects" pathname={props.pathname} cta={cta()}>
-      {/* <>
+      <>
         {error && <ErrorMessage errorMessage={errorMessage} />}
         {selectedUser && <ShowUserModal user={selectedUser} close={() => setSelectedUser(null)} />}
         {isLoading ? (
@@ -167,7 +167,7 @@ const Projects = (props: any) => {
             )}
           </div>
         )}
-      </> */}
+      </>
     </PrivatePageLayout>
   );
 };

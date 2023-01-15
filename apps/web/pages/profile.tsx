@@ -109,7 +109,7 @@ const Profile = (props: ProfileProps) => {
 
   return (
     <PrivatePageLayout pathname={props.pathname} title={"Edit Information"}>
-      {/* <>
+      <>
         {error && <ErrorMessage errorMessage={errorMessage} />}
         {isLoading ? (
           <Box>
@@ -132,7 +132,7 @@ const Profile = (props: ProfileProps) => {
             <UpdatePasswordForm />
           </>
         )}
-      </> */}
+      </>
     </PrivatePageLayout>
   );
 };
