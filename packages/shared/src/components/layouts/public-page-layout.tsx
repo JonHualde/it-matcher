@@ -71,7 +71,7 @@ const PublicPageLayout = ({ children, pathname }: PublicPageLayoutProps) => {
       />
       <PublicPageHeader />
       <PublicPageMobileHeader />
-      {children}
+      <>{children}</>
       {!isFooterHidden && <PublicPageFooter />}
     </div>
   );
