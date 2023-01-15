@@ -63,16 +63,18 @@ const SignUpForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-      <Title type="h3" customClassName="mt-6 mb-0 font-medium">
+      <Title type="h3" customClassName="mt-2 mb-3 sm:mb-2 font-medium">
         Register
       </Title>
-      <Title type="h6" customClassName="mb-4 lg:mb-8">
-        Already have an account?
-      </Title>
-      <div className="flex flex-col sm:flex-row">
-        <Link href="/login">
-          <a className="text-link-color underline sm:ml-1">Log in</a>
-        </Link>
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-center">
+        <Title type="h6" customClassName="my-0">
+          Already have an account?
+        </Title>
+        <div className="flex flex-col sm:flex-row">
+          <Link href="/login">
+            <a className="text-link-color mb-4 underline sm:mb-0 sm:ml-1">Log in</a>
+          </Link>
+        </div>
       </div>
       {error && <Alert status="error" message={errorMessage} />}
       <div className="grid grid-cols-1 gap-x-4 md:grid-cols-2 md:gap-x-2">

@@ -61,15 +61,15 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-      <Title type="h3" customClassName="mt-6 mb-0 font-medium">
+      <Title type="h3" customClassName="mt-2 mb-3 sm:mb-2 font-medium">
         Log in
       </Title>
-      <Title type="h6" customClassName="mb-4 lg:mb-8">
-        Do you need an account?
-      </Title>
-      <div className="flex flex-col sm:flex-row">
+      <div className="mb-4 flex flex-col sm:flex-row sm:items-center">
+        <Title type="h6" customClassName="my-0">
+          Do you need an account?
+        </Title>
         <Link href="/signup">
-          <a className="text-link-color underline sm:ml-1">Create an account</a>
+          <a className="text-link-color mb-4 underline sm:mb-0 sm:ml-1">Create an account</a>
         </Link>
       </div>
       {error && <Alert status="error" message={errorMessage} />}

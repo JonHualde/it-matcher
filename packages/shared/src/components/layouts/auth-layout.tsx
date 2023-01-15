@@ -5,11 +5,11 @@ interface AuthLayoutProps {
 
 const AuthLayout = ({ children, imgSrc }: AuthLayoutProps) => {
   return (
-    <div className="h-screen w-screen flex">
-      <div className="w-full lg:w-3/6">{children}</div>
-      <div className="hidden lg:block lg:w-3/6">
-        <div className="w-full h-full">
-          <img className="object-cover w-full h-full" src={imgSrc} />
+    <div className="flex h-screen w-screen">
+      <div className="w-full lg:w-4/6 xl:w-3/6">{children}</div>
+      <div className="hidden lg:block lg:w-2/6 xl:w-3/6">
+        <div className="h-full w-full">
+          <img className="h-full w-full object-cover" src={imgSrc} />
         </div>
       </div>
     </div>

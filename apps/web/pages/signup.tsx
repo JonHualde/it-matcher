@@ -9,9 +9,9 @@ const SignUp = () => {
 
   return (
     <AuthLayout imgSrc="/images/sign-up.png">
-      <div className="flex w-full flex-col justify-between break-words p-4">
-        <div className="py-6 px-8">
-          <h2 className="text-purple-400 cursor-pointer font-semibold text-pastel-dark" onClick={() => router.push("/")}>
+      <div className="relative flex h-full w-full flex-col items-center justify-center break-words py-4">
+        <div className="top-1/2 left-1/2 block w-full p-0 sm:p-2 md:w-2/3 lg:absolute lg:w-4/5 lg:-translate-y-2/3 lg:-translate-x-1/2 lg:p-4 xl:w-3/4">
+          <h2 className="cursor-pointer font-semibold text-purple-400 text-pastel-dark" onClick={() => router.push("/")}>
             EXPERT:MATCHER
           </h2>
           <SignUpForm />
