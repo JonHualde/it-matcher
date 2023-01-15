@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from "react";
-import PublicPageFooter from "../public-page-footer/public-page-footer";
-import PublicPageHeader from "../public-page-header/public-page-header";
-import PublicPageMobileHeader from "../public-page-header/public-page-mobile-header";
+import { PublicPageFooter } from "@shared-components/public-page-footer";
+import { PublicPageHeader } from "@shared-components/public-page-header";
+import { PublicPageMobileHeader } from "@shared-components/public-page-header";
 import { ToastContainer, Zoom } from "react-toastify";
 // States
 import { useStoreActions } from "easy-peasy";
