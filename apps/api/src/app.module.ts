@@ -10,11 +10,11 @@ import { JobTitlesModule } from './job-titles/job-titles.module';
 import { ToolsAndTechnologiesModule } from './tools-and-technologies/tools-and-technologies.module';
 import { MediaModule } from './media/media.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
-import * as dotenv from 'dotenv';
+// import * as dotenv from 'dotenv';
 
-dotenv.config({
-  path: `${process.cwd()}/environment/${process.env.NODE_ENV}.env`,
-});
+// dotenv.config({
+//   path: `${process.cwd()}/environment/${process.env.NODE_ENV}.env`,
+// });
 
 console.log('node env app: ', process.env.NODE_ENV);
 @Module({
