@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { v4 as uuid } from 'uuid';
 const AWS = require('aws-sdk');
 // Types
 import { S3UploadResponse } from '@types';
@@ -29,7 +28,9 @@ export class MediaService {
     const params = files.map((file) => {
       return {
         Bucket: process.env.AWS_S3_BUCKET_NAME,
-        Key: `${type}/${file.originalname}-${uuid()}`,
+        Key: `${type}/${file.originalname}-${Math.random()
+          .toString(36)
+          .substr(2, 14)}`,
         Body: file.buffer,
         ContentType: file.mimetype,
       };

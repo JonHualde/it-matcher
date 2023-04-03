@@ -1,15 +1,13 @@
 import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { AllExceptionsFilter } from './utils/error.filter';
 import { NestExpressApplication } from '@nestjs/platform-express';
-
 import {
   CorsOptions,
   CorsOptionsDelegate,
 } from '@nestjs/common/interfaces/external/cors-options.interface';
-const databaseUrl = process.env.DATABASE_URL;
 
 function getCors():
   | boolean

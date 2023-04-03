@@ -6,13 +6,11 @@ import { LocalStrategy } from './local.strategy';
 import { UserService } from 'src/user/user.service';
 // External modules
 import { PrismaModule } from 'src/prisma/prisma.module';
-import { UserModule } from 'src/user/user.module';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 // Custom config
 import authConfig from '@config/auth.config';
-import { MediaService } from 'src/media/media.service';
 import { MediaModule } from 'src/media/media.module';
 
 @Module({

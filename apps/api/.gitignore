@@ -400,3 +400,11 @@ environment/staging.env
 dist
 uploads/attachments
 uploads/pictures
+
+.serverless
+.env
+.env.prod
+.env.staging
+package-lock.json
+./node_modules
+./package-lock.json

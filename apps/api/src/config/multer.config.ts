@@ -2,7 +2,6 @@ import { extname } from 'path';
 import { memoryStorage, diskStorage } from 'multer';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { existsSync, mkdirSync } from 'fs';
-import { v4 as uuidv4 } from 'uuid';
 import * as dotenv from 'dotenv';
 
 dotenv.config({
@@ -16,6 +15,7 @@ const multerConfig = {
   imageRegex: /(jpg|jpeg|png)$/,
   attachmentRegex: /(jpg|jpeg|png|pdf|doc|docx|csv|png|jpeg|jpg|xlsx|xls)$/,
 };
+
 
 // Check if a variable contains the string "picture" in it (case insensitive)
 const isPicture = (variable: string) =>
@@ -67,9 +67,9 @@ export const multerOptions = () => ({
           },
           // File modification details
           filename: (req: any, file: any, cb: any) => {
-            file.updatedFilename = `${uuidv4()}${extname(file.originalname)}`;
+            file.updatedFilename = `${Math.random().toString(36).substr(2, 14)}${extname(file.originalname)}`;
             // Calling the callback passing the random name generated with the original extension name
-            cb(null, `${uuidv4()}${extname(file.originalname)}`);
+            cb(null, `${Math.random().toString(36).substr(2, 14)}${extname(file.originalname)}`);
           },
         }),
 });

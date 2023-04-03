@@ -1,17 +1,16 @@
 import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { AllExceptionsFilter } from './utils/error.filter';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import serverlessExpress from '@vendia/serverless-express';
 import { Callback, Context, Handler } from 'aws-lambda';
-
 import {
   CorsOptions,
   CorsOptionsDelegate,
 } from '@nestjs/common/interfaces/external/cors-options.interface';
-const databaseUrl = process.env.DATABASE_URL;
+
 let server: Handler;
 
 function getCors():
@@ -26,20 +25,17 @@ function getCors():
       'http://localhost:3001',
       'http://localhost:3001/',
     ],
-    prod: [],
+    prod: true,
   };
 
   return {
-    origin: whiteList.dev,
+    origin: process.env.NODE_ENV === 'dev' ? whiteList.dev : whiteList.prod,
     credentials: true,
-  };
-
-  return {
-    origin: /^(https:\/\/([^\.]*\.)?eovo\.capital)$/i,
   };
 }
 
 async function bootstrap() {
+  console.log(process.env.NODE_ENV, process.env.DATABASE_URL, 'bootstrap');
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: getCors(),
   });
@@ -65,6 +61,12 @@ export const handler: Handler = async (
   context: Context,
   callback: Callback,
 ) => {
+  console.log(
+    'hello from handler: ',
+    process.env.NODE_ENV,
+    process.env.DATABASE_URL,
+  );
   server = server ?? (await bootstrap());
+  console.log('test: ', server);
   return server(event, context, callback);
 };

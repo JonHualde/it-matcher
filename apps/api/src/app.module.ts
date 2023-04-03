@@ -9,16 +9,12 @@ import { UserModule } from './user/user.module';
 import { JobTitlesModule } from './job-titles/job-titles.module';
 import { ToolsAndTechnologiesModule } from './tools-and-technologies/tools-and-technologies.module';
 import { MediaModule } from './media/media.module';
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
-import * as dotenv from 'dotenv';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { ConfigModule } from '@nestjs/config';
 
-dotenv.config({
-  path: `${process.cwd()}/environment/${process.env.NODE_ENV}.env`,
-});
-
-console.log('node env app: ', process.env.NODE_ENV);
 @Module({
   imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
     AuthModule,
     ProjectModule,
     ApplicationModule,
@@ -33,13 +29,7 @@ console.log('node env app: ', process.env.NODE_ENV);
     }),
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: 'APP_GUARD',
-      useClass: ThrottlerGuard,
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}
 

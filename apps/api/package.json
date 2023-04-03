@@ -7,14 +7,17 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
+    "deploy:offline-dev": "sls offline",
+    "deploy:offline-prod": "sls offline --stage prod",
+    "deploy:prod": "sls deploy --stage prod",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "prisma:create": "npm run prisma:generate && npm run prisma:push && npm run prisma:seed",
-    "prisma:generate": "dotenv -e ./environment/dev.env -- npx prisma generate",
-    "prisma:push": "dotenv -e ./environment/dev.env -- npx prisma db push",
-    "prisma:seed": "dotenv -e ./environment/dev.env -- npx prisma db seed --preview-feature",
-    "dev": "NODE_ENV=dev nest start --watch",
-    "start": "NODE_ENV=dev nest start",
-    "start:dev": "NODE_ENV=dev nest start --watch",
+    "prisma:generate": "npx prisma generate",
+    "prisma:push": "npx prisma db push",
+    "prisma:seed": "npx prisma db seed --preview-feature",
+    "dev": "nest start --watch",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -25,34 +28,30 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@nestjs/common": "^8.0.0",
+    "@nestjs/common": "^8.4.7",
     "@nestjs/config": "^2.2.0",
-    "@nestjs/core": "^8.0.0",
+    "@nestjs/core": "^8.4.7",
     "@nestjs/jwt": "^10.0.1",
     "@nestjs/passport": "^8.2.1",
     "@nestjs/platform-express": "^8.4.7",
     "@nestjs/throttler": "^3.1.0",
-    "@prisma/client": "^4.8.1",
+    "@prisma/client": "^4.12.0",
     "@types/passport": "^1.0.11",
     "@vendia/serverless-express": "^4.10.1",
     "aws-lambda": "^1.0.7",
     "aws-sdk": "^2.1282.0",
-    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
+    "cache-manager": "^5.2.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "cookie": "^0.4.1",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.3",
-    "dotenv-cli": "^6.0.0",
-    "jsonwebtoken": "^9.0.0",
     "multer": "^1.4.5-lts.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
-    "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.2.0",
-    "shared": "*",
-    "uuid": "^9.0.0"
+    "rxjs": "^7.8.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^7.6.0",
@@ -72,34 +71,18 @@
     "eslint": "^8.0.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
+    "html-loader": "^4.2.0",
     "jest": "28.0.3",
     "prettier": "^2.3.2",
-    "prisma": "^4.8.1",
+    "prisma": "^4.12.0",
+    "serverless-dotenv-plugin": "^6.0.0",
     "serverless-offline": "^12.0.4",
-    "source-map-support": "^0.5.20",
     "supertest": "^6.1.3",
-    "ts-jest": "28.0.1",
     "ts-loader": "^9.2.3",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "4.0.0",
-    "typescript": "^4.3.5"
-  },
-  "jest": {
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ],
-    "rootDir": "src",
-    "testRegex": ".*\\.spec\\.ts$",
-    "transform": {
-      "^.+\\.(t|j)s$": "ts-jest"
-    },
-    "collectCoverageFrom": [
-      "**/*.(t|j)s"
-    ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "typescript": "^4.3.5",
+    "webpack": "^5.77.0"
   },
   "prisma": {
     "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
