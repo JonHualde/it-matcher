@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcrypt';
 
 // Data
 import favouritesData from '../favouritesData';
@@ -8,8 +7,6 @@ import favouritesData from '../favouritesData';
 const prisma = new PrismaClient();
 
 const run = async () => {
-  const salt = bcrypt.genSaltSync();
-
   // 4) Generating favourites
   await Promise.all(
     favouritesData.map(async (favourite) => {

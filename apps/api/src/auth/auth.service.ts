@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, Inject } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import { compareSync, hashSync } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -40,7 +40,7 @@ export class AuthService {
       where: { email },
     });
 
-    if (!bcrypt.compareSync(password, user.password)) return null;
+    if (!compareSync(password, user.password)) return null;
 
     delete user.password;
     return user;
@@ -48,7 +48,7 @@ export class AuthService {
 
   preparePassword(input: string): string {
     const saltRounds = 12;
-    const passwordHash = bcrypt.hashSync(input, saltRounds);
+    const passwordHash = hashSync(input, saltRounds);
 
     return passwordHash;
   }
@@ -158,7 +158,7 @@ export class AuthService {
   }
 
   async comparePasswords(passwordInDB: string, passwordTypedByUser: string) {
-    return bcrypt.compareSync(passwordTypedByUser, passwordInDB);
+    return compareSync(passwordTypedByUser, passwordInDB);
   }
 
   async resetPassword(body: ResetPassword, user: JwtDecodeDto) {

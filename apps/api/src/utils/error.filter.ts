@@ -10,7 +10,7 @@ import * as fs from 'fs';
 import {
   PrismaClientKnownRequestError,
   PrismaClientValidationError,
-} from '@prisma/client/runtime';
+} from '@prisma/client/runtime/binary';
 
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {

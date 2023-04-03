@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
+import { genSaltSync, hashSync } from 'bcryptjs';
 
 // Data
 import userData from './userData';
@@ -13,7 +13,7 @@ import toolsAndTechnologiesData from './toolsAndtechnologiesData';
 const prisma = new PrismaClient();
 
 const run = async () => {
-  const salt = bcrypt.genSaltSync();
+  const salt = genSaltSync();
 
   // 1) Generating users
   await Promise.all(
@@ -23,7 +23,7 @@ const run = async () => {
         update: {},
         create: {
           email: user.email,
-          password: bcrypt.hashSync('password', salt),
+          password: hashSync('password', salt),
           first_name: user.firstName,
           last_name: user.lastName,
           linkedIn_url: user.linkedInUrl,

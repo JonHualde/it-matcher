@@ -2,10 +2,6 @@
   "name": "my-turborepo",
   "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
@@ -14,17 +10,10 @@
   },
   "devDependencies": {
     "eslint-config-custom": "*",
-    "prettier": "latest",
     "turbo": "latest"
   },
   "engines": {
     "node": ">=14.0.0"
-  },
-  "dependencies": {
-    "@hookform/resolvers": "^2.9.10",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.13.2",
-    "cookie-parser": "^1.4.6"
   },
   "packageManager": "npm@8.13.2"
 }
