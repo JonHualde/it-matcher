@@ -1,4 +1,4 @@
-service: api
+service: it-matcher-api-staging
 
 useDotenv: true
 
@@ -7,17 +7,10 @@ plugins:
   - serverless-offline
   - serverless-branch-deploy
 
-custom:
-  branchDeploy:
-    develop:
-      stage: staging
-    main:
-      stage: production
-
 provider:
   name: aws
   runtime: nodejs14.x
-  stage: ${opt:stage, self:custom.branchDeploy.${env:BRANCH}.stage}
+  stage: staging
   environment:
     DATABASE_URL: ${env:DATABASE_URL}
     UPLOAD_LOCATION_PICTURES: ${env:UPLOAD_LOCATION_PICTURES}

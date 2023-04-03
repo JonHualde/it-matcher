@@ -25,17 +25,17 @@ function getCors():
       'http://localhost:3001',
       'http://localhost:3001/',
     ],
+    staging: true,
     prod: true,
   };
 
   return {
-    origin: process.env.NODE_ENV === 'dev' ? whiteList.dev : whiteList.prod,
+    origin: whiteList[process.env.NODE_ENV],
     credentials: true,
   };
 }
 
 async function bootstrap() {
-  console.log(process.env.NODE_ENV, process.env.DATABASE_URL, 'bootstrap');
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: getCors(),
   });
@@ -61,12 +61,6 @@ export const handler: Handler = async (
   context: Context,
   callback: Callback,
 ) => {
-  console.log(
-    'hello from handler: ',
-    process.env.NODE_ENV,
-    process.env.DATABASE_URL,
-  );
   server = server ?? (await bootstrap());
-  console.log('test: ', server);
   return server(event, context, callback);
 };
