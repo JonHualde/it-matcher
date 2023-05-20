@@ -1,3 +1,7 @@
+# THE LIVE VERSION IS CURRENTLY NOT WORKING
+
+The backend has been temporarily shut down.
+
 # IT Matcher
 
 Welcome to the IT Matcher project. This platform is designed to streamline the connection between IT professionals and businesses. Our main goal is to offer an intuitive, user-friendly interface with top-notch functionality that effectively bridges the gap in the IT industry.
